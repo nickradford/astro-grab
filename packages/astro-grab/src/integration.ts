@@ -2,38 +2,37 @@ import type { AstroIntegration } from 'astro';
 import { astroGrabVitePlugin } from 'astro-grab-server';
 import type { AstroGrabOptions } from 'astro-grab-shared';
 
-/**
- * Astro Grab integration
- * Enables visual element targeting in dev mode for copying source snippets
- */
-export function astroGrab(options: AstroGrabOptions = {}): AstroIntegration {
+export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
   const {
     enabled = true,
     holdDuration = 1000,
     contextLines = 4,
+    autoInject = true
   } = options;
 
   return {
     name: 'astro-grab',
 
     hooks: {
-      'astro:config:setup': ({ updateConfig, injectScript, command }) => {
-        // Only run in dev mode
-        if (command !== 'dev' || !enabled) {
-          return;
-        }
+       'astro:config:setup': ({ updateConfig, injectScript, command, logger }) => {
+         if (command !== 'dev' || !enabled) {
+           return;
+         }
 
-        console.log('[astro-grab] Initializing...');
+         logger.info('Initializing...');
 
-        // Add Vite plugin for instrumentation and snippet endpoint
-        updateConfig({
-          vite: {
-            plugins: [astroGrabVitePlugin({ contextLines })],
-          },
-        });
+         updateConfig({
+           vite: {
+             plugins: [astroGrabVitePlugin({ contextLines })],
+           },
+         });
+         logger.info('Astro Vite plugin enabled');
 
-        console.log('[astro-grab] Ready - Hold Cmd/Ctrl+G to target elements');
+        injectScript("page", "import 'astro-grab-client/auto'");
+
+        logger.info(`Client script injected. Use crtl/cmd+g on your Astro site to select components.`)
+
       },
     },
   };
-}
+};

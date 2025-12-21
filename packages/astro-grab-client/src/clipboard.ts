@@ -1,9 +1,6 @@
 import type { SnippetResponse } from 'astro-grab-shared';
 
-/**
- * Format a snippet response for clipboard
- */
-export function formatSnippet(data: SnippetResponse): string {
+export const formatSnippet = (data: SnippetResponse): string => {
   return `Astro Grab (alpha)
 
 Source: ${data.file}:${data.targetLine}:1
@@ -11,18 +8,13 @@ Source: ${data.file}:${data.targetLine}:1
 \`\`\`astro
 ${data.snippet}
 \`\`\``;
-}
+};
 
-/**
- * Copy text to clipboard with fallback for older browsers
- */
-export async function copyToClipboard(text: string): Promise<void> {
-  try {
-    // Modern Clipboard API
-    await navigator.clipboard.writeText(text);
-  } catch (error) {
-    // Fallback for older browsers
-    const textarea = document.createElement('textarea');
+export const copyToClipboard = async (text: string): Promise<void> => {
+   try {
+     await navigator.clipboard.writeText(text);
+   } catch (error) {
+     const textarea = document.createElement('textarea');
     textarea.value = text;
     textarea.style.position = 'fixed';
     textarea.style.opacity = '0';
@@ -39,4 +31,4 @@ export async function copyToClipboard(text: string): Promise<void> {
       document.body.removeChild(textarea);
     }
   }
-}
+};

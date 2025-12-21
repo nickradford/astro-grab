@@ -21,7 +21,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "bun run --filter './packages/*' typecheck",
-    "clean": "bun run --filter './packages/*' clean && bun run --filter demo clean"
+    "clean": "bun run --filter './packages/*' clean && bun run --filter demo clean",
+    "link:packages": "for dir in packages/*; do (cd \"$dir\" && bun link); done"
   },
   "devDependencies": {
     "@types/bun": "^1.1.0",

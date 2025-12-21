@@ -9,25 +9,20 @@ export interface AstroGrabPluginOptions {
   contextLines?: number;
 }
 
-/**
- * Vite plugin that instruments .astro files and provides snippet endpoint
- */
-export function astroGrabVitePlugin(
+export const astroGrabVitePlugin = (
   options: AstroGrabPluginOptions = {}
-): Plugin {
+): Plugin => {
   const { contextLines: defaultContextLines = 4 } = options;
   let root: string;
 
   return {
     name: 'astro-grab',
-    enforce: 'pre', // Run before Astro's transform
+    enforce: 'pre',
 
-    // Store the project root
     configResolved(config) {
       root = config.root;
     },
 
-    // Load hook to get original source before Astro compiles it
     async load(id) {
       if (!id.endsWith('.astro') || id.includes('node_modules')) {
         return null;
@@ -37,10 +32,7 @@ export function astroGrabVitePlugin(
         const { readFile } = await import('fs/promises');
         const code = await readFile(id, 'utf-8');
 
-        // Don't use addWatchFile - the file is already watched by Astro
-        // Using it causes race conditions with HMR
-
-        // Instrument the original source
+        // HACK: Don't use addWatchFile - causes race conditions with HMR
         const result = await transformAstroFile(code, id, root);
 
         if (!result) {
@@ -57,31 +49,24 @@ export function astroGrabVitePlugin(
       }
     },
 
-    // Handle hot updates - force full reload to avoid race conditions
     handleHotUpdate({ file, modules, server }) {
       if (file.endsWith('.astro')) {
-        // Invalidate all modules to clear cache
         for (const mod of modules) {
           server.moduleGraph.invalidateModule(mod);
         }
 
-        // Force full reload and return empty array to prevent Astro from also handling it
-        // This avoids race conditions where Astro's HMR runs after ours
+        // HACK: Force full reload to avoid race conditions with Astro's HMR
         server.ws.send({
           type: 'full-reload',
           path: '*',
         });
 
-        // Return empty array to signal we handled it (don't let it propagate to Astro)
         return [];
       }
-      // Return undefined to use default behavior for non-.astro files
     },
 
-    // Configure dev server middleware for snippet endpoint and client bundle
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
-        // Serve client bundle
         if (req.url === '/__astro_grab_client/auto.js') {
           try {
             const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -100,7 +85,6 @@ export function astroGrabVitePlugin(
           }
         }
 
-        // Handle snippet endpoint
         if (!req.url?.startsWith('/__astro_grab/snippet')) {
           return next();
         }
@@ -116,7 +100,6 @@ export function astroGrabVitePlugin(
             return;
           }
 
-          // Read contextLines from query param, fallback to default
           const contextLinesParam = url.searchParams.get('contextLines');
           const contextLines = contextLinesParam
             ? parseInt(contextLinesParam, 10)
@@ -143,4 +126,4 @@ export function astroGrabVitePlugin(
       });
     },
   };
-}
+};

@@ -7,7 +7,7 @@ export default defineConfig({
     astroGrab({
       enabled: true,
       holdDuration: 1000,
-      contextLines: 40,
+      contextLines: 4,
     }),
   ],
 });

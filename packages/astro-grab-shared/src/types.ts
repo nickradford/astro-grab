@@ -44,6 +44,8 @@ export interface AstroGrabOptions {
   enabled?: boolean;
   /** Duration in milliseconds to hold keybind (default: 1000) */
   holdDuration?: number;
-  /** Number of lines of context around target (default: 40) */
+  /** Number of lines of context around target (default: 4) */
   contextLines?: number;
+  /** Should auto inject the client script */
+  autoInject?: boolean;
 }

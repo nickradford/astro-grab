@@ -1,4 +1,3 @@
-// Re-export all types
 export type {
   SourceLocation,
   SnippetResponse,
@@ -7,7 +6,6 @@ export type {
   AstroGrabOptions,
 } from './types.js';
 
-// Re-export all utilities
 export {
   encodeSourceLocation,
   decodeSourceLocation,

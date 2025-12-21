@@ -45,11 +45,9 @@ export class TargetingHandler {
     this.overlay.clearHighlight();
   }
 
-  /**
-   * Handle mouse movement - highlight hovered element
-   */
   private handleMouseMove = (e: MouseEvent): void => {
-    const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
+    const element = document.elementFromPoint(e.clientX, e.clientY);
+    const target = element instanceof HTMLElement ? element : null;
 
     if (!target) {
       this.overlay.clearHighlight();
@@ -58,7 +56,6 @@ export class TargetingHandler {
       return;
     }
 
-    // Find nearest element with data-astro-grab attribute
     const elementWithSource = this.findElementWithSource(target);
 
     if (elementWithSource) {
@@ -74,9 +71,6 @@ export class TargetingHandler {
     }
   };
 
-  /**
-   * Handle click - fetch and copy snippet
-   */
   private handleClick = async (e: MouseEvent): Promise<void> => {
     if (this.stateMachine.getState() !== 'targeting') {
       return;
@@ -92,13 +86,9 @@ export class TargetingHandler {
       }
     }
 
-    // Exit targeting mode after click
     this.stateMachine.reset();
   };
 
-  /**
-   * Fetch snippet from server and copy to clipboard
-   */
   private async fetchAndCopySnippet(src: string): Promise<void> {
     try {
       const response = await fetch(
@@ -123,9 +113,6 @@ export class TargetingHandler {
     }
   }
 
-  /**
-   * Find the nearest ancestor (or self) with data-astro-grab attribute
-   */
   private findElementWithSource(element: HTMLElement): HTMLElement | null {
     let current: HTMLElement | null = element;
 

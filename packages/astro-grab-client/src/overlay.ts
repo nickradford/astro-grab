@@ -1,9 +1,5 @@
 import { StateMachine } from './state-machine.js';
 
-/**
- * Visual overlay for targeting mode
- * Shows highlight around hovered element, tooltip with source info, and toast notifications
- */
 export class Overlay {
   private container: HTMLDivElement | null = null;
   private highlightBox: HTMLDivElement | null = null;
@@ -16,9 +12,6 @@ export class Overlay {
     this.stateMachine = stateMachine;
   }
 
-  /**
-   * Initialize overlay and state listeners
-   */
   init(): void {
     this.createElements();
 
@@ -26,11 +19,7 @@ export class Overlay {
     this.stateMachine.onEnter('idle', () => this.hide());
   }
 
-  /**
-   * Create overlay DOM elements
-   */
   private createElements(): void {
-    // Container
     this.container = document.createElement('div');
     this.container.id = 'astro-grab-overlay';
     this.container.style.cssText = `
@@ -44,7 +33,6 @@ export class Overlay {
       display: none;
     `;
 
-    // Highlight box
     this.highlightBox = document.createElement('div');
     this.highlightBox.style.cssText = `
       position: absolute;
@@ -56,7 +44,6 @@ export class Overlay {
       display: none;
     `;
 
-    // Tooltip
     this.tooltip = document.createElement('div');
     this.tooltip.style.cssText = `
       position: absolute;
@@ -74,7 +61,6 @@ export class Overlay {
       text-overflow: ellipsis;
     `;
 
-    // Toast
     this.toast = document.createElement('div');
     this.toast.style.cssText = `
       position: fixed;
@@ -92,7 +78,6 @@ export class Overlay {
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     `;
 
-    // Crosshair - create 4 separate lines that will stop at the highlighted element
     this.crosshair = document.createElement('div');
     this.crosshair.style.cssText = `
       position: fixed;
@@ -105,7 +90,6 @@ export class Overlay {
       z-index: 999998;
     `;
 
-    // Create 4 crosshair lines (top, bottom, left, right)
     const lineTop = document.createElement('div');
     lineTop.className = 'crosshair-line-top';
     lineTop.style.cssText = `
@@ -162,9 +146,6 @@ export class Overlay {
     document.body.appendChild(this.container);
   }
 
-  /**
-   * Show overlay
-   */
   show(): void {
     if (this.container) {
       this.container.style.display = 'block';
@@ -174,9 +155,6 @@ export class Overlay {
     }
   }
 
-  /**
-   * Hide overlay
-   */
   hide(): void {
     if (this.container) {
       this.container.style.display = 'none';
@@ -192,9 +170,6 @@ export class Overlay {
     }
   }
 
-  /**
-   * Highlight an element at the given rect
-   */
   highlightElement(rect: DOMRect, sourceInfo: string | null): void {
     if (!this.highlightBox || !this.tooltip) {
       return;
@@ -207,11 +182,9 @@ export class Overlay {
     this.highlightBox.style.width = `${rect.width}px`;
     this.highlightBox.style.height = `${rect.height}px`;
 
-    // Update tooltip
     this.tooltip.style.display = 'block';
     this.tooltip.textContent = sourceInfo || 'No source info';
 
-    // Position tooltip near cursor (above the element)
     const tooltipTop = rect.top - 30;
     const tooltipLeft = rect.left;
 
@@ -219,9 +192,6 @@ export class Overlay {
     this.tooltip.style.left = `${tooltipLeft}px`;
   }
 
-  /**
-   * Hide highlight and tooltip
-   */
   clearHighlight(): void {
     if (this.highlightBox) {
       this.highlightBox.style.display = 'none';
@@ -231,45 +201,37 @@ export class Overlay {
     }
   }
 
-  /**
-   * Update crosshair position based on mouse and highlighted element
-   */
   updateCrosshair(mouseX: number, mouseY: number, highlightRect: DOMRect | null): void {
     if (!this.crosshair) {
       return;
     }
 
-    const lineTop = this.crosshair.querySelector('.crosshair-line-top') as HTMLDivElement;
-    const lineBottom = this.crosshair.querySelector('.crosshair-line-bottom') as HTMLDivElement;
-    const lineLeft = this.crosshair.querySelector('.crosshair-line-left') as HTMLDivElement;
-    const lineRight = this.crosshair.querySelector('.crosshair-line-right') as HTMLDivElement;
+    const lineTop = this.crosshair.querySelector('.crosshair-line-top');
+    const lineBottom = this.crosshair.querySelector('.crosshair-line-bottom');
+    const lineLeft = this.crosshair.querySelector('.crosshair-line-left');
+    const lineRight = this.crosshair.querySelector('.crosshair-line-right');
 
     if (!lineTop || !lineBottom || !lineLeft || !lineRight) {
       return;
     }
 
     if (highlightRect) {
-      // Vertical line (top): from top of viewport to top of highlighted element
       lineTop.style.left = `${mouseX}px`;
       lineTop.style.top = '0';
       lineTop.style.height = `${highlightRect.top}px`;
 
-      // Vertical line (bottom): from bottom of highlighted element to bottom of viewport
       lineBottom.style.left = `${mouseX}px`;
       lineBottom.style.top = `${highlightRect.bottom + 2}px`;
       lineBottom.style.height = `${window.innerHeight - highlightRect.bottom - 2}px`;
 
-      // Horizontal line (left): from left of viewport to left of highlighted element
       lineLeft.style.left = '0';
       lineLeft.style.top = `${mouseY}px`;
       lineLeft.style.width = `${highlightRect.left}px`;
 
-      // Horizontal line (right): from right of highlighted element to right of viewport
       lineRight.style.left = `${highlightRect.right + 2}px`;
       lineRight.style.top = `${mouseY}px`;
       lineRight.style.width = `${window.innerWidth - highlightRect.right - 2}px`;
     } else {
-      // No highlight - show full crosshair lines
       lineTop.style.left = `${mouseX}px`;
       lineTop.style.top = '0';
       lineTop.style.height = `${mouseY}px`;
@@ -288,9 +250,6 @@ export class Overlay {
     }
   }
 
-  /**
-   * Show a toast notification
-   */
   showToast(message: string, duration: number = 1000): void {
     if (!this.toast) {
       return;
@@ -306,9 +265,6 @@ export class Overlay {
     }, duration);
   }
 
-  /**
-   * Clean up overlay
-   */
   destroy(): void {
     if (this.container) {
       this.container.remove();

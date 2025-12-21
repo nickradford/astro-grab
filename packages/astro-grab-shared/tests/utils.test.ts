@@ -162,12 +162,12 @@ describe('extractSnippet', () => {
     expect(result.endLine).toBe(100); // Can't go beyond total lines
   });
 
-  it('should handle default context lines (40)', () => {
+  it('should handle default context lines (4)', () => {
     const content = createContent(100);
     const result = extractSnippet(content, 50);
 
-    expect(result.startLine).toBe(10); // 50 - 40
-    expect(result.endLine).toBe(90); // 50 + 40
+    expect(result.startLine).toBe(46); // 50 - 40
+    expect(result.endLine).toBe(54); // 50 + 40
   });
 
   it('should handle small files with large context', () => {

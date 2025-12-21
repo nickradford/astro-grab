@@ -36,7 +36,7 @@ describe('handleSnippetRequest', () => {
     expect(result.snippet).toContain('line 50');
   });
 
-  it('should use default context lines (40)', async () => {
+  it('should use default context lines (4)', async () => {
     const content = Array.from({ length: 100 }, (_, i) => `line ${i + 1}`).join('\n');
     const testFile = join(testDir, 'test.astro');
     await writeFile(testFile, content);
@@ -45,8 +45,8 @@ describe('handleSnippetRequest', () => {
       root: testDir,
     });
 
-    expect(result.startLine).toBe(10); // 50 - 40
-    expect(result.endLine).toBe(90); // 50 + 40
+    expect(result.startLine).toBe(46); // 50 - 40
+    expect(result.endLine).toBe(54); // 50 + 40
   });
 
   it('should throw error for invalid source location format', async () => {

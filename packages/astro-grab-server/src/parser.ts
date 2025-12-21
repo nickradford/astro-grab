@@ -10,29 +10,20 @@ interface Injection {
   attribute: string;
 }
 
-/**
- * Instruments an Astro file by adding data-astro-grab attributes to HTML elements
- * @param code The source code of the .astro file
- * @param filePath The file path (for attribution)
- * @param root The project root directory (optional, for making paths relative)
- * @returns Instrumented code with data-astro-grab attributes
- */
-export async function instrumentAstroFile(
+export const instrumentAstroFile = async (
   code: string,
   filePath: string,
   root?: string
-): Promise<InstrumentationResult> {
+): Promise<InstrumentationResult> => {
   let ast: any;
 
   try {
     ast = await parse(code, { position: true });
   } catch (error) {
-    // If parsing fails, return original code (don't break the build)
     console.error(`[astro-grab] Failed to parse ${filePath}:`, error);
     return { code };
   }
 
-  // Helper: Calculate line and column from character offset
   const lines = code.split('\n');
   const getLineAndColumn = (offset: number): { line: number; column: number } => {
     let currentOffset = 0;
@@ -55,29 +46,44 @@ export async function instrumentAstroFile(
   const injections: Injection[] = [];
   let normalizedPath = normalizePath(filePath);
 
-  // Make path relative to project root if root is provided
   if (root) {
     const normalizedRoot = normalizePath(root);
     if (normalizedPath.startsWith(normalizedRoot)) {
       normalizedPath = normalizedPath.slice(normalizedRoot.length);
-      // Remove leading slash if present
       if (normalizedPath.startsWith('/')) {
         normalizedPath = normalizedPath.slice(1);
       }
     }
   }
 
-  // Walk the AST to find HTML elements
-  walkAst(ast.ast, (node: any) => {
-    // Only process element nodes (not components)
+  let bodyNode: any = null;
+  const findBody = (node: any): any => {
+    if (node.type === 'element' && node.name === 'body') {
+      return node;
+    }
+    if (node.children && Array.isArray(node.children)) {
+      for (const child of node.children) {
+        const found = findBody(child);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+  bodyNode = findBody(ast.ast);
+
+  const rootToWalk = bodyNode || ast.ast;
+
+  walkAst(rootToWalk, (node: any) => {
     if (node.type === 'element' && node.position) {
-      // Skip if it's a component (uppercase first letter)
       if (node.name && /^[A-Z]/.test(node.name)) {
         return;
       }
 
-      // Skip script and style tags
       if (node.name === 'script' || node.name === 'style') {
+        return;
+      }
+
+      if (node.name === 'body') {
         return;
       }
 
@@ -92,18 +98,37 @@ export async function instrumentAstroFile(
 
       const encoded = encodeSourceLocation(loc);
 
-      // Find insertion point: after the tag name in the opening tag
-      // e.g., <div class="foo"> -> <div data-astro-grab="..." class="foo">
+      // Find insertion point more carefully by looking at the actual code
+      // We need to find the position after the tag name but before any attributes
       const tagStart = node.position.start.offset;
-      const tagNameLength = node.name.length;
 
-      // Position is right after the tag name: <div| class="foo">
-      const insertOffset = tagStart + 1 + tagNameLength;
+      // Find the end of the opening tag to search within
+      let searchEnd = tagStart;
+      let depth = 0;
+      for (let i = tagStart; i < code.length; i++) {
+        if (code[i] === '<') depth++;
+        if (code[i] === '>') {
+          depth--;
+          if (depth === 0) {
+            searchEnd = i;
+            break;
+          }
+        }
+      }
 
-      injections.push({
-        offset: insertOffset,
-        attribute: ` data-astro-grab="${encoded}"`,
-      });
+      // Search for the tag name within the opening tag
+      const openingTagContent = code.slice(tagStart, searchEnd + 1);
+      const tagPattern = new RegExp(`^<${node.name}([\\s>])`);
+      const match = openingTagContent.match(tagPattern);
+
+      if (match) {
+        // Insert right after the tag name (before the space or >)
+        const insertOffset = tagStart + match[0].length - 1;
+        injections.push({
+          offset: insertOffset,
+          attribute: ` data-astro-grab="${encoded}"`,
+        });
+      }
     }
   });
 
@@ -119,12 +144,9 @@ export async function instrumentAstroFile(
   }
 
   return { code: instrumentedCode };
-}
+};
 
-/**
- * Simple AST walker function
- */
-function walkAst(node: any, callback: (node: any) => void) {
+const walkAst = (node: any, callback: (node: any) => void): void => {
   if (!node || typeof node !== 'object') {
     return;
   }
@@ -144,4 +166,4 @@ function walkAst(node: any, callback: (node: any) => void) {
       walkAst(attr, callback);
     }
   }
-}
+};

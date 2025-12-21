@@ -12,8 +12,7 @@ describe('KeybindHandler', () => {
   beforeEach(() => {
     window = new Window();
     document = window.document;
-    global.document = document as any;
-    global.window = window as any;
+    Object.assign(global, { document, window });
 
     stateMachine = new StateMachine();
     keybindHandler = new KeybindHandler(stateMachine, 100); // Use short duration for tests
