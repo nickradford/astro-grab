@@ -31,11 +31,13 @@ bun run dev
 ```
 
 This will:
+
 - Build and watch all packages in `packages/`
 - Start the Astro dev server for the demo in `apps/demo`
 - Enable hot reload for client code changes
 
 Visit `http://localhost:4321` and try the targeting mode:
+
 1. Hold Cmd+G (Mac) or Ctrl+G (Win/Linux) for 1 second
 2. Move your mouse over elements to see them highlighted
 3. Click an element to copy its source code

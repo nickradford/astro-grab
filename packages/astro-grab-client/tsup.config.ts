@@ -1,8 +1,8 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from "tsup";
 
 export default defineConfig((options) => ({
-  entry: ['src/index.ts', 'src/auto.ts'],
-  format: ['esm'],
+  entry: ["src/index.ts", "src/auto.ts"],
+  format: ["esm"],
   dts: !options.watch, // Disable DTS generation in watch mode
   clean: true,
   sourcemap: true,

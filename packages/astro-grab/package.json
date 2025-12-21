@@ -1,6 +1,14 @@
 {
   "name": "astro-grab",
   "version": "0.1.0",
+  "keywords": [
+    "astro",
+    "astro-integration",
+    "dev-tools"
+  ],
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -10,14 +18,6 @@
       "default": "./dist/index.js"
     }
   },
-  "files": [
-    "dist"
-  ],
-  "keywords": [
-    "astro",
-    "astro-integration",
-    "dev-tools"
-  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -31,13 +31,13 @@
     "astro-grab-server": "workspace:*",
     "astro-grab-shared": "workspace:*"
   },
-  "peerDependencies": {
-    "astro": "^5.0.0"
-  },
   "devDependencies": {
     "astro": "^5.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.7.0",
     "vitest": "^2.1.0"
+  },
+  "peerDependencies": {
+    "astro": "^5.0.0"
   }
 }

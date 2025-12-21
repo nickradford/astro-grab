@@ -1,11 +1,11 @@
-import type { SourceLocation } from './types.js';
+import type { SourceLocation } from "./types.js";
 
 export const encodeSourceLocation = (loc: SourceLocation): string => {
   return `${loc.file}:${loc.line}:${loc.column}`;
 };
 
 export const decodeSourceLocation = (encoded: string): SourceLocation => {
-  const parts = encoded.split(':');
+  const parts = encoded.split(":");
 
   if (parts.length < 3) {
     throw new Error(`Invalid source location format: "${encoded}". Expected "file:line:column"`);
@@ -18,13 +18,13 @@ export const decodeSourceLocation = (encoded: string): SourceLocation => {
   if (parts.length === 3) {
     [file, lineStr, columnStr] = parts;
   } else if (parts.length === 4 && parts[0].length === 0 && parts[1].length === 1) {
-    file = parts[0] + ':' + parts[1];
+    file = parts[0] + ":" + parts[1];
     lineStr = parts[2];
     columnStr = parts[3];
   } else {
     columnStr = parts.pop()!;
     lineStr = parts.pop()!;
-    file = parts.join(':');
+    file = parts.join(":");
   }
 
   const line = parseInt(lineStr, 10);
@@ -39,10 +39,10 @@ export const decodeSourceLocation = (encoded: string): SourceLocation => {
   }
 
   if (!file) {
-    throw new Error('File path is empty');
+    throw new Error("File path is empty");
   }
 
-  if (!file.endsWith('.astro')) {
+  if (!file.endsWith(".astro")) {
     throw new Error(`File must be an .astro file, got: "${file}"`);
   }
 
@@ -50,15 +50,15 @@ export const decodeSourceLocation = (encoded: string): SourceLocation => {
 };
 
 export const normalizePath = (path: string): string => {
-  return path.replace(/\\/g, '/');
+  return path.replace(/\\/g, "/");
 };
 
 export const extractSnippet = (
   content: string,
   targetLine: number,
-  contextLines: number = 4
+  contextLines: number = 4,
 ): { snippet: string; startLine: number; endLine: number } => {
-  const lines = content.split('\n');
+  const lines = content.split("\n");
   const totalLines = lines.length;
 
   if (targetLine < 1 || targetLine > totalLines) {
@@ -69,7 +69,7 @@ export const extractSnippet = (
   const endLine = Math.min(totalLines, targetLine + contextLines);
 
   const snippetLines = lines.slice(startLine - 1, endLine);
-  const snippet = snippetLines.join('\n');
+  const snippet = snippetLines.join("\n");
 
   return { snippet, startLine, endLine };
 };

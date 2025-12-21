@@ -1,7 +1,7 @@
-import { StateMachine } from './state-machine.js';
-import { Overlay } from './overlay.js';
-import { copyToClipboard, formatSnippet } from './clipboard.js';
-import type { SnippetResponse } from 'astro-grab-shared';
+import { StateMachine } from "./state-machine.js";
+import { Overlay } from "./overlay.js";
+import { copyToClipboard, formatSnippet } from "./clipboard.js";
+import type { SnippetResponse } from "astro-grab-shared";
 
 /**
  * Handles targeting mode interactions
@@ -23,24 +23,24 @@ export class TargetingHandler {
    * Initialize targeting handlers
    */
   init(): void {
-    this.stateMachine.onEnter('targeting', () => this.enable());
-    this.stateMachine.onEnter('idle', () => this.disable());
+    this.stateMachine.onEnter("targeting", () => this.enable());
+    this.stateMachine.onEnter("idle", () => this.disable());
   }
 
   /**
    * Enable targeting mode
    */
   private enable(): void {
-    document.addEventListener('mousemove', this.handleMouseMove);
-    document.addEventListener('click', this.handleClick, true);
+    document.addEventListener("mousemove", this.handleMouseMove);
+    document.addEventListener("click", this.handleClick, true);
   }
 
   /**
    * Disable targeting mode
    */
   private disable(): void {
-    document.removeEventListener('mousemove', this.handleMouseMove);
-    document.removeEventListener('click', this.handleClick, true);
+    document.removeEventListener("mousemove", this.handleMouseMove);
+    document.removeEventListener("click", this.handleClick, true);
     this.currentTarget = null;
     this.overlay.clearHighlight();
   }
@@ -61,7 +61,7 @@ export class TargetingHandler {
     if (elementWithSource) {
       this.currentTarget = elementWithSource;
       const rect = elementWithSource.getBoundingClientRect();
-      const sourceInfo = elementWithSource.getAttribute('data-astro-grab');
+      const sourceInfo = elementWithSource.getAttribute("data-astro-grab");
       this.overlay.highlightElement(rect, sourceInfo);
       this.overlay.updateCrosshair(e.clientX, e.clientY, rect);
     } else {
@@ -72,7 +72,7 @@ export class TargetingHandler {
   };
 
   private handleClick = async (e: MouseEvent): Promise<void> => {
-    if (this.stateMachine.getState() !== 'targeting') {
+    if (this.stateMachine.getState() !== "targeting") {
       return;
     }
 
@@ -80,7 +80,7 @@ export class TargetingHandler {
     e.stopPropagation();
 
     if (this.currentTarget) {
-      const src = this.currentTarget.getAttribute('data-astro-grab');
+      const src = this.currentTarget.getAttribute("data-astro-grab");
       if (src) {
         await this.fetchAndCopySnippet(src);
       }
@@ -92,12 +92,12 @@ export class TargetingHandler {
   private async fetchAndCopySnippet(src: string): Promise<void> {
     try {
       const response = await fetch(
-        `/__astro_grab/snippet?src=${encodeURIComponent(src)}&contextLines=${this.contextLines}`
+        `/__astro_grab/snippet?src=${encodeURIComponent(src)}&contextLines=${this.contextLines}`,
       );
 
       if (!response.ok) {
-        console.error('[astro-grab] Failed to fetch snippet:', response.statusText);
-        this.overlay.showToast('Failed to fetch snippet', 2000);
+        console.error("[astro-grab] Failed to fetch snippet:", response.statusText);
+        this.overlay.showToast("Failed to fetch snippet", 2000);
         return;
       }
 
@@ -106,10 +106,10 @@ export class TargetingHandler {
       await copyToClipboard(formatted);
 
       console.log(`[astro-grab] Copied snippet from ${data.file}:${data.targetLine}`);
-      this.overlay.showToast('Copied!', 1000);
+      this.overlay.showToast("Copied!", 1000);
     } catch (error) {
-      console.error('[astro-grab] Error fetching snippet:', error);
-      this.overlay.showToast('Error copying snippet', 2000);
+      console.error("[astro-grab] Error fetching snippet:", error);
+      this.overlay.showToast("Error copying snippet", 2000);
     }
   }
 
@@ -117,7 +117,7 @@ export class TargetingHandler {
     let current: HTMLElement | null = element;
 
     while (current && current !== document.body) {
-      if (current.hasAttribute('data-astro-grab')) {
+      if (current.hasAttribute("data-astro-grab")) {
         return current;
       }
       current = current.parentElement;

@@ -34,7 +34,7 @@ export interface ClientConfig {
 /**
  * Client-side state machine states
  */
-export type ClientState = 'idle' | 'holding' | 'targeting';
+export type ClientState = "idle" | "holding" | "targeting";
 
 /**
  * Options for configuring the Astro Grab integration

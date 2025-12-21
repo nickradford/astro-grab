@@ -1,6 +1,9 @@
 {
   "name": "astro-grab-client",
   "version": "0.1.0",
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,9 +16,6 @@
       "default": "./dist/auto.js"
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

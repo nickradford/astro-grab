@@ -4,11 +4,11 @@ export type {
   ClientConfig,
   ClientState,
   AstroGrabOptions,
-} from './types.js';
+} from "./types.js";
 
 export {
   encodeSourceLocation,
   decodeSourceLocation,
   normalizePath,
   extractSnippet,
-} from './utils.js';
+} from "./utils.js";

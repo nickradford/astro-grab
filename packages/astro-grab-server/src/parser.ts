@@ -1,5 +1,5 @@
-import { parse } from '@astrojs/compiler';
-import { encodeSourceLocation, normalizePath } from 'astro-grab-shared';
+import { parse } from "@astrojs/compiler";
+import { encodeSourceLocation, normalizePath } from "astro-grab-shared";
 
 export interface InstrumentationResult {
   code: string;
@@ -13,7 +13,7 @@ interface Injection {
 export const instrumentAstroFile = async (
   code: string,
   filePath: string,
-  root?: string
+  root?: string,
 ): Promise<InstrumentationResult> => {
   let ast: any;
 
@@ -24,7 +24,7 @@ export const instrumentAstroFile = async (
     return { code };
   }
 
-  const lines = code.split('\n');
+  const lines = code.split("\n");
   const getLineAndColumn = (offset: number): { line: number; column: number } => {
     let currentOffset = 0;
     for (let i = 0; i < lines.length; i++) {
@@ -50,7 +50,7 @@ export const instrumentAstroFile = async (
     const normalizedRoot = normalizePath(root);
     if (normalizedPath.startsWith(normalizedRoot)) {
       normalizedPath = normalizedPath.slice(normalizedRoot.length);
-      if (normalizedPath.startsWith('/')) {
+      if (normalizedPath.startsWith("/")) {
         normalizedPath = normalizedPath.slice(1);
       }
     }
@@ -58,7 +58,7 @@ export const instrumentAstroFile = async (
 
   let bodyNode: any = null;
   const findBody = (node: any): any => {
-    if (node.type === 'element' && node.name === 'body') {
+    if (node.type === "element" && node.name === "body") {
       return node;
     }
     if (node.children && Array.isArray(node.children)) {
@@ -74,16 +74,16 @@ export const instrumentAstroFile = async (
   const rootToWalk = bodyNode || ast.ast;
 
   walkAst(rootToWalk, (node: any) => {
-    if (node.type === 'element' && node.position) {
+    if (node.type === "element" && node.position) {
       if (node.name && /^[A-Z]/.test(node.name)) {
         return;
       }
 
-      if (node.name === 'script' || node.name === 'style') {
+      if (node.name === "script" || node.name === "style") {
         return;
       }
 
-      if (node.name === 'body') {
+      if (node.name === "body") {
         return;
       }
 
@@ -106,8 +106,8 @@ export const instrumentAstroFile = async (
       let searchEnd = tagStart;
       let depth = 0;
       for (let i = tagStart; i < code.length; i++) {
-        if (code[i] === '<') depth++;
-        if (code[i] === '>') {
+        if (code[i] === "<") depth++;
+        if (code[i] === ">") {
           depth--;
           if (depth === 0) {
             searchEnd = i;
@@ -138,16 +138,14 @@ export const instrumentAstroFile = async (
   let instrumentedCode = code;
   for (const { offset, attribute } of injections) {
     instrumentedCode =
-      instrumentedCode.slice(0, offset) +
-      attribute +
-      instrumentedCode.slice(offset);
+      instrumentedCode.slice(0, offset) + attribute + instrumentedCode.slice(offset);
   }
 
   return { code: instrumentedCode };
 };
 
 const walkAst = (node: any, callback: (node: any) => void): void => {
-  if (!node || typeof node !== 'object') {
+  if (!node || typeof node !== "object") {
     return;
   }
 

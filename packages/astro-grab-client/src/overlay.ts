@@ -1,4 +1,4 @@
-import { StateMachine } from './state-machine.js';
+import { StateMachine } from "./state-machine.js";
 
 export class Overlay {
   private container: HTMLDivElement | null = null;
@@ -15,13 +15,13 @@ export class Overlay {
   init(): void {
     this.createElements();
 
-    this.stateMachine.onEnter('targeting', () => this.show());
-    this.stateMachine.onEnter('idle', () => this.hide());
+    this.stateMachine.onEnter("targeting", () => this.show());
+    this.stateMachine.onEnter("idle", () => this.hide());
   }
 
   private createElements(): void {
-    this.container = document.createElement('div');
-    this.container.id = 'astro-grab-overlay';
+    this.container = document.createElement("div");
+    this.container.id = "astro-grab-overlay";
     this.container.style.cssText = `
       position: fixed;
       top: 0;
@@ -33,7 +33,7 @@ export class Overlay {
       display: none;
     `;
 
-    this.highlightBox = document.createElement('div');
+    this.highlightBox = document.createElement("div");
     this.highlightBox.style.cssText = `
       position: absolute;
       border: 2px solid #f97316;
@@ -44,7 +44,7 @@ export class Overlay {
       display: none;
     `;
 
-    this.tooltip = document.createElement('div');
+    this.tooltip = document.createElement("div");
     this.tooltip.style.cssText = `
       position: absolute;
       background: rgba(0, 0, 0, 0.9);
@@ -61,7 +61,7 @@ export class Overlay {
       text-overflow: ellipsis;
     `;
 
-    this.toast = document.createElement('div');
+    this.toast = document.createElement("div");
     this.toast.style.cssText = `
       position: fixed;
       bottom: 20px;
@@ -78,7 +78,7 @@ export class Overlay {
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     `;
 
-    this.crosshair = document.createElement('div');
+    this.crosshair = document.createElement("div");
     this.crosshair.style.cssText = `
       position: fixed;
       top: 0;
@@ -90,8 +90,8 @@ export class Overlay {
       z-index: 999998;
     `;
 
-    const lineTop = document.createElement('div');
-    lineTop.className = 'crosshair-line-top';
+    const lineTop = document.createElement("div");
+    lineTop.className = "crosshair-line-top";
     lineTop.style.cssText = `
       position: absolute;
       left: 0;
@@ -101,8 +101,8 @@ export class Overlay {
       background: #f97316;
     `;
 
-    const lineBottom = document.createElement('div');
-    lineBottom.className = 'crosshair-line-bottom';
+    const lineBottom = document.createElement("div");
+    lineBottom.className = "crosshair-line-bottom";
     lineBottom.style.cssText = `
       position: absolute;
       left: 0;
@@ -112,8 +112,8 @@ export class Overlay {
       background: #f97316;
     `;
 
-    const lineLeft = document.createElement('div');
-    lineLeft.className = 'crosshair-line-left';
+    const lineLeft = document.createElement("div");
+    lineLeft.className = "crosshair-line-left";
     lineLeft.style.cssText = `
       position: absolute;
       left: 0;
@@ -123,8 +123,8 @@ export class Overlay {
       background: #f97316;
     `;
 
-    const lineRight = document.createElement('div');
-    lineRight.className = 'crosshair-line-right';
+    const lineRight = document.createElement("div");
+    lineRight.className = "crosshair-line-right";
     lineRight.style.cssText = `
       position: absolute;
       left: 0;
@@ -148,25 +148,25 @@ export class Overlay {
 
   show(): void {
     if (this.container) {
-      this.container.style.display = 'block';
+      this.container.style.display = "block";
     }
     if (this.crosshair) {
-      this.crosshair.style.display = 'block';
+      this.crosshair.style.display = "block";
     }
   }
 
   hide(): void {
     if (this.container) {
-      this.container.style.display = 'none';
+      this.container.style.display = "none";
     }
     if (this.highlightBox) {
-      this.highlightBox.style.display = 'none';
+      this.highlightBox.style.display = "none";
     }
     if (this.tooltip) {
-      this.tooltip.style.display = 'none';
+      this.tooltip.style.display = "none";
     }
     if (this.crosshair) {
-      this.crosshair.style.display = 'none';
+      this.crosshair.style.display = "none";
     }
   }
 
@@ -176,14 +176,14 @@ export class Overlay {
     }
 
     // Update highlight box
-    this.highlightBox.style.display = 'block';
+    this.highlightBox.style.display = "block";
     this.highlightBox.style.top = `${rect.top}px`;
     this.highlightBox.style.left = `${rect.left}px`;
     this.highlightBox.style.width = `${rect.width}px`;
     this.highlightBox.style.height = `${rect.height}px`;
 
-    this.tooltip.style.display = 'block';
-    this.tooltip.textContent = sourceInfo || 'No source info';
+    this.tooltip.style.display = "block";
+    this.tooltip.textContent = sourceInfo || "No source info";
 
     const tooltipTop = rect.top - 30;
     const tooltipLeft = rect.left;
@@ -194,10 +194,10 @@ export class Overlay {
 
   clearHighlight(): void {
     if (this.highlightBox) {
-      this.highlightBox.style.display = 'none';
+      this.highlightBox.style.display = "none";
     }
     if (this.tooltip) {
-      this.tooltip.style.display = 'none';
+      this.tooltip.style.display = "none";
     }
   }
 
@@ -206,10 +206,10 @@ export class Overlay {
       return;
     }
 
-    const lineTop = this.crosshair.querySelector('.crosshair-line-top');
-    const lineBottom = this.crosshair.querySelector('.crosshair-line-bottom');
-    const lineLeft = this.crosshair.querySelector('.crosshair-line-left');
-    const lineRight = this.crosshair.querySelector('.crosshair-line-right');
+    const lineTop = this.crosshair.querySelector(".crosshair-line-top");
+    const lineBottom = this.crosshair.querySelector(".crosshair-line-bottom");
+    const lineLeft = this.crosshair.querySelector(".crosshair-line-left");
+    const lineRight = this.crosshair.querySelector(".crosshair-line-right");
 
     if (!lineTop || !lineBottom || !lineLeft || !lineRight) {
       return;
@@ -217,14 +217,14 @@ export class Overlay {
 
     if (highlightRect) {
       lineTop.style.left = `${mouseX}px`;
-      lineTop.style.top = '0';
+      lineTop.style.top = "0";
       lineTop.style.height = `${highlightRect.top}px`;
 
       lineBottom.style.left = `${mouseX}px`;
       lineBottom.style.top = `${highlightRect.bottom + 2}px`;
       lineBottom.style.height = `${window.innerHeight - highlightRect.bottom - 2}px`;
 
-      lineLeft.style.left = '0';
+      lineLeft.style.left = "0";
       lineLeft.style.top = `${mouseY}px`;
       lineLeft.style.width = `${highlightRect.left}px`;
 
@@ -233,14 +233,14 @@ export class Overlay {
       lineRight.style.width = `${window.innerWidth - highlightRect.right - 2}px`;
     } else {
       lineTop.style.left = `${mouseX}px`;
-      lineTop.style.top = '0';
+      lineTop.style.top = "0";
       lineTop.style.height = `${mouseY}px`;
 
       lineBottom.style.left = `${mouseX}px`;
       lineBottom.style.top = `${mouseY}px`;
       lineBottom.style.height = `${window.innerHeight - mouseY}px`;
 
-      lineLeft.style.left = '0';
+      lineLeft.style.left = "0";
       lineLeft.style.top = `${mouseY}px`;
       lineLeft.style.width = `${mouseX}px`;
 
@@ -256,11 +256,11 @@ export class Overlay {
     }
 
     this.toast.textContent = message;
-    this.toast.style.display = 'block';
+    this.toast.style.display = "block";
 
     setTimeout(() => {
       if (this.toast) {
-        this.toast.style.display = 'none';
+        this.toast.style.display = "none";
       }
     }, duration);
   }

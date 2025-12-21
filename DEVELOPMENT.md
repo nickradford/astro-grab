@@ -61,21 +61,25 @@ bun run dev
 ```
 
 This command uses `concurrently` to:
+
 1. Build and watch all packages (`astro-grab-shared`, `astro-grab-server`, `astro-grab-client`, `astro-grab`)
 2. Run the Astro dev server for the demo app
 
 ### HMR Behavior (Alpha)
 
 **What hot reloads:**
+
 - Client code changes (`packages/astro-grab-client/src/*`) - triggers browser page reload
 - Demo `.astro` files - Astro's built-in HMR
 
 **What requires restart:**
+
 - Server package changes (`packages/astro-grab-server/src/*`)
 - Integration changes (`packages/astro-grab/src/*`)
 - Adding/removing dependencies
 
 To restart:
+
 ```bash
 # Ctrl+C to stop
 bun run dev
@@ -94,6 +98,7 @@ bun run --filter astro-grab build
 ```
 
 Or use the helper script:
+
 ```bash
 bun run build:packages
 ```
@@ -148,11 +153,13 @@ bun run typecheck
 ### Key Files
 
 **Server Package:**
+
 - `parser.ts` - AST parsing and instrumentation logic
 - `vite-plugin.ts` - Main Vite plugin + middleware
 - `snippet-handler.ts` - Snippet extraction endpoint
 
 **Client Package:**
+
 - `state-machine.ts` - Core state management
 - `keybind.ts` - Cmd/Ctrl+G detection with hold timer
 - `overlay.ts` - Visual overlay (highlight, tooltip, toast)
@@ -160,6 +167,7 @@ bun run typecheck
 - `auto.ts` - Auto-initialization entry point
 
 **Integration:**
+
 - `integration.ts` - Astro `astro:config:setup` hook
 
 ## Testing
@@ -169,16 +177,19 @@ bun run typecheck
 Tests use Vitest with the following patterns:
 
 **Shared Package:**
+
 - Encode/decode source locations
 - Snippet extraction with boundaries
 - Path normalization
 
 **Server Package:**
+
 - Parser instrumentation (simple, nested, edge cases)
 - Snippet handler with fixture files
 - Error handling
 
 **Client Package:**
+
 - State machine transitions
 - Keybind detection (Cmd+G, Ctrl+G, timing)
 - Clipboard formatting
@@ -203,6 +214,7 @@ Test in the demo app (`bun run dev`):
 ### Enable Verbose Logging
 
 The client logs state transitions to console:
+
 ```
 [astro-grab] State: idle → holding
 [astro-grab] State: holding → targeting
@@ -211,6 +223,7 @@ The client logs state transitions to console:
 ### Inspect Instrumented HTML
 
 In dev tools, inspect elements to see `data-astro-grab` attributes:
+
 ```html
 <div data-astro-grab="src/components/Card.astro:10:1" class="card">
 ```
@@ -218,6 +231,7 @@ In dev tools, inspect elements to see `data-astro-grab` attributes:
 ### Check Snippet Endpoint
 
 Test the endpoint directly:
+
 ```bash
 curl "http://localhost:4321/__astro_grab/snippet?src=src/pages/index.astro:10:1"
 ```
@@ -225,16 +239,19 @@ curl "http://localhost:4321/__astro_grab/snippet?src=src/pages/index.astro:10:1"
 ### Common Issues
 
 **Client script not loading:**
+
 - Check browser console for import errors
 - Verify packages are built: `bun run build:packages`
 - Check `astro.config.mjs` has the integration enabled
 
 **No data attributes in HTML:**
+
 - Ensure Vite plugin is running (check server logs)
 - Verify `.astro` file is in project (not `node_modules`)
 - Check for parser errors in terminal
 
 **Targeting not working:**
+
 - Verify client script loaded (check Network tab)
 - Check console for JavaScript errors
 - Ensure elements have `data-astro-grab` attributes
@@ -242,21 +259,25 @@ curl "http://localhost:4321/__astro_grab/snippet?src=src/pages/index.astro:10:1"
 ## Known Limitations (Alpha)
 
 ### HMR
+
 - Client changes require full page reload (not true HMR)
 - Server/integration changes require dev server restart
 - Package interdependencies may require manual `bun install`
 
 ### Parser
+
 - Only `.astro` files (no `.jsx`, `.vue`, `.svelte`)
 - Only HTML elements (not component tags with uppercase names)
 - Client-rendered content not instrumented
 
 ### Snippets
+
 - Fixed context window (±40 lines by default)
 - No syntax highlighting in output
 - No dependency resolution or related files
 
 ### Browser Support
+
 - Requires modern browser with Clipboard API
 - HTTPS or localhost required for clipboard access
 - Tested on Chrome, Firefox, Safari (latest)
@@ -292,6 +313,7 @@ curl "http://localhost:4321/__astro_grab/snippet?src=src/pages/index.astro:10:1"
 ### Build Fails with Type Errors
 
 Ensure packages are built in dependency order:
+
 ```bash
 bun run --filter astro-grab-shared build
 bun run --filter astro-grab-server build
@@ -302,6 +324,7 @@ bun run --filter astro-grab build
 ### Tests Fail After Changes
 
 Clear test cache and rebuild:
+
 ```bash
 bun run clean
 bun install
@@ -312,6 +335,7 @@ bun test
 ### Demo Won't Start
 
 Ensure all packages are built:
+
 ```bash
 bun run build:packages
 cd apps/demo
