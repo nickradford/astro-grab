@@ -1,0 +1,33 @@
+{
+  "name": "astro-grab-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "bun run build:packages && bun run build:demo",
+    "build:packages": "bun run build:shared && bun run build:server && bun run build:client && bun run build:integration",
+    "build:shared": "bun run --filter astro-grab-shared build",
+    "build:server": "bun run --filter astro-grab-server build",
+    "build:client": "bun run --filter astro-grab-client build",
+    "build:integration": "bun run --filter astro-grab build",
+    "build:demo": "bun run --filter demo build",
+    "dev": "bun run build:packages && concurrently -n packages,demo \"bun run dev:packages\" \"bun run dev:demo\"",
+    "dev:packages": "concurrently -n shared,server,client,integration \"bun run --filter astro-grab-shared dev\" \"bun run --filter astro-grab-server dev\" \"bun run --filter astro-grab-client dev\" \"bun run --filter astro-grab dev\"",
+    "dev:demo": "bun run --filter demo dev",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "bun run --filter './packages/*' typecheck",
+    "clean": "bun run --filter './packages/*' clean && bun run --filter demo clean"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.0",
+    "concurrently": "^9.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  }
+}

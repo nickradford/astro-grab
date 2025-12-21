@@ -1,0 +1,7 @@
+# Bun configuration
+[install]
+# Prefer exact versions for reproducibility
+exact = true
+
+# Use workspaces
+auto = true

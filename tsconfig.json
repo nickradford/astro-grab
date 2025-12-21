@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["ES2022"],
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "paths": {
+      "astro-grab-shared": ["./packages/astro-grab-shared/src/index.ts"],
+      "astro-grab-server": ["./packages/astro-grab-server/src/index.ts"],
+      "astro-grab-client": ["./packages/astro-grab-client/src/index.ts"],
+      "astro-grab": ["./packages/astro-grab/src/index.ts"]
+    }
+  }
+}
