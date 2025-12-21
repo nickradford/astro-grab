@@ -48,8 +48,8 @@ export class Overlay {
     this.highlightBox = document.createElement('div');
     this.highlightBox.style.cssText = `
       position: absolute;
-      border: 2px solid #3b82f6;
-      background: rgba(59, 130, 246, 0.1);
+      border: 2px solid #f97316;
+      background: rgba(249, 115, 22, 0.1);
       pointer-events: none;
       border-radius: 4px;
       transition: all 0.1s ease;
@@ -114,7 +114,7 @@ export class Overlay {
       top: 0;
       width: 1px;
       height: 0;
-      background: #3b82f6;
+      background: #f97316;
     `;
 
     const lineBottom = document.createElement('div');
@@ -125,7 +125,7 @@ export class Overlay {
       top: 0;
       width: 1px;
       height: 0;
-      background: #3b82f6;
+      background: #f97316;
     `;
 
     const lineLeft = document.createElement('div');
@@ -136,7 +136,7 @@ export class Overlay {
       top: 0;
       width: 0;
       height: 1px;
-      background: #3b82f6;
+      background: #f97316;
     `;
 
     const lineRight = document.createElement('div');
@@ -147,7 +147,7 @@ export class Overlay {
       top: 0;
       width: 0;
       height: 1px;
-      background: #3b82f6;
+      background: #f97316;
     `;
 
     this.crosshair.appendChild(lineTop);
@@ -256,8 +256,8 @@ export class Overlay {
 
       // Vertical line (bottom): from bottom of highlighted element to bottom of viewport
       lineBottom.style.left = `${mouseX}px`;
-      lineBottom.style.top = `${highlightRect.bottom}px`;
-      lineBottom.style.height = `${window.innerHeight - highlightRect.bottom}px`;
+      lineBottom.style.top = `${highlightRect.bottom + 2}px`;
+      lineBottom.style.height = `${window.innerHeight - highlightRect.bottom - 2}px`;
 
       // Horizontal line (left): from left of viewport to left of highlighted element
       lineLeft.style.left = '0';
@@ -265,9 +265,9 @@ export class Overlay {
       lineLeft.style.width = `${highlightRect.left}px`;
 
       // Horizontal line (right): from right of highlighted element to right of viewport
-      lineRight.style.left = `${highlightRect.right}px`;
+      lineRight.style.left = `${highlightRect.right + 2}px`;
       lineRight.style.top = `${mouseY}px`;
-      lineRight.style.width = `${window.innerWidth - highlightRect.right}px`;
+      lineRight.style.width = `${window.innerWidth - highlightRect.right - 2}px`;
     } else {
       // No highlight - show full crosshair lines
       lineTop.style.left = `${mouseX}px`;
