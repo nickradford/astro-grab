@@ -26,8 +26,9 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
           },
         });
         logger.info("Astro Vite plugin enabled");
+
         if (autoInject) {
-          injectScript("page", "import 'astro-grab-client/auto'");
+          injectScript("page", `import "astro-grab-client/auto";`);
           logger.info(
             `Client script injected. Use crtl/cmd+g on your Astro site to select components.`,
           );

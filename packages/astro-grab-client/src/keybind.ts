@@ -5,6 +5,8 @@ export class KeybindHandler {
   private readonly holdDuration: number;
   private readonly stateMachine: StateMachine;
   private isKeyDown = false;
+  private currentMouseX = 0;
+  private currentMouseY = 0;
 
   constructor(stateMachine: StateMachine, holdDuration: number = 1000) {
     this.stateMachine = stateMachine;
@@ -15,12 +17,14 @@ export class KeybindHandler {
     document.addEventListener("keydown", this.handleKeyDown);
     document.addEventListener("keyup", this.handleKeyUp);
     document.addEventListener("keydown", this.handleEscape);
+    document.addEventListener("mousemove", this.trackMousePosition);
   }
 
   destroy(): void {
     document.removeEventListener("keydown", this.handleKeyDown);
     document.removeEventListener("keyup", this.handleKeyUp);
     document.removeEventListener("keydown", this.handleEscape);
+    document.removeEventListener("mousemove", this.trackMousePosition);
     this.clearTimer();
   }
 
@@ -63,5 +67,14 @@ export class KeybindHandler {
       clearTimeout(this.holdTimer);
       this.holdTimer = null;
     }
+  }
+
+  private trackMousePosition = (e: MouseEvent): void => {
+    this.currentMouseX = e.clientX;
+    this.currentMouseY = e.clientY;
+  };
+
+  getMousePosition(): { x: number; y: number } {
+    return { x: this.currentMouseX, y: this.currentMouseY };
   }
 }

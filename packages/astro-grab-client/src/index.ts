@@ -11,7 +11,7 @@ export class AstroGrab {
   private targeting: TargetingHandler;
 
   constructor(config: ClientConfig = {}) {
-    const { holdDuration = 1000, contextLines = 4 } = config;
+    const { holdDuration = 500, contextLines = 4 } = config;
 
     this.stateMachine = new StateMachine();
     this.keybind = new KeybindHandler(this.stateMachine, holdDuration);
@@ -22,7 +22,7 @@ export class AstroGrab {
   init(): void {
     this.keybind.init();
     this.overlay.init();
-    this.targeting.init();
+    this.targeting.init(this.keybind);
     console.log("[astro-grab] Initialized - Hold Cmd/Ctrl+G to start");
   }
 

@@ -12,27 +12,48 @@ export class TargetingHandler {
   private readonly overlay: Overlay;
   private readonly contextLines: number;
   private currentTarget: HTMLElement | null = null;
+  private currentMouseX = 0;
+  private currentMouseY = 0;
 
   constructor(stateMachine: StateMachine, overlay: Overlay, contextLines: number = 4) {
     this.stateMachine = stateMachine;
     this.overlay = overlay;
     this.contextLines = contextLines;
+    this.trackMousePosition();
   }
 
   /**
    * Initialize targeting handlers
    */
-  init(): void {
-    this.stateMachine.onEnter("targeting", () => this.enable());
+  init(keybindHandler?: { getMousePosition(): { x: number; y: number } }): void {
+    this.stateMachine.onEnter("targeting", () => {
+      const mousePos = keybindHandler?.getMousePosition() ?? { x: 0, y: 0 };
+      this.enable(mousePos.x, mousePos.y);
+    });
     this.stateMachine.onEnter("idle", () => this.disable());
   }
 
+  private trackMousePosition = (e?: MouseEvent): void => {
+    if (e) {
+      this.currentMouseX = e.clientX;
+      this.currentMouseY = e.clientY;
+    }
+  };
+
   /**
-   * Enable targeting mode
+   * Enable targeting mode with optional initial cursor position
    */
-  private enable(): void {
+  private enable(cursorX?: number, cursorY?: number): void {
     document.addEventListener("mousemove", this.handleMouseMove);
+    document.addEventListener("mousemove", this.trackMousePosition);
     document.addEventListener("click", this.handleClick, true);
+    
+    if (cursorX !== undefined && cursorY !== undefined) {
+      this.currentMouseX = cursorX;
+      this.currentMouseY = cursorY;
+    }
+    
+    this.detectCurrentTarget();
   }
 
   /**
@@ -40,9 +61,50 @@ export class TargetingHandler {
    */
   private disable(): void {
     document.removeEventListener("mousemove", this.handleMouseMove);
+    document.removeEventListener("mousemove", this.trackMousePosition);
     document.removeEventListener("click", this.handleClick, true);
     this.currentTarget = null;
     this.overlay.clearHighlight();
+  }
+
+  private detectCurrentTarget(): void {
+    const element = document.elementFromPoint(this.currentMouseX, this.currentMouseY);
+    const target = element instanceof HTMLElement ? element : null;
+
+    if (!target) {
+      this.overlay.clearHighlight();
+      this.overlay.updateCrosshair(this.currentMouseX, this.currentMouseY, null);
+      this.currentTarget = null;
+      return;
+    }
+
+    const elementWithSource = this.findElementWithSource(target);
+
+    if (elementWithSource) {
+      this.currentTarget = elementWithSource;
+      const rect = elementWithSource.getBoundingClientRect();
+      const sourceInfo = elementWithSource.getAttribute("data-astro-grab");
+      this.overlay.highlightElement(rect, sourceInfo);
+      this.overlay.updateCrosshair(this.currentMouseX, this.currentMouseY, rect);
+    } else {
+      this.overlay.clearHighlight();
+      this.overlay.updateCrosshair(this.currentMouseX, this.currentMouseY, null);
+      this.currentTarget = null;
+    }
+  }
+
+  /**
+   * Get current mouse position (for external access)
+   */
+  getMousePosition(): { x: number; y: number } {
+    return { x: this.currentMouseX, y: this.currentMouseY };
+  }
+
+  /**
+   * Get current target element (for external access)
+   */
+  getCurrentTarget(): HTMLElement | null {
+    return this.currentTarget;
   }
 
   private handleMouseMove = (e: MouseEvent): void => {
