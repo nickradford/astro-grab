@@ -4,7 +4,7 @@ This document provides detailed information about developing and contributing to
 
 ## Project Structure
 
-Astro Grab is a Bun monorepo with the following packages:
+Astro Grab is a Bun monorepo with Turborepo for optimized builds. The monorepo has the following packages:
 
 ```
 astro-grab-v2/
@@ -46,7 +46,7 @@ cd astro-grab-v2
 bun install
 
 # Build all packages
-bun run build:packages
+bun run build
 ```
 
 ## Development Workflow
@@ -85,36 +85,34 @@ To restart:
 bun run dev
 ```
 
-### Building Individual Packages
+### Building Packages
 
-Packages must be built in dependency order:
-
-```bash
-# Build in order
-bun run --filter astro-grab-shared build
-bun run --filter astro-grab-server build
-bun run --filter astro-grab-client build
-bun run --filter astro-grab build
-```
-
-Or use the helper script:
+Turborepo automatically handles dependency ordering and caching:
 
 ```bash
-bun run build:packages
+# Build all packages
+bun run build
+
+# Build specific package (with dependencies)
+bun run turbo run build --filter astro-grab-server
 ```
+
+Turborepo features:
+- Automatic parallel execution when dependencies allow
+- Local caching for faster rebuilds
+- Dependency graph ensures packages build in correct order (shared → server/client → integration)
 
 ### Running Tests
 
 ```bash
 # Run all tests
-bun test
+bun run test
 
 # Run tests in watch mode
 bun run test:watch
 
 # Test specific package
-cd packages/astro-grab-shared
-bun test
+bun run turbo run test --filter astro-grab-shared
 ```
 
 ### Type Checking
@@ -241,7 +239,7 @@ curl "http://localhost:4321/__astro_grab/snippet?src=src/pages/index.astro:10:1"
 **Client script not loading:**
 
 - Check browser console for import errors
-- Verify packages are built: `bun run build:packages`
+- Verify packages are built: `bun run build`
 - Check `astro.config.mjs` has the integration enabled
 
 **No data attributes in HTML:**
@@ -328,7 +326,7 @@ Clear test cache and rebuild:
 ```bash
 bun run clean
 bun install
-bun run build:packages
+bun run build
 bun test
 ```
 
@@ -337,7 +335,7 @@ bun test
 Ensure all packages are built:
 
 ```bash
-bun run build:packages
+bun run build
 cd apps/demo
 bun run dev
 ```

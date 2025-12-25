@@ -45,3 +45,4 @@ coverage/
 # Misc
 *.tsbuildinfo
 .cache/
+.turbo/
