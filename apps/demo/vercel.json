@@ -1,3 +1,7 @@
 {
-  "includeFiles": ["src/**"]
+  "functions": {
+    "src/pages/api/astro-grab/snippet.ts": {
+      "includeFiles": ["src/**"]
+    }
+  }
 }
