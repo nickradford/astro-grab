@@ -203,15 +203,27 @@ export class Overlay {
     }
   }
 
-  updateCrosshair(mouseX: number, mouseY: number, highlightRect: DOMRect | null): void {
+  updateCrosshair(
+    mouseX: number,
+    mouseY: number,
+    highlightRect: DOMRect | null,
+  ): void {
     if (!this.crosshair) {
       return;
     }
 
-    const lineTop = this.crosshair.querySelector(".crosshair-line-top") as HTMLElement;
-    const lineBottom = this.crosshair.querySelector(".crosshair-line-bottom") as HTMLElement;
-    const lineLeft = this.crosshair.querySelector(".crosshair-line-left") as HTMLElement;
-    const lineRight = this.crosshair.querySelector(".crosshair-line-right") as HTMLElement;
+    const lineTop = this.crosshair.querySelector(
+      ".crosshair-line-top",
+    ) as HTMLElement;
+    const lineBottom = this.crosshair.querySelector(
+      ".crosshair-line-bottom",
+    ) as HTMLElement;
+    const lineLeft = this.crosshair.querySelector(
+      ".crosshair-line-left",
+    ) as HTMLElement;
+    const lineRight = this.crosshair.querySelector(
+      ".crosshair-line-right",
+    ) as HTMLElement;
 
     if (!lineTop || !lineBottom || !lineLeft || !lineRight) {
       return;
@@ -280,10 +292,18 @@ export class Overlay {
     }
 
     if (this.crosshair) {
-      const lineTop = this.crosshair.querySelector(".crosshair-line-top") as HTMLElement;
-      const lineBottom = this.crosshair.querySelector(".crosshair-line-bottom") as HTMLElement;
-      const lineLeft = this.crosshair.querySelector(".crosshair-line-left") as HTMLElement;
-      const lineRight = this.crosshair.querySelector(".crosshair-line-right") as HTMLElement;
+      const lineTop = this.crosshair.querySelector(
+        ".crosshair-line-top",
+      ) as HTMLElement;
+      const lineBottom = this.crosshair.querySelector(
+        ".crosshair-line-bottom",
+      ) as HTMLElement;
+      const lineLeft = this.crosshair.querySelector(
+        ".crosshair-line-left",
+      ) as HTMLElement;
+      const lineRight = this.crosshair.querySelector(
+        ".crosshair-line-right",
+      ) as HTMLElement;
 
       if (lineTop) {
         lineTop.style.backgroundColor = `hsla(${newHue}, 90%, 50%, 1)`;

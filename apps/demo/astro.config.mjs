@@ -5,9 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [
-    astroGrab()
-  ],
+  integrations: [astroGrab()],
 
   vite: {
     plugins: [tailwindcss()],

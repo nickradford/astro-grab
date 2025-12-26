@@ -15,7 +15,12 @@ export class AstroGrab {
   private isEnabled = true;
 
   constructor(config: ClientConfig = {}) {
-    const { holdDuration = 500, contextLines = 4, hue: configHue = 30, debug = false } = config;
+    const {
+      holdDuration = 500,
+      contextLines = 4,
+      hue: configHue = 30,
+      debug = false,
+    } = config;
     const hue = configHue;
 
     this.debug = debug;
@@ -30,7 +35,11 @@ export class AstroGrab {
     this.stateMachine = new StateMachine();
     this.keybind = new KeybindHandler(this.stateMachine, holdDuration);
     this.overlay = new Overlay(this.stateMachine, hue);
-    this.targeting = new TargetingHandler(this.stateMachine, this.overlay, contextLines);
+    this.targeting = new TargetingHandler(
+      this.stateMachine,
+      this.overlay,
+      contextLines,
+    );
   }
 
   init(): void {
@@ -39,14 +48,20 @@ export class AstroGrab {
     this.targeting.init(this.keybind);
     console.log("[astro-grab] Initialized - Hold Cmd/Ctrl+G to start");
 
-    window.addEventListener("astro-grab-config-update", this.handleConfigUpdate);
+    window.addEventListener(
+      "astro-grab-config-update",
+      this.handleConfigUpdate,
+    );
     window.addEventListener("astro-grab-toggle", this.handleToggle);
   }
 
   destroy(): void {
     this.keybind.destroy();
     this.overlay.destroy();
-    window.removeEventListener("astro-grab-config-update", this.handleConfigUpdate);
+    window.removeEventListener(
+      "astro-grab-config-update",
+      this.handleConfigUpdate,
+    );
     window.removeEventListener("astro-grab-toggle", this.handleToggle);
   }
 
@@ -93,7 +108,9 @@ export class AstroGrab {
   };
 
   updateConfig(config: Partial<ClientConfig>): void {
-    this.handleConfigUpdate(new CustomEvent("astro-grab-config-update", { detail: config }));
+    this.handleConfigUpdate(
+      new CustomEvent("astro-grab-config-update", { detail: config }),
+    );
   }
 }
 

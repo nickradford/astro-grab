@@ -66,27 +66,39 @@ describe("decodeSourceLocation", () => {
   });
 
   it("should throw error for invalid format (too few parts)", () => {
-    expect(() => decodeSourceLocation("invalid:42")).toThrow("Invalid source location format");
+    expect(() => decodeSourceLocation("invalid:42")).toThrow(
+      "Invalid source location format",
+    );
   });
 
   it("should throw error for non-numeric line", () => {
-    expect(() => decodeSourceLocation("file.astro:abc:8")).toThrow("Invalid line number");
+    expect(() => decodeSourceLocation("file.astro:abc:8")).toThrow(
+      "Invalid line number",
+    );
   });
 
   it("should throw error for non-numeric column", () => {
-    expect(() => decodeSourceLocation("file.astro:42:xyz")).toThrow("Invalid column number");
+    expect(() => decodeSourceLocation("file.astro:42:xyz")).toThrow(
+      "Invalid column number",
+    );
   });
 
   it("should throw error for line less than 1", () => {
-    expect(() => decodeSourceLocation("file.astro:0:8")).toThrow("Invalid line number");
+    expect(() => decodeSourceLocation("file.astro:0:8")).toThrow(
+      "Invalid line number",
+    );
   });
 
   it("should throw error for column less than 1", () => {
-    expect(() => decodeSourceLocation("file.astro:42:0")).toThrow("Invalid column number");
+    expect(() => decodeSourceLocation("file.astro:42:0")).toThrow(
+      "Invalid column number",
+    );
   });
 
   it("should throw error for non-.astro files", () => {
-    expect(() => decodeSourceLocation("file.tsx:42:8")).toThrow("File must be an .astro file");
+    expect(() => decodeSourceLocation("file.tsx:42:8")).toThrow(
+      "File must be an .astro file",
+    );
   });
 
   it("should throw error for empty file path", () => {
@@ -132,7 +144,9 @@ describe("normalizePath", () => {
 
 describe("extractSnippet", () => {
   const createContent = (numLines: number): string => {
-    return Array.from({ length: numLines }, (_, i) => `line ${i + 1}`).join("\n");
+    return Array.from({ length: numLines }, (_, i) => `line ${i + 1}`).join(
+      "\n",
+    );
   };
 
   it("should extract snippet with context around target line", () => {

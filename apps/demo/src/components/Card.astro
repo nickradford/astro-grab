@@ -7,7 +7,11 @@ interface Props {
 const { title, description } = Astro.props;
 ---
 
-<article class="bg-white border border-gray-200 rounded-lg p-8 transition-all duration-200 cursor-pointer hover:border-gray-900 hover:-translate-y-1 hover:shadow-lg">
-  <h3 class="text-gray-900 text-lg font-semibold mb-3">{title}</h3>
-  <p class="text-gray-600 leading-relaxed text-sm m-0">{description}</p>
+<article class="p-6 transition-all duration-300 hover:scale-105">
+  <h3
+    class="mb-4 text-center text-xl font-bold tracking-wide text-white uppercase"
+  >
+    {title}
+  </h3>
+  <p class="m-0 text-center leading-relaxed text-gray-400">{description}</p>
 </article>

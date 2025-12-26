@@ -66,10 +66,15 @@ const title = "Hello";
   it("should normalize Windows paths", async () => {
     const code = `<div>Test</div>`;
 
-    const result = await instrumentAstroFile(code, "C:\\Users\\test\\project\\file.astro");
+    const result = await instrumentAstroFile(
+      code,
+      "C:\\Users\\test\\project\\file.astro",
+    );
 
     // Should use forward slashes
-    expect(result.code).toContain('data-astro-grab="C:/Users/test/project/file.astro:');
+    expect(result.code).toContain(
+      'data-astro-grab="C:/Users/test/project/file.astro:',
+    );
   });
 
   it("should handle empty files gracefully", async () => {
@@ -103,19 +108,19 @@ const data = "test";
     expect(typeof result.code).toBe("string");
   });
 
-   it("should handle multiple attributes on same element", async () => {
-     const code = `<button class="btn" type="submit" disabled>Click</button>`;
+  it("should handle multiple attributes on same element", async () => {
+    const code = `<button class="btn" type="submit" disabled>Click</button>`;
 
-     const result = await instrumentAstroFile(code, "button.astro");
+    const result = await instrumentAstroFile(code, "button.astro");
 
-     expect(result.code).toContain("data-astro-grab");
-     expect(result.code).toContain('class="btn"');
-     expect(result.code).toContain('type="submit"');
-     expect(result.code).toContain("disabled");
-   });
+    expect(result.code).toContain("data-astro-grab");
+    expect(result.code).toContain('class="btn"');
+    expect(result.code).toContain('type="submit"');
+    expect(result.code).toContain("disabled");
+  });
 
-   it("should instrument all elements in complex nested structure", async () => {
-     const code = `<section id="demo" class="demo">
+  it("should instrument all elements in complex nested structure", async () => {
+    const code = `<section id="demo" class="demo">
    <div class="container">
      <h2>Demo</h2>
      <div class="steps">
@@ -133,28 +138,28 @@ const data = "test";
    </div>
  </section>`;
 
-     const result = await instrumentAstroFile(code, "complex.astro");
+    const result = await instrumentAstroFile(code, "complex.astro");
 
-     // Should instrument all HTML elements: section, div.container, h2, div.steps, div.step-card (2), div.icon (2), h3 (2), kbd, p (2)
-     const grabAttributes = result.code.match(/data-astro-grab=/g);
-     expect(grabAttributes?.length).toBe(13);
+    // Should instrument all HTML elements: section, div.container, h2, div.steps, div.step-card (2), div.icon (2), h3 (2), kbd, p (2)
+    const grabAttributes = result.code.match(/data-astro-grab=/g);
+    expect(grabAttributes?.length).toBe(13);
 
-     // Verify specific elements are instrumented
-     expect(result.code).toContain('data-astro-grab="complex.astro:1:');
-     expect(result.code).toContain('data-astro-grab="complex.astro:2:');
-     expect(result.code).toContain('data-astro-grab="complex.astro:3:');
-     expect(result.code).toContain('data-astro-grab="complex.astro:4:');
-     expect(result.code).toContain('data-astro-grab="complex.astro:5:');
-     expect(result.code).toContain('data-astro-grab="complex.astro:6:');
-     expect(result.code).toContain('data-astro-grab="complex.astro:7:');
-     expect(result.code).toContain('data-astro-grab="complex.astro:8:');
-     expect(result.code).toContain('data-astro-grab="complex.astro:10:');
-     expect(result.code).toContain('data-astro-grab="complex.astro:11:');
-      expect(result.code).toContain('data-astro-grab="complex.astro:12:');
-    });
+    // Verify specific elements are instrumented
+    expect(result.code).toContain('data-astro-grab="complex.astro:1:');
+    expect(result.code).toContain('data-astro-grab="complex.astro:2:');
+    expect(result.code).toContain('data-astro-grab="complex.astro:3:');
+    expect(result.code).toContain('data-astro-grab="complex.astro:4:');
+    expect(result.code).toContain('data-astro-grab="complex.astro:5:');
+    expect(result.code).toContain('data-astro-grab="complex.astro:6:');
+    expect(result.code).toContain('data-astro-grab="complex.astro:7:');
+    expect(result.code).toContain('data-astro-grab="complex.astro:8:');
+    expect(result.code).toContain('data-astro-grab="complex.astro:10:');
+    expect(result.code).toContain('data-astro-grab="complex.astro:11:');
+    expect(result.code).toContain('data-astro-grab="complex.astro:12:');
+  });
 
-    it("should instrument all elements in Hero.astro structure", async () => {
-      const heroContent = `---
+  it("should instrument all elements in Hero.astro structure", async () => {
+    const heroContent = `---
       // Hero component
       ---
 
@@ -173,21 +178,39 @@ const data = "test";
         </div>
       </section>`;
 
-      const result = await instrumentAstroFile(heroContent, "src/components/Hero.astro");
+    const result = await instrumentAstroFile(
+      heroContent,
+      "src/components/Hero.astro",
+    );
 
-      // Should instrument: section, div(max-w-2xl), h1, p(xl), p(base), kbd, kbd, div(flex), a, a = 10 total
-      const grabAttributes = result.code.match(/data-astro-grab=/g);
-      expect(grabAttributes?.length).toBe(10);
+    // Should instrument: section, div(max-w-2xl), h1, p(xl), p(base), kbd, kbd, div(flex), a, a = 10 total
+    const grabAttributes = result.code.match(/data-astro-grab=/g);
+    expect(grabAttributes?.length).toBe(10);
 
-      // Verify specific missing elements are now instrumented
-      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:6:');
-      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:7:');
-      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:8:');
-      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:9:');
-      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:10:');
-      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:13:');
-      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:14:');
-      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:15:');
-    });
+    // Verify specific missing elements are now instrumented
+    expect(result.code).toContain(
+      'data-astro-grab="src/components/Hero.astro:6:',
+    );
+    expect(result.code).toContain(
+      'data-astro-grab="src/components/Hero.astro:7:',
+    );
+    expect(result.code).toContain(
+      'data-astro-grab="src/components/Hero.astro:8:',
+    );
+    expect(result.code).toContain(
+      'data-astro-grab="src/components/Hero.astro:9:',
+    );
+    expect(result.code).toContain(
+      'data-astro-grab="src/components/Hero.astro:10:',
+    );
+    expect(result.code).toContain(
+      'data-astro-grab="src/components/Hero.astro:13:',
+    );
+    expect(result.code).toContain(
+      'data-astro-grab="src/components/Hero.astro:14:',
+    );
+    expect(result.code).toContain(
+      'data-astro-grab="src/components/Hero.astro:15:',
+    );
   });
-
+});

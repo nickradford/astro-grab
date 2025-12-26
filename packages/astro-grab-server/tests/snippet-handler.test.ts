@@ -19,7 +19,9 @@ describe("handleSnippetRequest", () => {
   });
 
   it("should extract snippet with correct line numbers", async () => {
-    const content = Array.from({ length: 100 }, (_, i) => `line ${i + 1}`).join("\n");
+    const content = Array.from({ length: 100 }, (_, i) => `line ${i + 1}`).join(
+      "\n",
+    );
     const testFile = join(testDir, "test.astro");
     await writeFile(testFile, content);
 
@@ -37,7 +39,9 @@ describe("handleSnippetRequest", () => {
   });
 
   it("should use default context lines (4)", async () => {
-    const content = Array.from({ length: 100 }, (_, i) => `line ${i + 1}`).join("\n");
+    const content = Array.from({ length: 100 }, (_, i) => `line ${i + 1}`).join(
+      "\n",
+    );
     const testFile = join(testDir, "test.astro");
     await writeFile(testFile, content);
 
@@ -50,15 +54,15 @@ describe("handleSnippetRequest", () => {
   });
 
   it("should throw error for invalid source location format", async () => {
-    await expect(handleSnippetRequest("invalid", { root: testDir })).rejects.toThrow(
-      "Invalid source location",
-    );
+    await expect(
+      handleSnippetRequest("invalid", { root: testDir }),
+    ).rejects.toThrow("Invalid source location");
   });
 
   it("should throw error for non-existent file", async () => {
-    await expect(handleSnippetRequest("nonexistent.astro:1:1", { root: testDir })).rejects.toThrow(
-      "Failed to read file",
-    );
+    await expect(
+      handleSnippetRequest("nonexistent.astro:1:1", { root: testDir }),
+    ).rejects.toThrow("Failed to read file");
   });
 
   it("should throw error for line out of bounds", async () => {
@@ -82,10 +86,13 @@ describe("handleSnippetRequest", () => {
     const testFile = join(nestedDir, "Component.astro");
     await writeFile(testFile, content);
 
-    const result = await handleSnippetRequest("src/components/Component.astro:2:1", {
-      root: testDir,
-      contextLines: 1,
-    });
+    const result = await handleSnippetRequest(
+      "src/components/Component.astro:2:1",
+      {
+        root: testDir,
+        contextLines: 1,
+      },
+    );
 
     expect(result.file).toBe("src/components/Component.astro");
     expect(result.snippet).toContain("line 2");

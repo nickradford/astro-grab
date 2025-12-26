@@ -10,7 +10,9 @@ export interface AstroGrabPluginOptions {
   hue?: number;
 }
 
-export const astroGrabVitePlugin = (options: AstroGrabPluginOptions = {}): Plugin => {
+export const astroGrabVitePlugin = (
+  options: AstroGrabPluginOptions = {},
+): Plugin => {
   const { contextLines: defaultContextLines = 4, hue = 30 } = options;
   let root: string;
 
@@ -69,7 +71,10 @@ export const astroGrabVitePlugin = (options: AstroGrabPluginOptions = {}): Plugi
         if (req.url === "/__astro_grab_client/auto.js") {
           try {
             const __dirname = dirname(fileURLToPath(import.meta.url));
-            const clientPath = join(__dirname, "../../astro-grab-client/dist/auto.js");
+            const clientPath = join(
+              __dirname,
+              "../../astro-grab-client/dist/auto.js",
+            );
             const content = await readFile(clientPath, "utf-8");
 
             const configScript = `window.__ASTRO_GRAB_CONFIG__ = { hue: ${hue} };\n`;

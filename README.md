@@ -41,6 +41,7 @@ This will:
 - Enable hot reload for client code changes
 
 Builds are optimized with Turborepo:
+
 - Automatic parallel execution when dependencies allow
 - Local caching speeds up subsequent builds
 - Dependency graph ensures correct build order
@@ -61,6 +62,7 @@ bun run build
 ```
 
 Turborepo automatically:
+
 - Builds packages in dependency order (shared → server/client → integration)
 - Caches build outputs for faster rebuilds
 - Runs packages in parallel when dependencies allow
@@ -112,15 +114,15 @@ bun add astro-grab
 2. Add to your `astro.config.mjs`:
 
 ```javascript
-import { defineConfig } from 'astro/config';
-import { astroGrab } from 'astro-grab';
+import { defineConfig } from "astro/config";
+import { astroGrab } from "astro-grab";
 
 export default defineConfig({
   integrations: [
     astroGrab({
-      enabled: true,        // Enable in dev mode (default: true)
-      holdDuration: 1000,   // Hold time in ms (default: 1000)
-      contextLines: 40,     // Lines of context around target (default: 40)
+      enabled: true, // Enable in dev mode (default: true)
+      holdDuration: 1000, // Hold time in ms (default: 1000)
+      contextLines: 40, // Lines of context around target (default: 40)
     }),
   ],
 });

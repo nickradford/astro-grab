@@ -8,7 +8,9 @@ export const decodeSourceLocation = (encoded: string): SourceLocation => {
   const parts = encoded.split(":");
 
   if (parts.length < 3) {
-    throw new Error(`Invalid source location format: "${encoded}". Expected "file:line:column"`);
+    throw new Error(
+      `Invalid source location format: "${encoded}". Expected "file:line:column"`,
+    );
   }
 
   let file: string;
@@ -17,7 +19,11 @@ export const decodeSourceLocation = (encoded: string): SourceLocation => {
 
   if (parts.length === 3) {
     [file, lineStr, columnStr] = parts;
-  } else if (parts.length === 4 && parts[0].length === 0 && parts[1].length === 1) {
+  } else if (
+    parts.length === 4 &&
+    parts[0].length === 0 &&
+    parts[1].length === 1
+  ) {
     file = parts[0] + ":" + parts[1];
     lineStr = parts[2];
     columnStr = parts[3];
@@ -62,7 +68,9 @@ export const extractSnippet = (
   const totalLines = lines.length;
 
   if (targetLine < 1 || targetLine > totalLines) {
-    throw new Error(`Target line ${targetLine} is out of bounds (file has ${totalLines} lines)`);
+    throw new Error(
+      `Target line ${targetLine} is out of bounds (file has ${totalLines} lines)`,
+    );
   }
 
   const startLine = Math.max(1, targetLine - contextLines);

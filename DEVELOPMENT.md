@@ -98,6 +98,7 @@ bun run turbo run build --filter astro-grab-server
 ```
 
 Turborepo features:
+
 - Automatic parallel execution when dependencies allow
 - Local caching for faster rebuilds
 - Dependency graph ensures packages build in correct order (shared → server/client → integration)
@@ -223,7 +224,7 @@ The client logs state transitions to console:
 In dev tools, inspect elements to see `data-astro-grab` attributes:
 
 ```html
-<div data-astro-grab="src/components/Card.astro:10:1" class="card">
+<div data-astro-grab="src/components/Card.astro:10:1" class="card"></div>
 ```
 
 ### Check Snippet Endpoint

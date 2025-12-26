@@ -25,7 +25,9 @@ export const instrumentAstroFile = async (
   }
 
   const lines = code.split("\n");
-  const getLineAndColumn = (offset: number): { line: number; column: number } => {
+  const getLineAndColumn = (
+    offset: number,
+  ): { line: number; column: number } => {
     let currentOffset = 0;
     for (let i = 0; i < lines.length; i++) {
       const lineLength = lines[i].length + 1; // +1 for newline
@@ -87,27 +89,30 @@ export const instrumentAstroFile = async (
         return;
       }
 
-       // Calculate actual line and column from character offset
-       const { line, column } = getLineAndColumn(node.position.start.offset);
+      // Calculate actual line and column from character offset
+      const { line, column } = getLineAndColumn(node.position.start.offset);
 
-       const loc = {
-         file: normalizedPath,
-         line,
-         column,
-       };
+      const loc = {
+        file: normalizedPath,
+        line,
+        column,
+      };
 
-       const encoded = encodeSourceLocation(loc);
+      const encoded = encodeSourceLocation(loc);
 
-       // Find the actual tag start by searching backwards for the opening tag
-       let tagStart = node.position.start.offset;
-       const tagPrefix = `<${node.name}`;
-       while (tagStart > 0 && code.slice(tagStart, tagStart + tagPrefix.length) !== tagPrefix) {
-         tagStart--;
-       }
-       if (tagStart === 0 && code.slice(0, tagPrefix.length) !== tagPrefix) {
-         // not found, skip
-         return;
-       }
+      // Find the actual tag start by searching backwards for the opening tag
+      let tagStart = node.position.start.offset;
+      const tagPrefix = `<${node.name}`;
+      while (
+        tagStart > 0 &&
+        code.slice(tagStart, tagStart + tagPrefix.length) !== tagPrefix
+      ) {
+        tagStart--;
+      }
+      if (tagStart === 0 && code.slice(0, tagPrefix.length) !== tagPrefix) {
+        // not found, skip
+        return;
+      }
 
       // Find the end of the opening tag to search within
       let searchEnd = tagStart;
@@ -145,7 +150,9 @@ export const instrumentAstroFile = async (
   let instrumentedCode = code;
   for (const { offset, attribute } of injections) {
     instrumentedCode =
-      instrumentedCode.slice(0, offset) + attribute + instrumentedCode.slice(offset);
+      instrumentedCode.slice(0, offset) +
+      attribute +
+      instrumentedCode.slice(offset);
   }
 
   return { code: instrumentedCode };
