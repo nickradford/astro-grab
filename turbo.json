@@ -4,7 +4,7 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"],
-      "env": ["ASTRO_GRAB_DANGEROUSLY_FORCE_ENABLE"]
+      "env": ["ASTRO_GRAB_DANGEROUSLY_FORCE_ENABLE", "ASTRO_GRAB_API_BASE_URL"]
     },
     "dev": {
       "cache": false,
