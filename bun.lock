@@ -20,7 +20,6 @@
       "dependencies": {
         "astro": "^5.0.0",
         "astro-grab": "workspace:*",
-        "astro-grab-client": "workspace:*",
       },
     },
     "packages/astro-grab": {
@@ -30,6 +29,7 @@
         "astro-grab-client": "workspace:*",
         "astro-grab-server": "workspace:*",
         "astro-grab-shared": "workspace:*",
+        "astro-grab-toolbar": "workspace:*",
       },
       "devDependencies": {
         "astro": "^5.0.0",
@@ -80,6 +80,18 @@
         "tsup": "^8.3.0",
         "typescript": "^5.7.0",
         "vitest": "^2.1.0",
+      },
+    },
+    "packages/astro-grab-toolbar": {
+      "name": "astro-grab-toolbar",
+      "version": "0.1.0",
+      "dependencies": {
+        "astro-grab-shared": "workspace:*",
+      },
+      "devDependencies": {
+        "astro": "^5.0.0",
+        "tsup": "^8.3.0",
+        "typescript": "^5.7.0",
       },
     },
   },
@@ -377,6 +389,8 @@
     "astro-grab-server": ["astro-grab-server@workspace:packages/astro-grab-server"],
 
     "astro-grab-shared": ["astro-grab-shared@workspace:packages/astro-grab-shared"],
+
+    "astro-grab-toolbar": ["astro-grab-toolbar@workspace:packages/astro-grab-toolbar"],
 
     "axobject-query": ["axobject-query@4.1.0", "", {}, "sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ=="],
 

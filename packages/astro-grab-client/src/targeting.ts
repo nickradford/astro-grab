@@ -10,7 +10,7 @@ import type { SnippetResponse } from "astro-grab-shared";
 export class TargetingHandler {
   private readonly stateMachine: StateMachine;
   private readonly overlay: Overlay;
-  private readonly contextLines: number;
+  private contextLines: number;
   private currentTarget: HTMLElement | null = null;
   private currentMouseX = 0;
   private currentMouseY = 0;
@@ -186,5 +186,9 @@ export class TargetingHandler {
     }
 
     return null;
+  }
+
+  updateContextLines(newContextLines: number): void {
+    this.contextLines = newContextLines;
   }
 }

@@ -56,4 +56,6 @@ export interface AstroGrabOptions {
   hue?: number;
   /** Enable debug logging */
   debug?: boolean;
+  /** Enable/disable the dev toolbar app (default: true) */
+  toolbar?: boolean;
 }

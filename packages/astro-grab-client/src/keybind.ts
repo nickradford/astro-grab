@@ -2,7 +2,7 @@ import { StateMachine } from "./state-machine.js";
 
 export class KeybindHandler {
   private holdTimer: number | null = null;
-  private readonly holdDuration: number;
+  private holdDuration: number;
   private readonly stateMachine: StateMachine;
   private isKeyDown = false;
   private hasActivatedOnce = false;
@@ -82,5 +82,9 @@ export class KeybindHandler {
 
   getMousePosition(): { x: number; y: number } {
     return { x: this.currentMouseX, y: this.currentMouseY };
+  }
+
+  updateHoldDuration(newDuration: number): void {
+    this.holdDuration = newDuration;
   }
 }

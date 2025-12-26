@@ -7,7 +7,7 @@ export class Overlay {
   private toast: HTMLDivElement | null = null;
   private crosshair: HTMLDivElement | null = null;
   private readonly stateMachine: StateMachine;
-  private readonly hue: number;
+  private hue: number;
 
   constructor(stateMachine: StateMachine, hue: number) {
     this.stateMachine = stateMachine;
@@ -265,6 +265,39 @@ export class Overlay {
         this.toast.style.display = "none";
       }
     }, duration);
+  }
+
+  updateHue(newHue: number): void {
+    this.hue = newHue;
+
+    if (this.highlightBox) {
+      this.highlightBox.style.borderColor = `hsla(${newHue}, 90%, 50%, 1)`;
+      this.highlightBox.style.backgroundColor = `hsla(${newHue}, 90%, 50%, 0.1)`;
+    }
+
+    if (this.toast) {
+      this.toast.style.backgroundColor = `hsla(${newHue}, 80%, 45%, 0.95)`;
+    }
+
+    if (this.crosshair) {
+      const lineTop = this.crosshair.querySelector(".crosshair-line-top") as HTMLElement;
+      const lineBottom = this.crosshair.querySelector(".crosshair-line-bottom") as HTMLElement;
+      const lineLeft = this.crosshair.querySelector(".crosshair-line-left") as HTMLElement;
+      const lineRight = this.crosshair.querySelector(".crosshair-line-right") as HTMLElement;
+
+      if (lineTop) {
+        lineTop.style.backgroundColor = `hsla(${newHue}, 90%, 50%, 1)`;
+      }
+      if (lineBottom) {
+        lineBottom.style.backgroundColor = `hsla(${newHue}, 90%, 50%, 1)`;
+      }
+      if (lineLeft) {
+        lineLeft.style.backgroundColor = `hsla(${newHue}, 90%, 50%, 1)`;
+      }
+      if (lineRight) {
+        lineRight.style.backgroundColor = `hsla(${newHue}, 90%, 50%, 1)`;
+      }
+    }
   }
 
   destroy(): void {
