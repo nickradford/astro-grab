@@ -20,10 +20,11 @@
       "name": "demo",
       "version": "0.1.0",
       "dependencies": {
-        "@astrojs/vercel": "9.0.2",
+        "@astrojs/vercel": "^9.0.2",
         "@tailwindcss/vite": "^4.1.18",
         "astro": "^5.0.0",
         "astro-grab": "workspace:*",
+        "astro-grab-client": "workspace:*",
         "tailwindcss": "^4.1.18",
       },
     },
