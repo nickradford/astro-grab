@@ -5,6 +5,7 @@
       "bun dev": "ask",
       "git add": "ask",
       "git commit": "ask",
+      "git push": "ask",
       "bun run": "ask",
     },
   },

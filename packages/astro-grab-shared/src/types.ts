@@ -33,6 +33,8 @@ export interface ClientConfig {
   hue?: number;
   /** Enable debug logging */
   debug?: boolean;
+  /** Base URL path for API endpoints (e.g., '/api/astro-grab') */
+  apiBaseUrl?: string;
 }
 
 /**

@@ -12,6 +12,7 @@ export class AstroGrab {
   private debug: boolean;
   private holdDuration: number;
   private contextLines: number;
+  private apiBaseUrl: string | undefined;
   private isEnabled = true;
 
   constructor(config: ClientConfig = {}) {
@@ -20,12 +21,14 @@ export class AstroGrab {
       contextLines = 4,
       hue: configHue = 30,
       debug = false,
+      apiBaseUrl,
     } = config;
     const hue = configHue;
 
     this.debug = debug;
     this.holdDuration = holdDuration;
     this.contextLines = contextLines;
+    this.apiBaseUrl = apiBaseUrl;
 
     if (debug) {
       console.log("[astro-grab:constructor] config:", config);
@@ -39,6 +42,7 @@ export class AstroGrab {
       this.stateMachine,
       this.overlay,
       contextLines,
+      apiBaseUrl,
     );
   }
 
@@ -49,7 +53,9 @@ export class AstroGrab {
     console.log("[astro-grab] Initialized - Hold Cmd/Ctrl+G to start");
 
     this.stateMachine.onEnter("targeting", () => {
-      window.dispatchEvent(new CustomEvent("astro-grab:targeting-mode-started"));
+      window.dispatchEvent(
+        new CustomEvent("astro-grab:targeting-mode-started"),
+      );
     });
 
     window.addEventListener(
@@ -89,6 +95,15 @@ export class AstroGrab {
     if (typeof config.contextLines === "number") {
       this.contextLines = config.contextLines;
       this.targeting.updateContextLines(config.contextLines);
+    }
+
+    if (typeof config.apiBaseUrl === "string") {
+      this.apiBaseUrl = config.apiBaseUrl;
+      // Note: apiBaseUrl changes require reinitializing TargetingHandler
+      // For now, we'll log that this requires a page reload
+      console.warn(
+        "[astro-grab] apiBaseUrl changed - page reload may be required for changes to take effect",
+      );
     }
   };
 

@@ -7,6 +7,10 @@ node_modules/
 dist/
 build/
 .astro/
+.vercel/
+
+# Demo generated files
+apps/demo/src/pages/api/astro-grab/snippet.ts
 
 # Environment variables
 .env

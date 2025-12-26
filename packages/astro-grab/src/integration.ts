@@ -18,13 +18,9 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
     name: "astro-grab",
 
     hooks: {
-      "astro:config:setup": ({
-        updateConfig,
-        injectScript,
-        command,
-        logger,
-      }) => {
-        if (command !== "dev" || !enabled) {
+      "astro:config:setup": ({ updateConfig, injectScript, command, logger }) => {
+        const forceEnable = process.env.ASTRO_GRAB_DANGEROUSLY_FORCE_ENABLE === "true";
+        if ((command !== "dev" && !forceEnable) || !enabled) {
           return;
         }
 
@@ -48,6 +44,8 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
         }
 
         if (autoInject) {
+          const apiBaseUrl = forceEnable ? process.env.ASTRO_GRAB_API_BASE_URL : undefined;
+
           const script = `import { AstroGrab } from "astro-grab-client";
 const toolbarConfig = (() => {
   try {
@@ -58,7 +56,13 @@ const toolbarConfig = (() => {
   } catch (e) {}
   return {};
 })();
-const instance = new AstroGrab({ holdDuration: toolbarConfig.holdDuration ?? ${holdDuration}, contextLines: ${contextLines}, hue: toolbarConfig.hue ?? ${hue}, debug: ${debug} });
+const instance = new AstroGrab({
+  holdDuration: toolbarConfig.holdDuration ?? ${holdDuration},
+  contextLines: ${contextLines},
+  hue: toolbarConfig.hue ?? ${hue},
+  debug: ${debug},
+  apiBaseUrl: ${apiBaseUrl ? `"${apiBaseUrl}"` : undefined}
+});
 window.__astroGrabInstance__ = instance;
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => instance.init());

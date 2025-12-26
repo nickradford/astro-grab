@@ -11,6 +11,7 @@ export class TargetingHandler {
   private readonly stateMachine: StateMachine;
   private readonly overlay: Overlay;
   private contextLines: number;
+  private apiBaseUrl: string | undefined;
   private currentTarget: HTMLElement | null = null;
   private currentMouseX = 0;
   private currentMouseY = 0;
@@ -19,10 +20,12 @@ export class TargetingHandler {
     stateMachine: StateMachine,
     overlay: Overlay,
     contextLines: number = 4,
+    apiBaseUrl?: string,
   ) {
     this.stateMachine = stateMachine;
     this.overlay = overlay;
     this.contextLines = contextLines;
+    this.apiBaseUrl = apiBaseUrl;
     this.trackMousePosition();
   }
 
@@ -173,34 +176,62 @@ export class TargetingHandler {
   };
 
   private async fetchAndCopySnippet(src: string): Promise<void> {
-    try {
-      const response = await fetch(
-        `/__astro_grab/snippet?src=${encodeURIComponent(src)}&contextLines=${this.contextLines}`,
-      );
+    const primaryEndpoint = this.apiBaseUrl
+      ? `${this.apiBaseUrl}/snippet`
+      : "/__astro_grab/snippet";
+    const fallbackEndpoint = "/__astro_grab/snippet";
 
-      if (!response.ok) {
-        console.error(
-          "[astro-grab] Failed to fetch snippet:",
-          response.statusText,
+    const tryEndpoint = async (endpoint: string): Promise<boolean> => {
+      try {
+        const response = await fetch(
+          `${endpoint}?src=${encodeURIComponent(src)}&contextLines=${this.contextLines}`,
         );
-        this.overlay.showToast("Failed to fetch snippet", 2000);
+
+        if (!response.ok) {
+          console.error(
+            `[astro-grab] Failed to fetch snippet from ${endpoint}:`,
+            response.statusText,
+          );
+          return false;
+        }
+
+        const data: SnippetResponse = await response.json();
+        const formatted = formatSnippet(data);
+        await copyToClipboard(formatted);
+
+        console.log(
+          `[astro-grab] Copied snippet from ${data.file}:${data.targetLine}`,
+        );
+        this.overlay.showToast("Copied!", 1000);
+
+        window.dispatchEvent(new CustomEvent("astro-grab:component-targeted"));
+        return true;
+      } catch (error) {
+        console.error(
+          `[astro-grab] Error fetching snippet from ${endpoint}:`,
+          error,
+        );
+        return false;
+      }
+    };
+
+    // Try primary endpoint first
+    const primarySuccess = await tryEndpoint(primaryEndpoint);
+    if (primarySuccess) {
+      return;
+    }
+
+    // If primary failed and we have a custom apiBaseUrl, try fallback
+    if (this.apiBaseUrl && primaryEndpoint !== fallbackEndpoint) {
+      console.log("[astro-grab] Primary endpoint failed, trying fallback...");
+      const fallbackSuccess = await tryEndpoint(fallbackEndpoint);
+      if (fallbackSuccess) {
         return;
       }
-
-      const data: SnippetResponse = await response.json();
-      const formatted = formatSnippet(data);
-      await copyToClipboard(formatted);
-
-      console.log(
-        `[astro-grab] Copied snippet from ${data.file}:${data.targetLine}`,
-      );
-      this.overlay.showToast("Copied!", 1000);
-
-      window.dispatchEvent(new CustomEvent("astro-grab:component-targeted"));
-    } catch (error) {
-      console.error("[astro-grab] Error fetching snippet:", error);
-      this.overlay.showToast("Error copying snippet", 2000);
     }
+
+    // Both endpoints failed
+    this.overlay.showToast("Error copying snippet", 2000);
   }
 
   private findElementWithSource(element: HTMLElement): HTMLElement | null {

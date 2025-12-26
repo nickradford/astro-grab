@@ -136,6 +136,20 @@ npm run dev
 
 4. Hold Cmd/Ctrl+G and click elements to grab their source!
 
+## Production Usage (Demo Sites)
+
+By default, astro-grab only works in development mode. For demo sites or production deployments that need to showcase the feature, you can force-enable it:
+
+```bash
+# Build with astro-grab enabled
+ASTRO_GRAB_DANGEROUSLY_FORCE_ENABLE=true npm run build
+
+# Preview the build
+npm run preview
+```
+
+**⚠️ Security Warning**: This exposes source code snippets to end users. Only enable this on demo sites where sharing component source is intentional.
+
 ## How It Works
 
 1. **Instrumentation**: During dev, the Vite plugin transforms `.astro` files to add `data-astro-grab="file:line:col"` attributes to HTML elements
