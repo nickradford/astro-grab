@@ -51,12 +51,14 @@ export const GET: APIRoute = async ({ request }) => {
 
     // Try embedded sources first (production/demo)
     if (process.env.NODE_ENV === 'production') {
-      if (demoSources && demoSources[src]) {
-        result = await handleSnippetRequestFromContent(src, demoSources[src], {
+      // Extract file path from src (remove line:column suffix)
+      const filePath = src.split(':')[0];
+      if (demoSources && demoSources[filePath]) {
+        result = await handleSnippetRequestFromContent(src, demoSources[filePath], {
           contextLines,
         });
       } else {
-        throw new Error('Source not found in embedded sources');
+        throw new Error(\`Source \${filePath} not found in embedded sources\`);
       }
     } else {
       // Development: always use filesystem
