@@ -1,4 +1,7 @@
+- MUST: Never commit and push unless explicitly asked to.
 - MUST: Never start the dev server unless explicitly told.
+- MUST: Never run git commands (add, commit, push, pull, etc.) unless explicitly asked to.
+- MUST: Never run dev servers (bun dev, npm run dev, etc.) unless explicitly asked to.
 - MUST: Use TypeScript interfaces over types.
 - MUST: Keep all types in the global scope.
 - MUST: Use arrow functions over function declarations

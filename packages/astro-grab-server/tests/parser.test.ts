@@ -150,6 +150,44 @@ const data = "test";
      expect(result.code).toContain('data-astro-grab="complex.astro:8:');
      expect(result.code).toContain('data-astro-grab="complex.astro:10:');
      expect(result.code).toContain('data-astro-grab="complex.astro:11:');
-     expect(result.code).toContain('data-astro-grab="complex.astro:12:');
-   });
- });
+      expect(result.code).toContain('data-astro-grab="complex.astro:12:');
+    });
+
+    it("should instrument all elements in Hero.astro structure", async () => {
+      const heroContent = `---
+      // Hero component
+      ---
+
+      <section class="text-center py-16">
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 tracking-tight">astro-grab</h1>
+          <p class="text-xl sm:text-2xl text-gray-700 mb-6 font-medium">Copy any Astro component's source code instantly</p>
+          <p class="text-base sm:text-lg text-gray-600 leading-relaxed mb-8 max-w-xl mx-auto">
+            Hold <kbd class="bg-gray-100 px-2 py-1 rounded border text-sm font-mono text-gray-900">Cmd+G</kbd> (Mac) or <kbd class="bg-gray-100 px-2 py-1 rounded border text-sm font-mono text-gray-900">Ctrl+G</kbd> (Windows/Linux) for 1 second to enter targeting mode,
+            then click any element to copy its source code—perfect for AI assistants.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="#installation" class="bg-black text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors duration-200">Get Started</a>
+            <a href="#try-it-now" class="bg-white text-black px-6 py-3 rounded-md font-medium border border-gray-300 hover:border-gray-900 transition-colors duration-200">Try Demo</a>
+          </div>
+        </div>
+      </section>`;
+
+      const result = await instrumentAstroFile(heroContent, "src/components/Hero.astro");
+
+      // Should instrument: section, div(max-w-2xl), h1, p(xl), p(base), kbd, kbd, div(flex), a, a = 10 total
+      const grabAttributes = result.code.match(/data-astro-grab=/g);
+      expect(grabAttributes?.length).toBe(10);
+
+      // Verify specific missing elements are now instrumented
+      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:6:');
+      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:7:');
+      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:8:');
+      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:9:');
+      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:10:');
+      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:13:');
+      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:14:');
+      expect(result.code).toContain('data-astro-grab="src/components/Hero.astro:15:');
+    });
+  });
+
