@@ -3,7 +3,14 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "astro",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "paths": {
+      "@astro-grab/shared": ["../astro-grab-shared/src/index.ts"],
+      "@astro-grab/server": ["../astro-grab-server/src/index.ts"],
+      "@astro-grab/client": ["../astro-grab-client/src/index.ts"],
+      "@astro-grab/toolbar": ["./src/index.ts"],
+      "astro-grab": ["../astro-grab/src/index.ts"]
+    }
   },
   "include": ["src"],
   "exclude": ["dist", "node_modules"]

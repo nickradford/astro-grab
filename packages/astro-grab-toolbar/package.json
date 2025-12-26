@@ -1,5 +1,5 @@
 {
-  "name": "astro-grab-toolbar",
+  "name": "@astro-grab/toolbar",
   "version": "0.1.0",
   "files": [
     "dist"
@@ -24,7 +24,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "astro-grab-shared": "workspace:*"
+    "@astro-grab/shared": "workspace:*"
   },
   "devDependencies": {
     "astro": "^5.0.0",

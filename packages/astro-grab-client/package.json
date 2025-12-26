@@ -1,5 +1,5 @@
 {
-  "name": "astro-grab-client",
+  "name": "@astro-grab/client",
   "version": "0.1.0",
   "files": [
     "dist"
@@ -25,7 +25,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "astro-grab-shared": "workspace:*"
+    "@astro-grab/shared": "workspace:*"
   },
   "devDependencies": {
     "happy-dom": "^15.7.0",

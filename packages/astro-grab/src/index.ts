@@ -1,5 +1,5 @@
 export { astroGrab } from "./integration.js";
-export type { AstroGrabOptions } from "astro-grab-shared";
+export type { AstroGrabOptions } from "@astro-grab/shared";
 
 // Re-export for production API routes
-export { handleSnippetRequest } from "astro-grab-server";
+export { handleSnippetRequest } from "@astro-grab/server";

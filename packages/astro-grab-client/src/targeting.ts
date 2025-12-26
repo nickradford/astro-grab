@@ -1,7 +1,7 @@
 import { StateMachine } from "./state-machine.js";
 import { Overlay } from "./overlay.js";
 import { copyToClipboard, formatSnippet } from "./clipboard.js";
-import type { SnippetResponse } from "astro-grab-shared";
+import type { SnippetResponse } from "@astro-grab/shared";
 
 /**
  * Handles targeting mode interactions

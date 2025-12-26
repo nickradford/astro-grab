@@ -1,7 +1,7 @@
 import type { AstroIntegration } from "astro";
-import { astroGrabVitePlugin } from "astro-grab-server";
-import type { AstroGrabOptions } from "astro-grab-shared";
-import { astroGrabToolbar } from "astro-grab-toolbar";
+import { astroGrabVitePlugin } from "@astro-grab/server";
+import type { AstroGrabOptions } from "@astro-grab/shared";
+import { astroGrabToolbar } from "@astro-grab/toolbar";
 
 export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
   const {
@@ -32,7 +32,7 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
 
         logger.info("Initializing...");
         logger.info(
-          `[astro-grab] Config: enabled=${enabled}, holdDuration=${holdDuration}, contextLines=${contextLines}, autoInject=${autoInject}, hue=${hue}, debug=${debug}, toolbar=${toolbar}`,
+          `Config: enabled=${enabled}, holdDuration=${holdDuration}, contextLines=${contextLines}, autoInject=${autoInject}, hue=${hue}, debug=${debug}, toolbar=${toolbar}`,
         );
 
         updateConfig({
@@ -40,7 +40,7 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
             plugins: [astroGrabVitePlugin({ hue, contextLines })],
           },
         });
-        logger.info("Astro Vite plugin enabled");
+        logger.info("Vite plugin enabled");
 
         if (toolbar) {
           updateConfig({
@@ -54,7 +54,7 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
             ? process.env.ASTRO_GRAB_API_BASE_URL
             : undefined;
 
-          const script = `import { AstroGrab } from "astro-grab/client";
+          const script = `import { AstroGrab } from "@astro-grab/client";
 const toolbarConfig = (() => {
   try {
     const stored = localStorage.getItem("astro-grab-toolbar-config");
@@ -77,9 +77,7 @@ if (document.readyState === "loading") {
 } else {
   instance.init();
 }`;
-          if (debug) {
-            logger.info(`[astro-grab] Injecting script`);
-          }
+          logger.info(`Injecting script`);
           injectScript("page", script);
           logger.info(
             `Client script injected. Use crtl/cmd+g on your Astro site to select components.`,

@@ -13,9 +13,10 @@
     "declarationMap": true,
     "sourceMap": true,
     "paths": {
-      "astro-grab-shared": ["./packages/astro-grab-shared/src/index.ts"],
-      "astro-grab-server": ["./packages/astro-grab-server/src/index.ts"],
-      "astro-grab-client": ["./packages/astro-grab-client/src/index.ts"],
+      "@astro-grab/shared": ["./packages/astro-grab-shared/src/index.ts"],
+      "@astro-grab/server": ["./packages/astro-grab-server/src/index.ts"],
+      "@astro-grab/client": ["./packages/astro-grab-client/src/index.ts"],
+      "@astro-grab/toolbar": ["./packages/astro-grab-toolbar/src/index.ts"],
       "astro-grab": ["./packages/astro-grab/src/index.ts"]
     }
   }

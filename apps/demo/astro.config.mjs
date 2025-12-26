@@ -2,13 +2,13 @@ import { defineConfig } from "astro/config";
 import { astroGrab } from "astro-grab";
 
 import tailwindcss from "@tailwindcss/vite";
-import vercelServerless from "@astrojs/vercel/serverless";
+import vercel from "@astrojs/vercel";
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [astroGrab()],
   output: "server",
-  adapter: vercelServerless(),
+  adapter: vercel(),
   vite: {
     plugins: [tailwindcss()],
   },

@@ -1,4 +1,4 @@
-import type { ClientState } from "astro-grab-shared";
+import type { ClientState } from "@astro-grab/shared";
 
 export interface StateListener {
   (): void;

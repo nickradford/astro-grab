@@ -1,4 +1,4 @@
-import type { SnippetResponse } from "astro-grab-shared";
+import type { SnippetResponse } from "@astro-grab/shared";
 
 export const formatSnippet = (data: SnippetResponse): string => {
   return `Astro Grab (alpha)
