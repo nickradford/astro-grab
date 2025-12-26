@@ -1,39 +1,120 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import Installation from '../components/Installation.astro';
-import Card from '../components/Card.astro';
-import TryItNow from '../components/TryItNow.astro';
-import Footer from '../components/Footer.astro';
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import Installation from "../components/Installation.astro";
+import Card from "../components/Card.astro";
+
+import Footer from "../components/Footer.astro";
 ---
 
 <Layout title="astro-grab - Visual element targeting for Astro">
   <main>
     <Hero />
-    
-    <section class="py-16">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card
-            title="🎯 Visual Targeting"
-            description="Hold Cmd/Ctrl+G to enter targeting mode. Elements are highlighted as you hover."
-          />
-          <Card
-            title="📋 Instant Copy"
-            description="Click any highlighted element to copy its source code with context."
-          />
-          <Card
-            title="🤖 LLM-Ready Format"
-            description="Snippets include source attribution, perfect for AI assistants."
-          />
+
+    <section class="bg-black py-24">
+      <div class="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+        <h2
+          class="mb-16 text-2xl font-bold tracking-wider text-white uppercase"
+        >
+          Try It Now
+        </h2>
+        <div id="steps-container" class="mb-12 text-left max-w-lg mx-auto">
+          <ol class="list-decimal list-inside space-y-2 text-gray-300">
+            <li id="step-1">Hit <kbd class="bg-gray-800 px-2 py-1 font-mono text-xs text-white">Cmd+G</kbd> to enter targeting mode</li>
+            <li id="step-2" style="height: 0; overflow: hidden; opacity: 0; transition: height 0.3s ease, opacity 0.3s ease;">Click on any component on this page</li>
+            <li id="step-3" style="height: 0; overflow: hidden; opacity: 0; transition: height 0.3s ease, opacity 0.3s ease;">Paste the copied code into the textarea below</li>
+            <li id="step-4" style="height: 0; overflow: hidden; opacity: 0; transition: height 0.3s ease, opacity 0.3s ease;">Now your AI agent has better context for editing</li>
+          </ol>
+        </div>
+        <!-- Fake Terminal -->
+        <div class="mx-auto max-w-2xl">
+          <div class="bg-gray-900 rounded-lg p-6 font-mono text-sm text-green-400 border border-gray-700">
+            <div class="flex items-center mb-4">
+              <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+              <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+              <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+              <span class="text-gray-400 text-xs">agent@astro-grab</span>
+            </div>
+            <div class="space-y-4 text-left">
+              <div>
+                <span class="text-green-400 font-bold">Clog:</span>
+                <span class="text-gray-300 ml-2">What's next on your plate?</span>
+              </div>
+              <div class="bg-gray-800 p-3 rounded">
+                <textarea
+                  id="code-input"
+                  class="w-full bg-transparent border-none outline-none resize-none text-gray-300 font-mono text-sm placeholder-gray-500 overflow-hidden"
+                  rows="6"
+                  placeholder="// Paste your copied component code here"
+                ></textarea>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-    
-    <Installation />
-    <TryItNow />
-  </main>
-  
-  <Footer />
-</Layout>
 
+    <Installation />
+  </main>
+
+  <Footer />
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const textarea = document.getElementById('code-input');
+      const step2 = document.getElementById('step-2');
+      const step3 = document.getElementById('step-3');
+      const step4 = document.getElementById('step-4');
+      let hasPasted = false;
+
+      if (textarea) {
+        textarea.addEventListener('input', function() {
+          this.style.height = 'auto';
+          this.style.height = this.scrollHeight + 'px';
+        });
+        // Dispatch paste event when content is added
+        const handleInput = () => {
+          if ((textarea as HTMLTextAreaElement).value.trim().length > 0 && !hasPasted) {
+            hasPasted = true;
+            window.dispatchEvent(new CustomEvent('demo:text-pasted'));
+          }
+        };
+        textarea.addEventListener('input', handleInput);
+      }
+
+      // Listen for targeting mode start
+      window.addEventListener('astro-grab:targeting-mode-started', () => {
+        setTimeout(() => {
+          if (step2) {
+            const targetHeight = step2.scrollHeight;
+            step2.style.height = targetHeight + 'px';
+            step2.style.opacity = '1';
+          }
+        }, 500);
+      });
+
+      // Listen for component targeted
+      window.addEventListener('astro-grab:component-targeted', () => {
+        setTimeout(() => {
+          if (step3 && textarea) {
+            const targetHeight = step3.scrollHeight;
+            step3.style.height = targetHeight + 'px';
+            step3.style.opacity = '1';
+            textarea.focus();
+          }
+        }, 500);
+      });
+
+      // Listen for text pasted
+      window.addEventListener('demo:text-pasted', () => {
+        setTimeout(() => {
+          if (step4) {
+            const targetHeight = step4.scrollHeight;
+            step4.style.height = targetHeight + 'px';
+            step4.style.opacity = '1';
+          }
+        }, 500);
+      });
+    });
+  </script>
+</Layout>

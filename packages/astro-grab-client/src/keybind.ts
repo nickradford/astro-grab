@@ -30,7 +30,8 @@ export class KeybindHandler {
   }
 
   private handleKeyDown = (e: KeyboardEvent): void => {
-    const isTriggerKey = e.key.toLowerCase() === "g" && (e.metaKey || e.ctrlKey);
+    const isTriggerKey =
+      e.key.toLowerCase() === "g" && (e.metaKey || e.ctrlKey);
 
     if (!isTriggerKey || this.isKeyDown) {
       return;
@@ -51,7 +52,11 @@ export class KeybindHandler {
   };
 
   private handleKeyUp = (e: KeyboardEvent): void => {
-    if (e.key.toLowerCase() === "g" || e.key === "Meta" || e.key === "Control") {
+    if (
+      e.key.toLowerCase() === "g" ||
+      e.key === "Meta" ||
+      e.key === "Control"
+    ) {
       this.isKeyDown = false;
       this.clearTimer();
 

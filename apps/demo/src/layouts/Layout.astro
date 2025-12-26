@@ -5,7 +5,7 @@ interface Props {
 
 const { title } = Astro.props;
 
-import "../styles/global.css"
+import "../styles/global.css";
 ---
 
 <!doctype html>
@@ -14,8 +14,29 @@ import "../styles/global.css"
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css"
+      <!--
+      and
+      it's
+      easy
+      to
+      individually
+      load
+      additional
+      languages
+      --
+    />
   </head>
-  <body class="font-sans leading-relaxed text-gray-900 bg-white min-h-screen">
+  <body class="min-h-screen bg-black font-mono leading-relaxed text-white">
     <slot />
   </body>
 </html>

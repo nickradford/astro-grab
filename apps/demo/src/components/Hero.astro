@@ -2,17 +2,43 @@
 // Hero component
 ---
 
-<section class="text-center py-16">
-  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 tracking-tight">astro-grab</h1>
-    <p class="text-xl sm:text-2xl text-gray-700 mb-6 font-medium">Copy any Astro component's source code instantly</p>
-    <p class="text-base sm:text-lg text-gray-600 leading-relaxed mb-8 max-w-xl mx-auto">
-      Hold <kbd class="bg-gray-100 px-2 py-1 rounded border text-sm font-mono text-gray-900">Cmd+G</kbd> (Mac) or <kbd class="bg-gray-100 px-2 py-1 rounded border text-sm font-mono text-gray-900">Ctrl+G</kbd> (Windows/Linux) for 1 second to enter targeting mode,
-      then click any element to copy its source code—perfect for AI assistants.
-    </p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-      <a href="#installation" class="bg-black text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors duration-200">Get Started</a>
-      <a href="#try-it-now" class="bg-white text-black px-6 py-3 rounded-md font-medium border border-gray-300 hover:border-gray-900 transition-colors duration-200">Try Demo</a>
-    </div>
+<div class="relative w-full bg-black">
+  {/* Orange Grid Background */}
+  <div
+    class="absolute inset-0 z-0"
+    style="background: #000000; background-image: linear-gradient(to right, rgba(255,165,0,0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,165,0,0.2) 1px, transparent 1px); background-size: 40px 40px;"
+  >
   </div>
-</section>
+  {/* Transparency Mask */}
+  <div
+    class="absolute inset-0 z-5"
+    style="background: radial-gradient(circle at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);"
+  >
+  </div>
+  {/* Your Content/Components */}
+  <section class="relative z-10 py-24 text-center">
+    <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+      <h1
+        class="mb-6 font-mono text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl"
+      >
+        astro-grab
+      </h1>
+      <p class="mb-8 text-lg text-gray-400 sm:text-xl">
+        try it, right now. hit cmd+g
+      </p>
+      <div class="flex flex-col items-center justify-center gap-6 sm:flex-row">
+        <a
+          href="#installation"
+          class="bg-orange-500 px-8 py-4 font-bold tracking-wide text-white uppercase transition-colors duration-200 hover:bg-orange-600"
+          >Get Started</a
+        >
+        <a
+          href="https://github.com/nickradford/astro-grab"
+          target="_blank"
+          class="bg-gray-800 px-8 py-4 font-bold tracking-wide text-white uppercase transition-colors duration-200 hover:bg-gray-700"
+          ><i class="ph ph-fill ph-github-logo mr-2"></i>GitHub</a
+        >
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,6 +1,9 @@
 {
   "name": "astro-grab-toolbar",
   "version": "0.1.0",
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -14,21 +17,18 @@
       "import": "./dist/app.js"
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit"
   },
-  "devDependencies": {
-    "astro": "^5.0.0",
-    "typescript": "^5.7.0",
-    "tsup": "^8.3.0"
-  },
   "dependencies": {
     "astro-grab-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "astro": "^5.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
   }
 }

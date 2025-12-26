@@ -18,7 +18,12 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
     name: "astro-grab",
 
     hooks: {
-      "astro:config:setup": ({ updateConfig, injectScript, command, logger }) => {
+      "astro:config:setup": ({
+        updateConfig,
+        injectScript,
+        command,
+        logger,
+      }) => {
         if (command !== "dev" || !enabled) {
           return;
         }

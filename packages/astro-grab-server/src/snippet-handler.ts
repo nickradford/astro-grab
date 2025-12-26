@@ -34,7 +34,11 @@ export const handleSnippetRequest = async (
     );
   }
 
-  const { snippet, startLine, endLine } = extractSnippet(content, loc.line, contextLines);
+  const { snippet, startLine, endLine } = extractSnippet(
+    content,
+    loc.line,
+    contextLines,
+  );
 
   return {
     file: loc.file,

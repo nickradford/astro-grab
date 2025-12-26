@@ -15,7 +15,11 @@ export class TargetingHandler {
   private currentMouseX = 0;
   private currentMouseY = 0;
 
-  constructor(stateMachine: StateMachine, overlay: Overlay, contextLines: number = 4) {
+  constructor(
+    stateMachine: StateMachine,
+    overlay: Overlay,
+    contextLines: number = 4,
+  ) {
     this.stateMachine = stateMachine;
     this.overlay = overlay;
     this.contextLines = contextLines;
@@ -25,7 +29,9 @@ export class TargetingHandler {
   /**
    * Initialize targeting handlers
    */
-  init(keybindHandler?: { getMousePosition(): { x: number; y: number } }): void {
+  init(keybindHandler?: {
+    getMousePosition(): { x: number; y: number };
+  }): void {
     this.stateMachine.onEnter("targeting", () => {
       const mousePos = keybindHandler?.getMousePosition() ?? { x: 0, y: 0 };
       this.enable(mousePos.x, mousePos.y);
@@ -47,12 +53,12 @@ export class TargetingHandler {
     document.addEventListener("mousemove", this.handleMouseMove);
     document.addEventListener("mousemove", this.trackMousePosition);
     document.addEventListener("click", this.handleClick, true);
-    
+
     if (cursorX !== undefined && cursorY !== undefined) {
       this.currentMouseX = cursorX;
       this.currentMouseY = cursorY;
     }
-    
+
     this.detectCurrentTarget();
   }
 
@@ -68,12 +74,19 @@ export class TargetingHandler {
   }
 
   private detectCurrentTarget(): void {
-    const element = document.elementFromPoint(this.currentMouseX, this.currentMouseY);
+    const element = document.elementFromPoint(
+      this.currentMouseX,
+      this.currentMouseY,
+    );
     const target = element instanceof HTMLElement ? element : null;
 
     if (!target) {
       this.overlay.clearHighlight();
-      this.overlay.updateCrosshair(this.currentMouseX, this.currentMouseY, null);
+      this.overlay.updateCrosshair(
+        this.currentMouseX,
+        this.currentMouseY,
+        null,
+      );
       this.currentTarget = null;
       return;
     }
@@ -85,10 +98,18 @@ export class TargetingHandler {
       const rect = elementWithSource.getBoundingClientRect();
       const sourceInfo = elementWithSource.getAttribute("data-astro-grab");
       this.overlay.highlightElement(rect, sourceInfo);
-      this.overlay.updateCrosshair(this.currentMouseX, this.currentMouseY, rect);
+      this.overlay.updateCrosshair(
+        this.currentMouseX,
+        this.currentMouseY,
+        rect,
+      );
     } else {
       this.overlay.clearHighlight();
-      this.overlay.updateCrosshair(this.currentMouseX, this.currentMouseY, null);
+      this.overlay.updateCrosshair(
+        this.currentMouseX,
+        this.currentMouseY,
+        null,
+      );
       this.currentTarget = null;
     }
   }
@@ -158,7 +179,10 @@ export class TargetingHandler {
       );
 
       if (!response.ok) {
-        console.error("[astro-grab] Failed to fetch snippet:", response.statusText);
+        console.error(
+          "[astro-grab] Failed to fetch snippet:",
+          response.statusText,
+        );
         this.overlay.showToast("Failed to fetch snippet", 2000);
         return;
       }
@@ -167,8 +191,12 @@ export class TargetingHandler {
       const formatted = formatSnippet(data);
       await copyToClipboard(formatted);
 
-      console.log(`[astro-grab] Copied snippet from ${data.file}:${data.targetLine}`);
+      console.log(
+        `[astro-grab] Copied snippet from ${data.file}:${data.targetLine}`,
+      );
       this.overlay.showToast("Copied!", 1000);
+
+      window.dispatchEvent(new CustomEvent("astro-grab:component-targeted"));
     } catch (error) {
       console.error("[astro-grab] Error fetching snippet:", error);
       this.overlay.showToast("Error copying snippet", 2000);
