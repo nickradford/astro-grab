@@ -14,6 +14,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.0.0",
     "astro-grab": "workspace:*",
+    "astro-grab-client": "workspace:*",
     "tailwindcss": "^4.1.18"
   }
 }
