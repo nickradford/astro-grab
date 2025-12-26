@@ -4,7 +4,8 @@
 
 <footer>
   <div class="container">
-    <p>Built with <a href="https://github.com/yourusername/astro-grab" target="_blank" rel="noopener noreferrer">astro-grab</a></p>
+    <p>Built with <a href="https://github.com/sst/astro-grab" target="_blank" rel="noopener noreferrer">astro-grab</a></p>
+    <p class="footer-note">Alpha • <a href="https://github.com/sst/astro-grab/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT</a></p>
   </div>
 </footer>
 
@@ -12,7 +13,7 @@
   footer {
     background: white;
     border-top: 1px solid #e5e5e5;
-    padding: 2.5rem 0;
+    padding: 2rem 0;
     margin-top: 4rem;
     text-align: center;
   }
@@ -25,17 +26,23 @@
 
   p {
     color: #666;
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
+    margin: 0.5rem 0;
+  }
+
+  .footer-note {
+    opacity: 0.7;
   }
 
   a {
-    color: #1a1a1a;
+    color: #666;
     text-decoration: none;
     border-bottom: 1px solid #e5e5e5;
     transition: border-color 0.2s ease;
   }
 
   a:hover {
-    border-bottom-color: #1a1a1a;
+    border-bottom-color: #000;
+    color: #000;
   }
 </style>

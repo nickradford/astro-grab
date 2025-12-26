@@ -1,0 +1,177 @@
+---
+// Installation component
+---
+
+<section id="installation" class="installation">
+  <div class="container">
+    <h2>Installation</h2>
+    
+    <div class="step">
+      <h3>1. Install the package</h3>
+      <div class="code-block">
+        <pre><code>npm install astro-grab</code></pre>
+        <button class="copy-btn" onclick="copyToClipboard('npm install astro-grab')">Copy</button>
+      </div>
+      <p class="note">Or use <code>bun add astro-grab</code> if you prefer Bun.</p>
+    </div>
+    
+    <div class="step">
+      <h3>2. Add the integration</h3>
+      <div class="code-block">
+        <pre id="config-code"></pre>
+        <button class="copy-btn" onclick="copyConfig()">Copy</button>
+      </div>
+    </div>
+    
+    <div class="step">
+      <h3>3. Start dev server</h3>
+      <div class="code-block">
+        <pre><code>npm run dev</code></pre>
+        <button class="copy-btn" onclick="copyToClipboard('npm run dev')">Copy</button>
+      </div>
+      <p class="note">The astro-grab toolbar will appear in your Astro dev toolbar.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const configCode = `// astro.config.mjs
+import { defineConfig } from 'astro/config';
+import { astroGrab } from 'astro-grab';
+
+export default defineConfig({
+  integrations: [
+    astroGrab({
+      enabled: true,        // Enable in dev mode
+      holdDuration: 1000,   // Hold time in ms
+      contextLines: 4,      // Lines around target
+      hue: 30,             // Highlight color (orange)
+      toolbar: true,       // Enable dev toolbar
+    }),
+  ],
+});`;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const codeElement = document.getElementById('config-code');
+    if (codeElement) {
+      codeElement.textContent = configCode;
+    }
+  });
+
+  function copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      const button = event.target as HTMLButtonElement;
+      const originalText = button.textContent;
+      button.textContent = 'Copied!';
+      button.style.background = '#000';
+      button.style.color = 'white';
+      
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '';
+        button.style.color = '';
+      }, 2000);
+    });
+  }
+
+  function copyConfig() {
+    navigator.clipboard.writeText(configCode).then(() => {
+      const button = event.target as HTMLButtonElement;
+      const originalText = button.textContent;
+      button.textContent = 'Copied!';
+      button.style.background = '#000';
+      button.style.color = 'white';
+      
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '';
+        button.style.color = '';
+      }, 2000);
+    });
+  }
+</script>
+
+<style>
+  .installation {
+    padding: 4rem 0;
+    background: #fafafa;
+  }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  .step {
+    margin-bottom: 3rem;
+  }
+
+  .step:last-child {
+    margin-bottom: 0;
+  }
+
+  .step h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 1rem;
+  }
+
+  .code-block {
+    position: relative;
+    background: #000;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .code-block pre {
+    padding: 1.5rem;
+    margin: 0;
+    color: #fff;
+    font-family: ui-monospace, monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    overflow-x: auto;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .copy-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .note {
+    font-size: 0.875rem;
+    color: #666;
+    margin: 0;
+  }
+
+  .note code {
+    background: #f5f5f5;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-family: ui-monospace, monospace;
+    font-size: 0.8em;
+  }
+</style>
