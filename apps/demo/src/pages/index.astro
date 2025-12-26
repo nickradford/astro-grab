@@ -11,9 +11,9 @@ import Footer from '../components/Footer.astro';
   <main>
     <Hero />
     
-    <section class="features">
-      <div class="container">
-        <div class="grid">
+    <section class="py-16">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <Card
             title="🎯 Visual Targeting"
             description="Hold Cmd/Ctrl+G to enter targeting mode. Elements are highlighted as you hover."
@@ -37,20 +37,3 @@ import Footer from '../components/Footer.astro';
   <Footer />
 </Layout>
 
-<style>
-  .features {
-    padding: 4rem 0;
-  }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-  }
-</style>

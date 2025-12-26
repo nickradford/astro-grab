@@ -2,34 +2,36 @@
 // Installation component
 ---
 
-<section id="installation" class="installation">
-  <div class="container">
-    <h2>Installation</h2>
-    
-    <div class="step">
-      <h3>1. Install the package</h3>
-      <div class="code-block">
-        <pre><code>npm install astro-grab</code></pre>
-        <button class="copy-btn" onclick="copyToClipboard('npm install astro-grab')">Copy</button>
+<section id="installation" class="py-16 bg-gray-50">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-semibold text-gray-900 mb-12 text-center">Installation</h2>
+
+    <div class="space-y-12">
+      <div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">1. Install the package</h3>
+        <div class="relative bg-gray-900 rounded-lg mb-4">
+          <pre class="p-6 text-white font-mono text-sm leading-relaxed overflow-x-auto"><code>npm install astro-grab</code></pre>
+          <button class="copy-btn absolute top-2 right-2 bg-white/10 text-white border border-white/20 px-3 py-1 rounded text-xs cursor-pointer transition-all duration-200 hover:bg-white/20" onclick="copyToClipboard('npm install astro-grab')">Copy</button>
+        </div>
+        <p class="text-sm text-gray-600 m-0">Or use <code class="bg-gray-100 px-2 py-1 rounded text-xs font-mono">bun add astro-grab</code> if you prefer Bun.</p>
       </div>
-      <p class="note">Or use <code>bun add astro-grab</code> if you prefer Bun.</p>
-    </div>
-    
-    <div class="step">
-      <h3>2. Add the integration</h3>
-      <div class="code-block">
-        <pre id="config-code"></pre>
-        <button class="copy-btn" onclick="copyConfig()">Copy</button>
+
+      <div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">2. Add the integration</h3>
+        <div class="relative bg-gray-900 rounded-lg mb-4">
+          <pre id="config-code" class="p-6 text-white font-mono text-sm leading-relaxed overflow-x-auto"></pre>
+          <button class="copy-btn absolute top-2 right-2 bg-white/10 text-white border border-white/20 px-3 py-1 rounded text-xs cursor-pointer transition-all duration-200 hover:bg-white/20" onclick="copyConfig()">Copy</button>
+        </div>
       </div>
-    </div>
-    
-    <div class="step">
-      <h3>3. Start dev server</h3>
-      <div class="code-block">
-        <pre><code>npm run dev</code></pre>
-        <button class="copy-btn" onclick="copyToClipboard('npm run dev')">Copy</button>
+
+      <div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">3. Start dev server</h3>
+        <div class="relative bg-gray-900 rounded-lg mb-4">
+          <pre class="p-6 text-white font-mono text-sm leading-relaxed overflow-x-auto"><code>npm run dev</code></pre>
+          <button class="copy-btn absolute top-2 right-2 bg-white/10 text-white border border-white/20 px-3 py-1 rounded text-xs cursor-pointer transition-all duration-200 hover:bg-white/20" onclick="copyToClipboard('npm run dev')">Copy</button>
+        </div>
+        <p class="text-sm text-gray-600 m-0">The astro-grab toolbar will appear in your Astro dev toolbar.</p>
       </div>
-      <p class="note">The astro-grab toolbar will appear in your Astro dev toolbar.</p>
     </div>
   </div>
 </section>
@@ -92,86 +94,7 @@ export default defineConfig({
 </script>
 
 <style>
-  .installation {
-    padding: 4rem 0;
-    background: #fafafa;
-  }
-
-  .container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-
-  h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #000;
-    margin-bottom: 3rem;
-    text-align: center;
-  }
-
-  .step {
-    margin-bottom: 3rem;
-  }
-
-  .step:last-child {
-    margin-bottom: 0;
-  }
-
-  .step h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #000;
-    margin-bottom: 1rem;
-  }
-
-  .code-block {
-    position: relative;
-    background: #000;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .code-block pre {
-    padding: 1.5rem;
-    margin: 0;
-    color: #fff;
-    font-family: ui-monospace, monospace;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    overflow-x: auto;
-  }
-
-  .copy-btn {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 0.375rem 0.625rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
   .copy-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  .note {
-    font-size: 0.875rem;
-    color: #666;
-    margin: 0;
-  }
-
-  .note code {
-    background: #f5f5f5;
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
-    font-family: ui-monospace, monospace;
-    font-size: 0.8em;
+    @apply bg-white/20;
   }
 </style>

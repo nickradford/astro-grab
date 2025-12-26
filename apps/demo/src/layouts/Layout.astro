@@ -4,6 +4,8 @@ interface Props {
 }
 
 const { title } = Astro.props;
+
+import "../styles/global.css"
 ---
 
 <!doctype html>
@@ -13,18 +15,8 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
       body {
-        font-family: system-ui, -apple-system, sans-serif;
-        line-height: 1.5;
-        color: #000;
-        background: #fff;
-        min-height: 100vh;
+        @apply font-sans leading-relaxed text-gray-900 bg-white min-h-screen;
       }
     </style>
   </head>
