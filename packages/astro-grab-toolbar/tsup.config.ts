@@ -1,7 +1,7 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/app.tsx"],
+  entry: ["src/index.ts", "src/app.ts"],
   format: ["esm"],
   dts: true,
   external: ["astro/toolbar", "astro"],
