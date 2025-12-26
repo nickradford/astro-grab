@@ -18,11 +18,12 @@ import Footer from "../components/Footer.astro";
         >
           Try It Now
         </h2>
-        <div class="mb-12 text-left max-w-lg mx-auto">
+        <div id="steps-container" class="mb-12 text-left max-w-lg mx-auto">
           <ol class="list-decimal list-inside space-y-2 text-gray-300">
-            <li>Hit <kbd class="bg-gray-800 px-2 py-1 font-mono text-xs text-white">Cmd+G</kbd> to enter targeting mode</li>
-            <li>Click on any component on this page</li>
-            <li>Paste the copied code into the textarea below</li>
+            <li id="step-1">Hit <kbd class="bg-gray-800 px-2 py-1 font-mono text-xs text-white">Cmd+G</kbd> to enter targeting mode</li>
+            <li id="step-2" style="height: 0; overflow: hidden; opacity: 0; transition: height 0.3s ease, opacity 0.3s ease;">Click on any component on this page</li>
+            <li id="step-3" style="height: 0; overflow: hidden; opacity: 0; transition: height 0.3s ease, opacity 0.3s ease;">Paste the copied code into the textarea below</li>
+            <li id="step-4" style="height: 0; overflow: hidden; opacity: 0; transition: height 0.3s ease, opacity 0.3s ease;">Now your AI agent has better context for editing</li>
           </ol>
         </div>
         <!-- Fake Terminal -->
@@ -61,12 +62,59 @@ import Footer from "../components/Footer.astro";
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const textarea = document.getElementById('code-input');
+      const step2 = document.getElementById('step-2');
+      const step3 = document.getElementById('step-3');
+      const step4 = document.getElementById('step-4');
+      let hasPasted = false;
+
       if (textarea) {
         textarea.addEventListener('input', function() {
           this.style.height = 'auto';
           this.style.height = this.scrollHeight + 'px';
         });
+        // Dispatch paste event when content is added
+        const handleInput = () => {
+          if ((textarea as HTMLTextAreaElement).value.trim().length > 0 && !hasPasted) {
+            hasPasted = true;
+            window.dispatchEvent(new CustomEvent('demo:text-pasted'));
+          }
+        };
+        textarea.addEventListener('input', handleInput);
       }
+
+      // Listen for targeting mode start
+      window.addEventListener('astro-grab:targeting-mode-started', () => {
+        setTimeout(() => {
+          if (step2) {
+            const targetHeight = step2.scrollHeight;
+            step2.style.height = targetHeight + 'px';
+            step2.style.opacity = '1';
+          }
+        }, 500);
+      });
+
+      // Listen for component targeted
+      window.addEventListener('astro-grab:component-targeted', () => {
+        setTimeout(() => {
+          if (step3 && textarea) {
+            const targetHeight = step3.scrollHeight;
+            step3.style.height = targetHeight + 'px';
+            step3.style.opacity = '1';
+            textarea.focus();
+          }
+        }, 500);
+      });
+
+      // Listen for text pasted
+      window.addEventListener('demo:text-pasted', () => {
+        setTimeout(() => {
+          if (step4) {
+            const targetHeight = step4.scrollHeight;
+            step4.style.height = targetHeight + 'px';
+            step4.style.opacity = '1';
+          }
+        }, 500);
+      });
     });
   </script>
 </Layout>

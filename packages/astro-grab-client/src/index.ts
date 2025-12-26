@@ -48,21 +48,25 @@ export class AstroGrab {
     this.targeting.init(this.keybind);
     console.log("[astro-grab] Initialized - Hold Cmd/Ctrl+G to start");
 
+    this.stateMachine.onEnter("targeting", () => {
+      window.dispatchEvent(new CustomEvent("astro-grab:targeting-mode-started"));
+    });
+
     window.addEventListener(
-      "astro-grab-config-update",
+      "astro-grab:config-update",
       this.handleConfigUpdate,
     );
-    window.addEventListener("astro-grab-toggle", this.handleToggle);
+    window.addEventListener("astro-grab:toggle", this.handleToggle);
   }
 
   destroy(): void {
     this.keybind.destroy();
     this.overlay.destroy();
     window.removeEventListener(
-      "astro-grab-config-update",
+      "astro-grab:config-update",
       this.handleConfigUpdate,
     );
-    window.removeEventListener("astro-grab-toggle", this.handleToggle);
+    window.removeEventListener("astro-grab:toggle", this.handleToggle);
   }
 
   private handleConfigUpdate = (event: Event): void => {
@@ -109,7 +113,7 @@ export class AstroGrab {
 
   updateConfig(config: Partial<ClientConfig>): void {
     this.handleConfigUpdate(
-      new CustomEvent("astro-grab-config-update", { detail: config }),
+      new CustomEvent("astro-grab:config-update", { detail: config }),
     );
   }
 }

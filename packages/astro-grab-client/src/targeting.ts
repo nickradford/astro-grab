@@ -195,6 +195,8 @@ export class TargetingHandler {
         `[astro-grab] Copied snippet from ${data.file}:${data.targetLine}`,
       );
       this.overlay.showToast("Copied!", 1000);
+
+      window.dispatchEvent(new CustomEvent("astro-grab:component-targeted"));
     } catch (error) {
       console.error("[astro-grab] Error fetching snippet:", error);
       this.overlay.showToast("Error copying snippet", 2000);

@@ -29,19 +29,19 @@ const setConfig = (config: Partial<ToolbarConfig>): void => {
   const updated = { ...current, ...config };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   window.dispatchEvent(
-    new CustomEvent("astro-grab-config-change", { detail: updated }),
+    new CustomEvent("astro-grab:config-change", { detail: updated }),
   );
 };
 
 const updateAstroGrab = (config: Partial<ToolbarConfig>): void => {
   window.dispatchEvent(
-    new CustomEvent("astro-grab-config-update", { detail: config }),
+    new CustomEvent("astro-grab:config-update", { detail: config }),
   );
 };
 
 const toggleAstroGrab = (enabled: boolean): void => {
   window.dispatchEvent(
-    new CustomEvent("astro-grab-toggle", { detail: { enabled } }),
+    new CustomEvent("astro-grab:toggle", { detail: { enabled } }),
   );
 };
 
