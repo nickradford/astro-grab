@@ -103,14 +103,53 @@ const data = "test";
     expect(typeof result.code).toBe("string");
   });
 
-  it("should handle multiple attributes on same element", async () => {
-    const code = `<button class="btn" type="submit" disabled>Click</button>`;
+   it("should handle multiple attributes on same element", async () => {
+     const code = `<button class="btn" type="submit" disabled>Click</button>`;
 
-    const result = await instrumentAstroFile(code, "button.astro");
+     const result = await instrumentAstroFile(code, "button.astro");
 
-    expect(result.code).toContain("data-astro-grab");
-    expect(result.code).toContain('class="btn"');
-    expect(result.code).toContain('type="submit"');
-    expect(result.code).toContain("disabled");
-  });
-});
+     expect(result.code).toContain("data-astro-grab");
+     expect(result.code).toContain('class="btn"');
+     expect(result.code).toContain('type="submit"');
+     expect(result.code).toContain("disabled");
+   });
+
+   it("should instrument all elements in complex nested structure", async () => {
+     const code = `<section id="demo" class="demo">
+   <div class="container">
+     <h2>Demo</h2>
+     <div class="steps">
+       <div class="step-card">
+         <div class="icon">🎯</div>
+         <h3>Hold <kbd>Cmd+G</kbd></h3>
+         <p>Enter targeting mode</p>
+       </div>
+       <div class="step-card">
+         <div class="icon">👆</div>
+         <h3>Hover</h3>
+         <p>See highlights</p>
+       </div>
+     </div>
+   </div>
+ </section>`;
+
+     const result = await instrumentAstroFile(code, "complex.astro");
+
+     // Should instrument all HTML elements: section, div.container, h2, div.steps, div.step-card (2), div.icon (2), h3 (2), kbd, p (2)
+     const grabAttributes = result.code.match(/data-astro-grab=/g);
+     expect(grabAttributes?.length).toBe(13);
+
+     // Verify specific elements are instrumented
+     expect(result.code).toContain('data-astro-grab="complex.astro:1:');
+     expect(result.code).toContain('data-astro-grab="complex.astro:2:');
+     expect(result.code).toContain('data-astro-grab="complex.astro:3:');
+     expect(result.code).toContain('data-astro-grab="complex.astro:4:');
+     expect(result.code).toContain('data-astro-grab="complex.astro:5:');
+     expect(result.code).toContain('data-astro-grab="complex.astro:6:');
+     expect(result.code).toContain('data-astro-grab="complex.astro:7:');
+     expect(result.code).toContain('data-astro-grab="complex.astro:8:');
+     expect(result.code).toContain('data-astro-grab="complex.astro:10:');
+     expect(result.code).toContain('data-astro-grab="complex.astro:11:');
+     expect(result.code).toContain('data-astro-grab="complex.astro:12:');
+   });
+ });
