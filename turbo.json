@@ -3,7 +3,8 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**"],
+      "env": ["ASTRO_GRAB_DANGEROUSLY_FORCE_ENABLE"]
     },
     "dev": {
       "cache": false,
