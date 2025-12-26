@@ -24,7 +24,9 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
         command,
         logger,
       }) => {
-        if (command !== "dev" || !enabled) {
+        const forceEnable =
+          process.env.ASTRO_GRAB_DANGEROUSLY_FORCE_ENABLE === "true";
+        if ((command !== "dev" && !forceEnable) || !enabled) {
           return;
         }
 
