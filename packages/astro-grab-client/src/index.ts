@@ -11,11 +11,17 @@ export class AstroGrab {
   private targeting: TargetingHandler;
 
   constructor(config: ClientConfig = {}) {
-    const { holdDuration = 500, contextLines = 4 } = config;
+    const { holdDuration = 500, contextLines = 4, hue: configHue = 30, debug = false } = config;
+    const hue = configHue;
+
+    if (debug) {
+      console.log("[astro-grab:constructor] config:", config);
+      console.log("[astro-grab:constructor] Using hue:", hue);
+    }
 
     this.stateMachine = new StateMachine();
     this.keybind = new KeybindHandler(this.stateMachine, holdDuration);
-    this.overlay = new Overlay(this.stateMachine);
+    this.overlay = new Overlay(this.stateMachine, hue);
     this.targeting = new TargetingHandler(this.stateMachine, this.overlay, contextLines);
   }
 

@@ -8,6 +8,8 @@ export default defineConfig({
       enabled: true,
       holdDuration: 1000,
       contextLines: 4,
+      hue: 0,
+      debug: true
     }),
   ],
 });

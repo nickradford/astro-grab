@@ -29,6 +29,10 @@ export interface ClientConfig {
   holdDuration?: number;
   /** Number of lines of context to include around the target line */
   contextLines?: number;
+  /** Hue value for overlay colors (default: 30 for orange) */
+  hue?: number;
+  /** Enable debug logging */
+  debug?: boolean;
 }
 
 /**
@@ -48,4 +52,8 @@ export interface AstroGrabOptions {
   contextLines?: number;
   /** Should auto inject the client script */
   autoInject?: boolean;
+  /** Hue value for overlay colors (default: 30 for orange) */
+  hue?: number;
+  /** Enable debug logging */
+  debug?: boolean;
 }

@@ -1,3 +1,4 @@
+- MUST: Never start the dev server unless explicitly told.
 - MUST: Use TypeScript interfaces over types.
 - MUST: Keep all types in the global scope.
 - MUST: Use arrow functions over function declarations

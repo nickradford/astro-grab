@@ -7,10 +7,11 @@ import { handleSnippetRequest } from "./snippet-handler.js";
 
 export interface AstroGrabPluginOptions {
   contextLines?: number;
+  hue?: number;
 }
 
 export const astroGrabVitePlugin = (options: AstroGrabPluginOptions = {}): Plugin => {
-  const { contextLines: defaultContextLines = 4 } = options;
+  const { contextLines: defaultContextLines = 4, hue = 30 } = options;
   let root: string;
 
   return {
@@ -71,9 +72,11 @@ export const astroGrabVitePlugin = (options: AstroGrabPluginOptions = {}): Plugi
             const clientPath = join(__dirname, "../../astro-grab-client/dist/auto.js");
             const content = await readFile(clientPath, "utf-8");
 
+            const configScript = `window.__ASTRO_GRAB_CONFIG__ = { hue: ${hue} };\n`;
+
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/javascript");
-            res.end(content);
+            res.end(configScript + content);
             return;
           } catch (error) {
             console.error("[astro-grab] Failed to serve client bundle:", error);

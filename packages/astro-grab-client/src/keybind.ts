@@ -5,6 +5,7 @@ export class KeybindHandler {
   private readonly holdDuration: number;
   private readonly stateMachine: StateMachine;
   private isKeyDown = false;
+  private hasActivatedOnce = false;
   private currentMouseX = 0;
   private currentMouseY = 0;
 
@@ -37,11 +38,16 @@ export class KeybindHandler {
 
     e.preventDefault();
     this.isKeyDown = true;
-    this.stateMachine.transition("holding");
 
-    this.holdTimer = window.setTimeout(() => {
+    if (this.hasActivatedOnce) {
       this.stateMachine.transition("targeting");
-    }, this.holdDuration);
+    } else {
+      this.stateMachine.transition("holding");
+      this.holdTimer = window.setTimeout(() => {
+        this.stateMachine.transition("targeting");
+        this.hasActivatedOnce = true;
+      }, this.holdDuration);
+    }
   };
 
   private handleKeyUp = (e: KeyboardEvent): void => {

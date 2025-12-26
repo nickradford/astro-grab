@@ -5,8 +5,11 @@ import type { AstroGrabOptions } from "astro-grab-shared";
 export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
   const {
     enabled = true,
-    /* TODO: set this up later holdDuration = 1000,*/ contextLines = 4,
+    holdDuration = 1000,
+    contextLines = 4,
     autoInject = true,
+    hue = 30,
+    debug = false,
   } = options;
 
   return {
@@ -19,16 +22,27 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
         }
 
         logger.info("Initializing...");
+        logger.info(`[astro-grab] Config: enabled=${enabled}, holdDuration=${holdDuration}, contextLines=${contextLines}, autoInject=${autoInject}, hue=${hue}, debug=${debug}`);
 
         updateConfig({
           vite: {
-            plugins: [astroGrabVitePlugin({ contextLines })],
+            plugins: [astroGrabVitePlugin({ hue, contextLines })],
           },
         });
         logger.info("Astro Vite plugin enabled");
 
         if (autoInject) {
-          injectScript("page", `import "astro-grab-client/auto";`);
+          const script = `import { AstroGrab } from "astro-grab-client";
+const instance = new AstroGrab({ holdDuration: ${holdDuration}, contextLines: ${contextLines}, hue: ${hue}, debug: ${debug } });
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => instance.init());
+} else {
+  instance.init();
+}`;
+          if (debug) {
+            logger.info(`[astro-grab] Injecting script: ${script}`);
+          }
+          injectScript("page", script);
           logger.info(
             `Client script injected. Use crtl/cmd+g on your Astro site to select components.`,
           );

@@ -30,10 +30,5 @@ const { title } = Astro.props;
   </head>
   <body>
     <slot />
-    <script>
-      import { AstroGrab } from "astro-grab-client";
-      const ag = new AstroGrab({ contextLines: 4});
-      ag.init()
-    </script>
   </body>
 </html>
