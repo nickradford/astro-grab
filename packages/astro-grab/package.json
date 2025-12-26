@@ -31,10 +31,10 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "astro-grab-client": "workspace:*",
-    "astro-grab-server": "workspace:*",
-    "astro-grab-shared": "workspace:*",
-    "astro-grab-toolbar": "workspace:*"
+    "@astro-grab/client": "workspace:*",
+    "@astro-grab/server": "workspace:*",
+    "@astro-grab/shared": "workspace:*",
+    "@astro-grab/toolbar": "workspace:*"
   },
   "devDependencies": {
     "astro": "^5.0.0",

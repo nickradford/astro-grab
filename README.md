@@ -2,10 +2,6 @@
 
 **Visual element targeting for Astro projects** - Hold Cmd/Ctrl+G to target any element and copy its source code to your clipboard.
 
-## Project Status
-
-This monorepo uses Turborepo for efficient builds and caching. Package builds automatically respect dependency ordering and cache results locally.
-
 ## What is Astro Grab?
 
 Astro Grab is a dev-only tool that helps you quickly locate and grab source code from your Astro components. Simply hold Cmd+G (Mac) or Ctrl+G (Windows/Linux) for one second, then click any element to copy its source snippet to your clipboard - perfect for pasting into AI assistants like Claude.
@@ -122,7 +118,7 @@ export default defineConfig({
     astroGrab({
       enabled: true, // Enable in dev mode (default: true)
       holdDuration: 1000, // Hold time in ms (default: 1000)
-      contextLines: 40, // Lines of context around target (default: 40)
+      contextLines: 10, // Lines of context around target (default: 5)
     }),
   ],
 });
@@ -143,9 +139,6 @@ By default, astro-grab only works in development mode. For demo sites or product
 ```bash
 # Build with astro-grab enabled
 ASTRO_GRAB_DANGEROUSLY_FORCE_ENABLE=true npm run build
-
-# Preview the build
-npm run preview
 ```
 
 **⚠️ Security Warning**: This exposes source code snippets to end users. Only enable this on demo sites where sharing component source is intentional.

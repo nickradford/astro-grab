@@ -2,7 +2,7 @@ import { StateMachine } from "./state-machine.js";
 import { KeybindHandler } from "./keybind.js";
 import { Overlay } from "./overlay.js";
 import { TargetingHandler } from "./targeting.js";
-import type { ClientConfig } from "astro-grab-shared";
+import type { ClientConfig } from "@astro-grab/shared";
 
 export class AstroGrab {
   private stateMachine: StateMachine;
@@ -133,4 +133,4 @@ export class AstroGrab {
   }
 }
 
-export type { ClientConfig } from "astro-grab-shared";
+export type { ClientConfig } from "@astro-grab/shared";

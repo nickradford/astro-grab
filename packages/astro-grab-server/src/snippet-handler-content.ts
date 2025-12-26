@@ -1,5 +1,5 @@
-import { decodeSourceLocation, extractSnippet } from "astro-grab-shared";
-import type { SnippetResponse } from "astro-grab-shared";
+import { decodeSourceLocation, extractSnippet } from "@astro-grab/shared";
+import type { SnippetResponse } from "@astro-grab/shared";
 
 export interface SnippetHandlerOptions {
   contextLines?: number;

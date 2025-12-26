@@ -2,8 +2,15 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+    "rootDir": "../../",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "paths": {
+      "@astro-grab/shared": ["../astro-grab-shared/src/index.ts"],
+      "@astro-grab/server": ["../astro-grab-server/src/index.ts"],
+      "@astro-grab/client": ["./src/index.ts"],
+      "@astro-grab/toolbar": ["../astro-grab-toolbar/src/index.ts"],
+      "astro-grab": ["../astro-grab/src/index.ts"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "tests"]

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { formatSnippet } from "../src/clipboard.js";
-import type { SnippetResponse } from "astro-grab-shared";
+import type { SnippetResponse } from "@astro-grab/shared";
 
 describe("formatSnippet", () => {
   it("should format snippet with header and code block", () => {

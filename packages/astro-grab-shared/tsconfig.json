@@ -2,7 +2,14 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "../../",
+    "paths": {
+      "@astro-grab/shared": ["./src/index.ts"],
+      "@astro-grab/server": ["../astro-grab-server/src/index.ts"],
+      "@astro-grab/client": ["../astro-grab-client/src/index.ts"],
+      "@astro-grab/toolbar": ["../astro-grab-toolbar/src/index.ts"],
+      "astro-grab": ["../astro-grab/src/index.ts"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "tests"]

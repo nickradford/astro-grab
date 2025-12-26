@@ -13,6 +13,7 @@
         "tsup": "^8.3.0",
         "turbo": "2.7.2",
         "typescript": "^5.7.0",
+        "vite-tsconfig-paths": "6.0.3",
         "vitest": "^2.1.0",
       },
     },
@@ -20,12 +21,12 @@
       "name": "demo",
       "version": "0.1.0",
       "dependencies": {
+        "@astro-grab/client": "workspace:*",
+        "@astro-grab/server": "workspace:*",
         "@astrojs/vercel": "^9.0.2",
         "@tailwindcss/vite": "^4.1.18",
         "astro": "^5.0.0",
         "astro-grab": "workspace:*",
-        "astro-grab-client": "workspace:*",
-        "astro-grab-server": "workspace:*",
         "glob": "^10.4.5",
         "tailwindcss": "^4.1.18",
       },
@@ -34,10 +35,10 @@
       "name": "astro-grab",
       "version": "0.1.0",
       "dependencies": {
-        "astro-grab-client": "workspace:*",
-        "astro-grab-server": "workspace:*",
-        "astro-grab-shared": "workspace:*",
-        "astro-grab-toolbar": "workspace:*",
+        "@astro-grab/client": "workspace:*",
+        "@astro-grab/server": "workspace:*",
+        "@astro-grab/shared": "workspace:*",
+        "@astro-grab/toolbar": "workspace:*",
       },
       "devDependencies": {
         "astro": "^5.0.0",
@@ -50,10 +51,10 @@
       },
     },
     "packages/astro-grab-client": {
-      "name": "astro-grab-client",
+      "name": "@astro-grab/client",
       "version": "0.1.0",
       "dependencies": {
-        "astro-grab-shared": "workspace:*",
+        "@astro-grab/shared": "workspace:*",
       },
       "devDependencies": {
         "happy-dom": "^15.7.0",
@@ -63,11 +64,11 @@
       },
     },
     "packages/astro-grab-server": {
-      "name": "astro-grab-server",
+      "name": "@astro-grab/server",
       "version": "0.1.0",
       "dependencies": {
+        "@astro-grab/shared": "workspace:*",
         "@astrojs/compiler": "^2.10.0",
-        "astro-grab-shared": "workspace:*",
       },
       "devDependencies": {
         "astro": "^5.0.0",
@@ -82,7 +83,7 @@
       },
     },
     "packages/astro-grab-shared": {
-      "name": "astro-grab-shared",
+      "name": "@astro-grab/shared",
       "version": "0.1.0",
       "devDependencies": {
         "tsup": "^8.3.0",
@@ -91,10 +92,10 @@
       },
     },
     "packages/astro-grab-toolbar": {
-      "name": "astro-grab-toolbar",
+      "name": "@astro-grab/toolbar",
       "version": "0.1.0",
       "dependencies": {
-        "astro-grab-shared": "workspace:*",
+        "@astro-grab/shared": "workspace:*",
       },
       "devDependencies": {
         "astro": "^5.0.0",
@@ -104,6 +105,14 @@
     },
   },
   "packages": {
+    "@astro-grab/client": ["@astro-grab/client@workspace:packages/astro-grab-client"],
+
+    "@astro-grab/server": ["@astro-grab/server@workspace:packages/astro-grab-server"],
+
+    "@astro-grab/shared": ["@astro-grab/shared@workspace:packages/astro-grab-shared"],
+
+    "@astro-grab/toolbar": ["@astro-grab/toolbar@workspace:packages/astro-grab-toolbar"],
+
     "@astrojs/compiler": ["@astrojs/compiler@2.13.0", "", {}, "sha512-mqVORhUJViA28fwHYaWmsXSzLO9osbdZ5ImUfxBarqsYdMlPbqAqGJCxsNzvppp1BEzc1mJNjOVvQqeDN8Vspw=="],
 
     "@astrojs/internal-helpers": ["@astrojs/internal-helpers@0.7.5", "", {}, "sha512-vreGnYSSKhAjFJCWAwe/CNhONvoc5lokxtRoZims+0wa3KbHBdPHSSthJsKxPd8d/aic6lWKpRTYGY/hsgK6EA=="],
@@ -436,14 +445,6 @@
 
     "astro-grab": ["astro-grab@workspace:packages/astro-grab"],
 
-    "astro-grab-client": ["astro-grab-client@workspace:packages/astro-grab-client"],
-
-    "astro-grab-server": ["astro-grab-server@workspace:packages/astro-grab-server"],
-
-    "astro-grab-shared": ["astro-grab-shared@workspace:packages/astro-grab-shared"],
-
-    "astro-grab-toolbar": ["astro-grab-toolbar@workspace:packages/astro-grab-toolbar"],
-
     "async-sema": ["async-sema@3.1.1", "", {}, "sha512-tLRNUXati5MFePdAk8dw7Qt7DpxPB60ofAgn8WRhW6a2rcimZnYBP9oxHiv0OHy+Wz7kPMG+t4LGdt31+4EmGg=="],
 
     "axobject-query": ["axobject-query@4.1.0", "", {}, "sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ=="],
@@ -617,6 +618,8 @@
     "github-slugger": ["github-slugger@2.0.0", "", {}, "sha512-IaOQ9puYtjrkq7Y0Ygl9KDZnrf/aiUJYUpVf89y8kyaxbRG7Y1SrX/jaumrv81vc61+kiMempujsM3Yw7w5qcw=="],
 
     "glob": ["glob@10.5.0", "", { "dependencies": { "foreground-child": "^3.1.0", "jackspeak": "^3.1.2", "minimatch": "^9.0.4", "minipass": "^7.1.2", "package-json-from-dist": "^1.0.0", "path-scurry": "^1.11.1" }, "bin": { "glob": "dist/esm/bin.mjs" } }, "sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg=="],
+
+    "globrex": ["globrex@0.1.2", "", {}, "sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg=="],
 
     "graceful-fs": ["graceful-fs@4.2.11", "", {}, "sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ=="],
 
@@ -1105,6 +1108,8 @@
     "vite": ["vite@6.4.1", "", { "dependencies": { "esbuild": "^0.25.0", "fdir": "^6.4.4", "picomatch": "^4.0.2", "postcss": "^8.5.3", "rollup": "^4.34.9", "tinyglobby": "^0.2.13" }, "optionalDependencies": { "fsevents": "~2.3.3" }, "peerDependencies": { "@types/node": "^18.0.0 || ^20.0.0 || >=22.0.0", "jiti": ">=1.21.0", "less": "*", "lightningcss": "^1.21.0", "sass": "*", "sass-embedded": "*", "stylus": "*", "sugarss": "*", "terser": "^5.16.0", "tsx": "^4.8.1", "yaml": "^2.4.2" }, "optionalPeers": ["@types/node", "jiti", "less", "lightningcss", "sass", "sass-embedded", "stylus", "sugarss", "terser", "tsx", "yaml"], "bin": { "vite": "bin/vite.js" } }, "sha512-+Oxm7q9hDoLMyJOYfUYBuHQo+dkAloi33apOPP56pzj+vsdJDzr+j1NISE5pyaAuKL4A3UD34qd0lx5+kfKp2g=="],
 
     "vite-node": ["vite-node@2.1.9", "", { "dependencies": { "cac": "^6.7.14", "debug": "^4.3.7", "es-module-lexer": "^1.5.4", "pathe": "^1.1.2", "vite": "^5.0.0" }, "bin": { "vite-node": "vite-node.mjs" } }, "sha512-AM9aQ/IPrW/6ENLQg3AGY4K1N2TGZdR5e4gu/MmmR2xR3Ll1+dib+nook92g4TV3PXVyeyxdWwtaCAiUL0hMxA=="],
+
+    "vite-tsconfig-paths": ["vite-tsconfig-paths@6.0.3", "", { "dependencies": { "debug": "^4.1.1", "globrex": "^0.1.2", "tsconfck": "^3.0.3" }, "peerDependencies": { "vite": "*" }, "optionalPeers": ["vite"] }, "sha512-7bL7FPX/DSviaZGYUKowWF1AiDVWjMjxNbE8lyaVGDezkedWqfGhlnQ4BZXre0ZN5P4kAgIJfAlgFDVyjrCIyg=="],
 
     "vitefu": ["vitefu@1.1.1", "", { "peerDependencies": { "vite": "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0-beta.0" }, "optionalPeers": ["vite"] }, "sha512-B/Fegf3i8zh0yFbpzZ21amWzHmuNlLlmJT6n7bu5e+pCHUKQIfXSYokrqOBGEMMe9UG2sostKQF9mml/vYaWJQ=="],
 

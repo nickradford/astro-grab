@@ -1,5 +1,5 @@
 import { parse } from "@astrojs/compiler";
-import { encodeSourceLocation, normalizePath } from "astro-grab-shared";
+import { encodeSourceLocation, normalizePath } from "@astro-grab/shared";
 
 export interface InstrumentationResult {
   code: string;

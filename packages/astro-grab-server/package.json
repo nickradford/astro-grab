@@ -1,5 +1,5 @@
 {
-  "name": "astro-grab-server",
+  "name": "@astro-grab/server",
   "version": "0.1.0",
   "files": [
     "dist"
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@astrojs/compiler": "^2.10.0",
-    "astro-grab-shared": "workspace:*"
+    "@astro-grab/shared": "workspace:*"
   },
   "devDependencies": {
     "astro": "^5.0.0",

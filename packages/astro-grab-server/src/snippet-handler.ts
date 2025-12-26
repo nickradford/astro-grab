@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { decodeSourceLocation, extractSnippet } from "astro-grab-shared";
-import type { SnippetResponse } from "astro-grab-shared";
+import { decodeSourceLocation, extractSnippet } from "@astro-grab/shared";
+import type { SnippetResponse } from "@astro-grab/shared";
 
 export interface SnippetHandlerOptions {
   root: string;
