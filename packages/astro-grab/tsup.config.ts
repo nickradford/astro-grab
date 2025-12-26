@@ -1,7 +1,7 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig((options) => ({
-  entry: ["src/index.ts"],
+  entry: ["src/index.ts", "src/client.ts"],
   format: ["esm"],
   dts: !options.watch, // Disable DTS generation in watch mode
   clean: true,

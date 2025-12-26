@@ -18,8 +18,14 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
     name: "astro-grab",
 
     hooks: {
-      "astro:config:setup": ({ updateConfig, injectScript, command, logger }) => {
-        const forceEnable = process.env.ASTRO_GRAB_DANGEROUSLY_FORCE_ENABLE === "true";
+      "astro:config:setup": ({
+        updateConfig,
+        injectScript,
+        command,
+        logger,
+      }) => {
+        const forceEnable =
+          process.env.ASTRO_GRAB_DANGEROUSLY_FORCE_ENABLE === "true";
         if ((command !== "dev" && !forceEnable) || !enabled) {
           return;
         }
@@ -44,9 +50,11 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
         }
 
         if (autoInject) {
-          const apiBaseUrl = forceEnable ? process.env.ASTRO_GRAB_API_BASE_URL : undefined;
+          const apiBaseUrl = forceEnable
+            ? process.env.ASTRO_GRAB_API_BASE_URL
+            : undefined;
 
-          const script = `import { AstroGrab } from "astro-grab-client";
+          const script = `import { AstroGrab } from "astro-grab/client";
 const toolbarConfig = (() => {
   try {
     const stored = localStorage.getItem("astro-grab-toolbar-config");
