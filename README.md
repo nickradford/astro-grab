@@ -2,6 +2,10 @@
 
 **Visual element targeting for Astro projects** - Hold Cmd/Ctrl+G to target any element and copy its source code to your clipboard.
 
+## Project Status
+
+This monorepo uses Turborepo for efficient builds and caching. Package builds automatically respect dependency ordering and cache results locally.
+
 ## What is Astro Grab?
 
 Astro Grab is a dev-only tool that helps you quickly locate and grab source code from your Astro components. Simply hold Cmd+G (Mac) or Ctrl+G (Windows/Linux) for one second, then click any element to copy its source snippet to your clipboard - perfect for pasting into AI assistants like Claude.
@@ -36,6 +40,11 @@ This will:
 - Start the Astro dev server for the demo in `apps/demo`
 - Enable hot reload for client code changes
 
+Builds are optimized with Turborepo:
+- Automatic parallel execution when dependencies allow
+- Local caching speeds up subsequent builds
+- Dependency graph ensures correct build order
+
 Visit `http://localhost:4321` and try the targeting mode:
 
 1. Hold Cmd+G (Mac) or Ctrl+G (Win/Linux) for 1 second
@@ -45,10 +54,21 @@ Visit `http://localhost:4321` and try the targeting mode:
 
 ### Building
 
-Build all packages:
+Build all packages with Turborepo:
 
 ```bash
 bun run build
+```
+
+Turborepo automatically:
+- Builds packages in dependency order (shared → server/client → integration)
+- Caches build outputs for faster rebuilds
+- Runs packages in parallel when dependencies allow
+
+Build specific packages:
+
+```bash
+bun run turbo run build --filter astro-grab-shared
 ```
 
 ### Testing
@@ -56,13 +76,19 @@ bun run build
 Run all tests:
 
 ```bash
-bun test
+bun run test
 ```
 
 Watch mode:
 
 ```bash
 bun run test:watch
+```
+
+Run tests in specific package:
+
+```bash
+bun run turbo run test --filter astro-grab-shared
 ```
 
 ## Project Structure

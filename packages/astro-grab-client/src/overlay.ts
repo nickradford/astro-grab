@@ -39,7 +39,6 @@ export class Overlay {
       border: 2px solid #f97316;
       background: rgba(249, 115, 22, 0.1);
       pointer-events: none;
-      border-radius: 4px;
       transition: all 0.1s ease;
       display: none;
     `;
@@ -185,7 +184,7 @@ export class Overlay {
     this.tooltip.style.display = "block";
     this.tooltip.textContent = sourceInfo || "No source info";
 
-    const tooltipTop = rect.top - 30;
+    const tooltipTop = rect.top - 34;
     const tooltipLeft = rect.left;
 
     this.tooltip.style.top = `${Math.max(10, tooltipTop)}px`;
