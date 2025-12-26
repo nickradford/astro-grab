@@ -174,13 +174,8 @@ export class TargetingHandler {
 
   private async fetchAndCopySnippet(src: string): Promise<void> {
     try {
-      // HACK: Astro doesn't support underscore routes in production, so we route differently
-      // based on environment. In dev, Vite serves /__astro_grab/snippet. In production, we
-      // use an Astro API route at /api/__astro_grab/snippet. This is a workaround and ideally
-      // Astro would support underscore routes or we'd have a cleaner routing solution.
-      const baseUrl = import.meta.env.DEV ? "" : "/api";
       const response = await fetch(
-        `${baseUrl}/__astro_grab/snippet?src=${encodeURIComponent(src)}&contextLines=${this.contextLines}`,
+        `/__astro_grab/snippet?src=${encodeURIComponent(src)}&contextLines=${this.contextLines}`,
       );
 
       if (!response.ok) {
