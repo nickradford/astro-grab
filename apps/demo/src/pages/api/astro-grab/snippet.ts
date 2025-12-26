@@ -1,7 +1,8 @@
 import type { APIRoute } from "astro";
 import { handleSnippetRequest } from "astro-grab-server";
 import { readdir, stat } from "fs/promises";
-import { resolve, join } from "path";
+import { resolve, join, dirname } from "path";
+import { fileURLToPath } from "url";
 
 async function logFileTree(
   dir: string,
@@ -47,8 +48,45 @@ export const GET: APIRoute = async ({ request }) => {
   const contextLines = contextLinesParam ? parseInt(contextLinesParam, 10) : 4;
 
   try {
-    const root = process.cwd();
-    console.log("[astro-grab] Using root:", root);
+    const cwd = process.cwd();
+    console.log("[astro-grab] Current working directory:", cwd);
+
+    // In Vercel serverless functions, we need to find the project root
+    // Try common locations where Astro projects are deployed
+    let root = cwd;
+
+    // Check if we're in a Vercel environment and find the correct root
+    const possibleRoots = [
+      cwd,
+      resolve(cwd, ".."),
+      "/var/task",
+      resolve(cwd, "../../.."), // Go up to find the actual project root
+    ];
+
+    // Also try to find root by traversing up from this API route
+    const currentFilePath = fileURLToPath(import.meta.url);
+    let apiRouteDir = dirname(currentFilePath);
+    for (let i = 0; i < 10; i++) {
+      possibleRoots.push(apiRouteDir);
+      apiRouteDir = resolve(apiRouteDir, "..");
+    }
+
+    for (const candidateRoot of possibleRoots) {
+      console.log("[astro-grab] Checking root candidate:", candidateRoot);
+      const testPath = resolve(candidateRoot, "src/components/Hero.astro");
+      console.log("[astro-grab] Testing file path:", testPath);
+
+      try {
+        await stat(testPath);
+        console.log("[astro-grab] Found project root at:", candidateRoot);
+        root = candidateRoot;
+        break;
+      } catch {
+        console.log("[astro-grab] File not found at:", testPath);
+      }
+    }
+
+    console.log("[astro-grab] Final root:", root);
 
     // Log the file tree starting from root
     const fileTree = await logFileTree(root);
