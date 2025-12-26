@@ -8,8 +8,6 @@ async function logFileTree(
   prefix = "",
   depth = 0,
 ): Promise<string> {
-  if (depth > 3) return ""; // Limit depth to avoid too much output
-
   let result = "";
   try {
     const items = await readdir(dir);
@@ -22,7 +20,7 @@ async function logFileTree(
 
       result += `${prefix}${isDir ? "📁" : "📄"} ${item}\n`;
 
-      if (isDir && depth < 2) {
+      if (isDir) {
         result += await logFileTree(fullPath, prefix + "  ", depth + 1);
       }
     }
