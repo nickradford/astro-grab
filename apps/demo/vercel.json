@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/astro-grab/snippet": {
-      "includeFiles": "src/**"
-    }
-  }
-}
