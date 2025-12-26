@@ -1,6 +1,6 @@
 {
   "name": "astro-grab-monorepo",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": true,
   "workspaces": [
     "packages/*",
@@ -21,6 +21,7 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
+    "@changesets/cli": "2.29.8",
     "@types/bun": "^1.1.0",
     "oxlint": "1.34.0",
     "prettier": "3.7.4",
