@@ -1,11 +1,11 @@
 import { AstroGrab } from "./index.js";
 
-/**
- * Auto-start entry point
- * This file self-executes on load to automatically initialize AstroGrab
- */
 if (typeof window !== "undefined") {
-  const instance = new AstroGrab();
+  const config = (window as any).__ASTRO_GRAB_CONFIG__ || {};
+  if (config.debug) {
+    console.log("[astro-grab:auto] Config from window:", config);
+  }
+  const instance = new AstroGrab(config);
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => instance.init());

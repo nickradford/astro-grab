@@ -1,12 +1,17 @@
 import type { AstroIntegration } from "astro";
 import { astroGrabVitePlugin } from "astro-grab-server";
 import type { AstroGrabOptions } from "astro-grab-shared";
+import { astroGrabToolbar } from "astro-grab-toolbar";
 
 export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
   const {
     enabled = true,
-    /* TODO: set this up later holdDuration = 1000,*/ contextLines = 4,
+    holdDuration = 1000,
+    contextLines = 5,
     autoInject = true,
+    hue = 30,
+    debug = false,
+    toolbar = true,
   } = options;
 
   return {
@@ -19,16 +24,46 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
         }
 
         logger.info("Initializing...");
+        logger.info(
+          `[astro-grab] Config: enabled=${enabled}, holdDuration=${holdDuration}, contextLines=${contextLines}, autoInject=${autoInject}, hue=${hue}, debug=${debug}, toolbar=${toolbar}`,
+        );
 
         updateConfig({
           vite: {
-            plugins: [astroGrabVitePlugin({ contextLines })],
+            plugins: [astroGrabVitePlugin({ hue, contextLines })],
           },
         });
         logger.info("Astro Vite plugin enabled");
 
+        if (toolbar) {
+          updateConfig({
+            integrations: [astroGrabToolbar()],
+          });
+          logger.info("Adding astro-grab-toolbar");
+        }
+
         if (autoInject) {
-          injectScript("page", `import "astro-grab-client/auto";`);
+          const script = `import { AstroGrab } from "astro-grab-client";
+const toolbarConfig = (() => {
+  try {
+    const stored = localStorage.getItem("astro-grab-toolbar-config");
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (e) {}
+  return {};
+})();
+const instance = new AstroGrab({ holdDuration: toolbarConfig.holdDuration ?? ${holdDuration}, contextLines: ${contextLines}, hue: toolbarConfig.hue ?? ${hue}, debug: ${debug} });
+window.__astroGrabInstance__ = instance;
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => instance.init());
+} else {
+  instance.init();
+}`;
+          if (debug) {
+            logger.info(`[astro-grab] Injecting script`);
+          }
+          injectScript("page", script);
           logger.info(
             `Client script injected. Use crtl/cmd+g on your Astro site to select components.`,
           );

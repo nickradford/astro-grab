@@ -1,0 +1,95 @@
+---
+// Installation component
+---
+
+<section id="installation" class="py-16 bg-gray-50">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-semibold text-gray-900 mb-12 text-center">Installation</h2>
+
+    <div class="space-y-12">
+      <div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">1. Install the package</h3>
+        <div class="relative bg-gray-900 rounded-lg mb-4">
+          <pre class="p-6 text-white font-mono text-sm leading-relaxed overflow-x-auto"><code>npm install astro-grab</code></pre>
+          <button class="copy-btn absolute top-2 right-2 bg-white/10 text-white border border-white/20 px-3 py-1 rounded text-xs cursor-pointer transition-all duration-200 hover:bg-white/20" onclick="copyToClipboard('npm install astro-grab')">Copy</button>
+        </div>
+        <p class="text-sm text-gray-600 m-0">Or use <code class="bg-gray-100 px-2 py-1 rounded text-xs font-mono">bun add astro-grab</code> if you prefer Bun.</p>
+      </div>
+
+      <div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">2. Add the integration</h3>
+        <div class="relative bg-gray-900 rounded-lg mb-4">
+          <pre id="config-code" class="p-6 text-white font-mono text-sm leading-relaxed overflow-x-auto"></pre>
+          <button class="copy-btn absolute top-2 right-2 bg-white/10 text-white border border-white/20 px-3 py-1 rounded text-xs cursor-pointer transition-all duration-200 hover:bg-white/20" onclick="copyConfig()">Copy</button>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">3. Start dev server</h3>
+        <div class="relative bg-gray-900 rounded-lg mb-4">
+          <pre class="p-6 text-white font-mono text-sm leading-relaxed overflow-x-auto"><code>npm run dev</code></pre>
+          <button class="copy-btn absolute top-2 right-2 bg-white/10 text-white border border-white/20 px-3 py-1 rounded text-xs cursor-pointer transition-all duration-200 hover:bg-white/20" onclick="copyToClipboard('npm run dev')">Copy</button>
+        </div>
+        <p class="text-sm text-gray-600 m-0">The astro-grab toolbar will appear in your Astro dev toolbar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const configCode = `// astro.config.mjs
+import { defineConfig } from 'astro/config';
+import { astroGrab } from 'astro-grab';
+
+export default defineConfig({
+  integrations: [
+    astroGrab({
+      enabled: true,        // Enable in dev mode
+      holdDuration: 1000,   // Hold time in ms
+      contextLines: 4,      // Lines around target
+      hue: 30,             // Highlight color (orange)
+      toolbar: true,       // Enable dev toolbar
+    }),
+  ],
+});`;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const codeElement = document.getElementById('config-code');
+    if (codeElement) {
+      codeElement.textContent = configCode;
+    }
+  });
+
+  function copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      const button = event.target as HTMLButtonElement;
+      const originalText = button.textContent;
+      button.textContent = 'Copied!';
+      button.style.background = '#000';
+      button.style.color = 'white';
+      
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '';
+        button.style.color = '';
+      }, 2000);
+    });
+  }
+
+  function copyConfig() {
+    navigator.clipboard.writeText(configCode).then(() => {
+      const button = event.target as HTMLButtonElement;
+      const originalText = button.textContent;
+      button.textContent = 'Copied!';
+      button.style.background = '#000';
+      button.style.color = 'white';
+      
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '';
+        button.style.color = '';
+      }, 2000);
+    });
+  }
+</script>
+

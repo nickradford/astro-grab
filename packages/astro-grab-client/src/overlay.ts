@@ -7,9 +7,11 @@ export class Overlay {
   private toast: HTMLDivElement | null = null;
   private crosshair: HTMLDivElement | null = null;
   private readonly stateMachine: StateMachine;
+  private hue: number;
 
-  constructor(stateMachine: StateMachine) {
+  constructor(stateMachine: StateMachine, hue: number) {
     this.stateMachine = stateMachine;
+    this.hue = hue;
   }
 
   init(): void {
@@ -36,8 +38,8 @@ export class Overlay {
     this.highlightBox = document.createElement("div");
     this.highlightBox.style.cssText = `
       position: absolute;
-      border: 2px solid #f97316;
-      background: rgba(249, 115, 22, 0.1);
+      border: 2px solid hsla(${this.hue}, 90%, 50%, 1);
+      background: hsla(${this.hue}, 90%, 50%, 0.1);
       pointer-events: none;
       transition: all 0.1s ease;
       display: none;
@@ -65,7 +67,7 @@ export class Overlay {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background: rgba(34, 197, 94, 0.95);
+      background: hsla(${this.hue}, 80%, 45%, 0.95);
       color: white;
       padding: 12px 20px;
       border-radius: 6px;
@@ -75,6 +77,7 @@ export class Overlay {
       pointer-events: none;
       display: none;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 999999;
     `;
 
     this.crosshair = document.createElement("div");
@@ -97,7 +100,7 @@ export class Overlay {
       top: 0;
       width: 1px;
       height: 0;
-      background: #f97316;
+      background: hsla(${this.hue}, 90%, 50%, 1);
     `;
 
     const lineBottom = document.createElement("div");
@@ -108,7 +111,7 @@ export class Overlay {
       top: 0;
       width: 1px;
       height: 0;
-      background: #f97316;
+      background: hsla(${this.hue}, 90%, 50%, 1);
     `;
 
     const lineLeft = document.createElement("div");
@@ -119,7 +122,7 @@ export class Overlay {
       top: 0;
       width: 0;
       height: 1px;
-      background: #f97316;
+      background: hsla(${this.hue}, 90%, 50%, 1);
     `;
 
     const lineRight = document.createElement("div");
@@ -130,7 +133,7 @@ export class Overlay {
       top: 0;
       width: 0;
       height: 1px;
-      background: #f97316;
+      background: hsla(${this.hue}, 90%, 50%, 1);
     `;
 
     this.crosshair.appendChild(lineTop);
@@ -205,10 +208,10 @@ export class Overlay {
       return;
     }
 
-    const lineTop = this.crosshair.querySelector(".crosshair-line-top");
-    const lineBottom = this.crosshair.querySelector(".crosshair-line-bottom");
-    const lineLeft = this.crosshair.querySelector(".crosshair-line-left");
-    const lineRight = this.crosshair.querySelector(".crosshair-line-right");
+    const lineTop = this.crosshair.querySelector(".crosshair-line-top") as HTMLElement;
+    const lineBottom = this.crosshair.querySelector(".crosshair-line-bottom") as HTMLElement;
+    const lineLeft = this.crosshair.querySelector(".crosshair-line-left") as HTMLElement;
+    const lineRight = this.crosshair.querySelector(".crosshair-line-right") as HTMLElement;
 
     if (!lineTop || !lineBottom || !lineLeft || !lineRight) {
       return;
@@ -262,6 +265,39 @@ export class Overlay {
         this.toast.style.display = "none";
       }
     }, duration);
+  }
+
+  updateHue(newHue: number): void {
+    this.hue = newHue;
+
+    if (this.highlightBox) {
+      this.highlightBox.style.borderColor = `hsla(${newHue}, 90%, 50%, 1)`;
+      this.highlightBox.style.backgroundColor = `hsla(${newHue}, 90%, 50%, 0.1)`;
+    }
+
+    if (this.toast) {
+      this.toast.style.backgroundColor = `hsla(${newHue}, 80%, 45%, 0.95)`;
+    }
+
+    if (this.crosshair) {
+      const lineTop = this.crosshair.querySelector(".crosshair-line-top") as HTMLElement;
+      const lineBottom = this.crosshair.querySelector(".crosshair-line-bottom") as HTMLElement;
+      const lineLeft = this.crosshair.querySelector(".crosshair-line-left") as HTMLElement;
+      const lineRight = this.crosshair.querySelector(".crosshair-line-right") as HTMLElement;
+
+      if (lineTop) {
+        lineTop.style.backgroundColor = `hsla(${newHue}, 90%, 50%, 1)`;
+      }
+      if (lineBottom) {
+        lineBottom.style.backgroundColor = `hsla(${newHue}, 90%, 50%, 1)`;
+      }
+      if (lineLeft) {
+        lineLeft.style.backgroundColor = `hsla(${newHue}, 90%, 50%, 1)`;
+      }
+      if (lineRight) {
+        lineRight.style.backgroundColor = `hsla(${newHue}, 90%, 50%, 1)`;
+      }
+    }
   }
 
   destroy(): void {

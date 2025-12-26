@@ -1,143 +1,39 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Installation from '../components/Installation.astro';
 import Card from '../components/Card.astro';
+import TryItNow from '../components/TryItNow.astro';
 import Footer from '../components/Footer.astro';
 ---
 
 <Layout title="astro-grab - Visual element targeting for Astro">
-  <Header />
-
   <main>
-    <section class="hero">
-      <div class="container">
-        <h2>Copy any component's source code with a single click</h2>
-        <p class="subtitle">
-          Hold <kbd>Cmd+G</kbd> (Mac) or <kbd>Ctrl+G</kbd> (Windows/Linux) for 1 second,
-          then click any element to copy its source code to your clipboard.
-        </p>
-      </div>
-    </section>
-
-    <section class="features">
-      <div class="container">
-        <div class="grid">
+    <Hero />
+    
+    <section class="py-16">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <Card
-            title="Visual Targeting"
-            description="Hold Cmd/Ctrl+G to enter targeting mode. A blue outline highlights elements as you hover over them."
+            title="🎯 Visual Targeting"
+            description="Hold Cmd/Ctrl+G to enter targeting mode. Elements are highlighted as you hover."
           />
           <Card
-            title="Instant Copy"
-            description="Click any highlighted element to instantly copy its source code snippet to your clipboard."
+            title="📋 Instant Copy"
+            description="Click any highlighted element to copy its source code with context."
           />
           <Card
-            title="LLM-Ready Format"
-            description="Snippets are formatted with context and source attribution, perfect for pasting into AI assistants."
+            title="🤖 LLM-Ready Format"
+            description="Snippets include source attribution, perfect for AI assistants."
           />
         </div>
       </div>
     </section>
-
-    <section class="instructions">
-      <div class="container">
-        <h3>Try it now</h3>
-        <ol>
-          <li>Hold <kbd>Cmd+G</kbd> or <kbd>Ctrl+G</kbd> for 1 second</li>
-          <li>Hover over the cards above to see the targeting</li>
-          <li>Click a card to copy its source code</li>
-          <li>Press <kbd>Esc</kbd> to exit targeting mode</li>
-        </ol>
-      </div>
-    </section>
+    
+    <Installation />
+    <TryItNow />
   </main>
-
+  
   <Footer />
 </Layout>
 
-<style>
-  main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-
-  .hero {
-    padding: 5rem 0 4rem;
-    text-align: center;
-  }
-
-  .hero h2 {
-    color: #1a1a1a;
-    font-size: 2.25rem;
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-    letter-spacing: -1px;
-    line-height: 1.2;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .subtitle {
-    color: #666;
-    font-size: 1rem;
-    line-height: 1.7;
-    max-width: 700px;
-    margin: 0 auto;
-  }
-
-  kbd {
-    background: #f5f5f5;
-    padding: 0.25rem 0.6rem;
-    border-radius: 4px;
-    font-family: ui-monospace, monospace;
-    font-size: 0.9em;
-    font-weight: 500;
-    border: 1px solid #e0e0e0;
-    color: #1a1a1a;
-    display: inline-block;
-    margin: 0 0.15rem;
-  }
-
-  .features {
-    padding: 4rem 0;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .instructions {
-    padding: 4rem 0 5rem;
-    text-align: center;
-  }
-
-  .instructions h3 {
-    color: #1a1a1a;
-    font-size: 1.75rem;
-    margin-bottom: 2rem;
-    font-weight: 600;
-  }
-
-  .instructions ol {
-    display: inline-block;
-    text-align: left;
-    background: white;
-    padding: 2rem 2.5rem;
-    border-radius: 8px;
-    color: #333;
-    font-size: 1.0625rem;
-    border: 1px solid #e5e5e5;
-    line-height: 1.8;
-  }
-
-  .instructions li {
-    margin-bottom: 0.75rem;
-  }
-
-  .instructions li:last-child {
-    margin-bottom: 0;
-  }
-</style>

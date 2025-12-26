@@ -87,20 +87,27 @@ export const instrumentAstroFile = async (
         return;
       }
 
-      // Calculate actual line and column from character offset
-      const { line, column } = getLineAndColumn(node.position.start.offset);
+       // Calculate actual line and column from character offset
+       const { line, column } = getLineAndColumn(node.position.start.offset);
 
-      const loc = {
-        file: normalizedPath,
-        line,
-        column,
-      };
+       const loc = {
+         file: normalizedPath,
+         line,
+         column,
+       };
 
-      const encoded = encodeSourceLocation(loc);
+       const encoded = encodeSourceLocation(loc);
 
-      // Find insertion point more carefully by looking at the actual code
-      // We need to find the position after the tag name but before any attributes
-      const tagStart = node.position.start.offset;
+       // Find the actual tag start by searching backwards for the opening tag
+       let tagStart = node.position.start.offset;
+       const tagPrefix = `<${node.name}`;
+       while (tagStart > 0 && code.slice(tagStart, tagStart + tagPrefix.length) !== tagPrefix) {
+         tagStart--;
+       }
+       if (tagStart === 0 && code.slice(0, tagPrefix.length) !== tagPrefix) {
+         // not found, skip
+         return;
+       }
 
       // Find the end of the opening tag to search within
       let searchEnd = tagStart;

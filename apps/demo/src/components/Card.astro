@@ -7,36 +7,7 @@ interface Props {
 const { title, description } = Astro.props;
 ---
 
-<article class="card">
-  <h3>{title}</h3>
-  <p>{description}</p>
+<article class="bg-white border border-gray-200 rounded-lg p-8 transition-all duration-200 cursor-pointer hover:border-gray-900 hover:-translate-y-1 hover:shadow-lg">
+  <h3 class="text-gray-900 text-lg font-semibold mb-3">{title}</h3>
+  <p class="text-gray-600 leading-relaxed text-sm m-0">{description}</p>
 </article>
-
-<style>
-  .card {
-    background: white;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    padding: 2rem;
-    transition: all 0.2s ease;
-    cursor: pointer;
-  }
-
-  .card:hover {
-    border-color: #1a1a1a;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  }
-
-  h3 {
-    color: #1a1a1a;
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-  }
-
-  p {
-    color: #666;
-    line-height: 1.6;
-    font-size: 0.9375rem;
-  }
-</style>

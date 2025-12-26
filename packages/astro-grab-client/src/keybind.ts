@@ -2,9 +2,10 @@ import { StateMachine } from "./state-machine.js";
 
 export class KeybindHandler {
   private holdTimer: number | null = null;
-  private readonly holdDuration: number;
+  private holdDuration: number;
   private readonly stateMachine: StateMachine;
   private isKeyDown = false;
+  private hasActivatedOnce = false;
   private currentMouseX = 0;
   private currentMouseY = 0;
 
@@ -37,11 +38,16 @@ export class KeybindHandler {
 
     e.preventDefault();
     this.isKeyDown = true;
-    this.stateMachine.transition("holding");
 
-    this.holdTimer = window.setTimeout(() => {
+    if (this.hasActivatedOnce) {
       this.stateMachine.transition("targeting");
-    }, this.holdDuration);
+    } else {
+      this.stateMachine.transition("holding");
+      this.holdTimer = window.setTimeout(() => {
+        this.stateMachine.transition("targeting");
+        this.hasActivatedOnce = true;
+      }, this.holdDuration);
+    }
   };
 
   private handleKeyUp = (e: KeyboardEvent): void => {
@@ -76,5 +82,9 @@ export class KeybindHandler {
 
   getMousePosition(): { x: number; y: number } {
     return { x: this.currentMouseX, y: this.currentMouseY };
+  }
+
+  updateHoldDuration(newDuration: number): void {
+    this.holdDuration = newDuration;
   }
 }
