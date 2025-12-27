@@ -1,10 +1,15 @@
 {
   "name": "astro-grab",
-  "version": "0.1.3",
+  "description": "Grab context for coding agents directly from your astro site.",
+  "homepage": "https://astro-grab.nickradford.dev",
+  "version": "0.1.4",
   "keywords": [
     "astro",
     "astro-integration",
-    "dev-tools"
+    "withastro",
+    "devtools",
+    "overlay",
+    "grab"
   ],
   "files": [
     "dist"

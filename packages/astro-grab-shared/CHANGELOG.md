@@ -1,5 +1,11 @@
 # @astro-grab/shared
 
+## 0.1.4
+
+### Patch Changes
+
+- Update package information
+
 ## 0.1.3
 
 ### Patch Changes

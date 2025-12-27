@@ -1,5 +1,15 @@
 # demo
 
+## 0.1.4
+
+### Patch Changes
+
+- Update package information
+- Updated dependencies
+  - astro-grab@0.1.4
+  - @astro-grab/client@0.1.4
+  - @astro-grab/server@0.1.4
+
 ## 0.1.3
 
 ### Patch Changes
