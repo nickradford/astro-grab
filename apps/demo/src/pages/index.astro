@@ -21,7 +21,7 @@ import Footer from "../components/Footer.astro";
         </h2>
         <div id="steps-container" class="mb-12 text-left max-w-lg mx-auto">
           <ol class="list-decimal list-inside space-y-2 text-gray-300">
-             <li id="step-1">Hit <kbd class="bg-gray-800 px-2 py-1 font-mono text-xs text-white"><ShortcutDisplay /></kbd> to enter targeting mode</li>
+             <li id="step-1">Hold <kbd class="bg-gray-800 px-2 py-1 font-mono text-xs text-white"><ShortcutDisplay client:load /></kbd> for 1 second to enter targeting mode</li>
             <li id="step-2" style="height: 0; overflow: hidden; opacity: 0; transition: height 0.3s ease, opacity 0.3s ease;">Click on any component on this page</li>
             <li id="step-3" style="height: 0; overflow: hidden; opacity: 0; transition: height 0.3s ease, opacity 0.3s ease;">Paste the copied code into the textarea below</li>
             <li id="step-4" style="height: 0; overflow: hidden; opacity: 0; transition: height 0.3s ease, opacity 0.3s ease;">Now your AI agent has better context for editing</li>
