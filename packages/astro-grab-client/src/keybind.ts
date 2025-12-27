@@ -60,7 +60,9 @@ export class KeybindHandler {
       this.isKeyDown = false;
       this.clearTimer();
 
-      if (this.stateMachine.getState() !== "targeting") {
+      if (this.stateMachine.getState() === "holding") {
+        // Track early release (didn't hold long enough)
+        window.dispatchEvent(new CustomEvent("astro-grab:keypress-too-short"));
         this.stateMachine.reset();
       }
     }
@@ -69,6 +71,8 @@ export class KeybindHandler {
   private handleEscape = (e: KeyboardEvent): void => {
     if (e.key === "Escape" && this.stateMachine.getState() === "targeting") {
       e.preventDefault();
+      // Track escape/cancel
+      window.dispatchEvent(new CustomEvent("astro-grab:targeting-cancelled"));
       this.stateMachine.reset();
     }
   };

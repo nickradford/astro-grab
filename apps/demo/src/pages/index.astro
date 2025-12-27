@@ -67,6 +67,15 @@ import Footer from "../components/Footer.astro";
       const step4 = document.getElementById('step-4');
       let hasPasted = false;
 
+      // Timing tracking
+      let cmdgTime: number | null = null;
+      let step1Time: number | null = null;
+      let step2Time: number | null = null;
+
+      // Advanced tracking
+      let step1Count = 0;
+      let integrationViewed = false;
+
       if (textarea) {
         textarea.addEventListener('input', function() {
           this.style.height = 'auto';
@@ -82,8 +91,25 @@ import Footer from "../components/Footer.astro";
         textarea.addEventListener('input', handleInput);
       }
 
+      // Listen for initial keypress
+      window.addEventListener('astro-grab:key-held', () => {
+        cmdgTime = Date.now();
+        if ((window as any).umami) {
+          (window as any).umami.track('cmd-g');
+        }
+      });
+
       // Listen for targeting mode start
       window.addEventListener('astro-grab:targeting-mode-started', () => {
+        step1Time = Date.now();
+        step1Count++;
+        if ((window as any).umami) {
+          (window as any).umami.track('step-1');
+          // Track repeat walkthroughs
+          if (step1Count > 1) {
+            (window as any).umami.track('repeat-walkthrough', { count: step1Count });
+          }
+        }
         setTimeout(() => {
           if (step2) {
             const targetHeight = step2.scrollHeight;
@@ -94,7 +120,16 @@ import Footer from "../components/Footer.astro";
       });
 
       // Listen for component targeted
-      window.addEventListener('astro-grab:component-targeted', () => {
+      window.addEventListener('astro-grab:component-targeted', (event: any) => {
+        step2Time = Date.now();
+        if ((window as any).umami) {
+          (window as any).umami.track('step-2', { el: event.detail?.el });
+          // Track step-1 to step-2 duration
+          if (step1Time) {
+            const duration = step2Time - step1Time;
+            (window as any).umami.track('step-1-to-step-2-time', { duration });
+          }
+        }
         setTimeout(() => {
           if (step3 && textarea) {
             const targetHeight = step3.scrollHeight;
@@ -107,6 +142,20 @@ import Footer from "../components/Footer.astro";
 
       // Listen for text pasted
       window.addEventListener('demo:text-pasted', () => {
+        const step3Time = Date.now();
+        if ((window as any).umami) {
+          (window as any).umami.track('step-3');
+          // Track step-2 to step-3 duration
+          if (step2Time) {
+            const duration = step3Time - step2Time;
+            (window as any).umami.track('step-2-to-step-3-time', { duration });
+          }
+          // Track total walkthrough time
+          if (cmdgTime) {
+            const totalDuration = step3Time - cmdgTime;
+            (window as any).umami.track('total-walkthrough-time', { duration: totalDuration });
+          }
+        }
         setTimeout(() => {
           if (step4) {
             const targetHeight = step4.scrollHeight;
@@ -115,6 +164,36 @@ import Footer from "../components/Footer.astro";
           }
         }, 100);
       });
+
+      // Listen for keypress too short (didn't hold long enough)
+      window.addEventListener('astro-grab:keypress-too-short', () => {
+        if ((window as any).umami) {
+          (window as any).umami.track('keypress-too-short');
+        }
+      });
+
+      // Listen for targeting cancelled (escape key)
+      window.addEventListener('astro-grab:targeting-cancelled', () => {
+        if ((window as any).umami) {
+          (window as any).umami.track('targeting-cancelled');
+        }
+      });
+
+      // Track integration section visibility
+      const integrationSection = document.getElementById('installation');
+      if (integrationSection && (window as any).IntersectionObserver) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !integrationViewed) {
+              integrationViewed = true;
+              if ((window as any).umami) {
+                (window as any).umami.track('integration-attempted');
+              }
+            }
+          });
+        }, { threshold: 0.1 });
+        observer.observe(integrationSection);
+      }
     });
   </script>
 </Layout>

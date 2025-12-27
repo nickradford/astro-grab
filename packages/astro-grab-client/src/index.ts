@@ -52,6 +52,10 @@ export class AstroGrab {
     this.targeting.init(this.keybind);
     console.log("[astro-grab] Initialized - Hold Cmd/Ctrl+G to start");
 
+    this.stateMachine.onEnter("holding", () => {
+      window.dispatchEvent(new CustomEvent("astro-grab:key-held"));
+    });
+
     this.stateMachine.onEnter("targeting", () => {
       window.dispatchEvent(
         new CustomEvent("astro-grab:targeting-mode-started"),

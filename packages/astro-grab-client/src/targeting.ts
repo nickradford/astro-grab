@@ -204,7 +204,11 @@ export class TargetingHandler {
         );
         this.overlay.showToast("Copied!", 1000);
 
-        window.dispatchEvent(new CustomEvent("astro-grab:component-targeted"));
+        window.dispatchEvent(
+          new CustomEvent("astro-grab:component-targeted", {
+            detail: { el: `${data.file}:${data.targetLine}` },
+          }),
+        );
         return true;
       } catch (error) {
         console.error(

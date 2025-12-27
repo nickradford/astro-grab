@@ -28,11 +28,20 @@ import "../styles/global.css";
   </head>
   <body class="min-h-screen bg-black font-mono leading-relaxed text-white">
     <slot />
+    <script is:inline>
+      function beforeSendHandler(type, payload) {
+        if (payload.hostname !== "astro-grab.nickradford.dev") {
+          console.log(type,payload)
+          return false
+        }
+        return payload;
+
+      }</script>
     <script 
       defer 
       is:inline 
       src="https://st.nickradford.dev/script.js" 
       data-website-id="a105b203-64dc-4fd8-be7b-319fa279bf49" 
-      data-domains="astro-grab.nickradford.dev"></script>
+      data-before-send="beforeSendHandler"></script>
   </body>
 </html>
