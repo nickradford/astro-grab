@@ -12,8 +12,24 @@ import Footer from "../components/Footer.astro";
   <main>
     <Hero />
 
-    <section class="bg-black py-24">
-      <div class="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+    <section class="bg-black py-8 md:py-24">
+      <!-- Mobile video -->
+      <div class="block md:hidden mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+        <video
+          class="w-full max-w-2xl mx-auto rounded-lg"
+          autoplay
+          muted
+          loop
+          playsinline
+        >
+          <source src="/astro-grab-demo-trimmed.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <!-- <p>(Try the demo on desktop)</p> -->
+      </div>
+
+      <!-- Desktop content -->
+      <div class="hidden md:block mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
         <h2
           class="mb-16 text-2xl font-bold tracking-wider text-white uppercase"
         >
