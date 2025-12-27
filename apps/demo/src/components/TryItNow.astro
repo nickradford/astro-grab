@@ -1,5 +1,6 @@
 ---
 // TryItNow component
+import ShortcutDisplay from "./ShortcutDisplay.astro";
 ---
 
 <section id="try-it-now" class="bg-black py-24 text-center">
@@ -13,9 +14,9 @@
     >
       <div class="p-6 text-center transition-all duration-300 hover:scale-105">
         <div class="mb-4 text-3xl">🎯</div>
-        <h3 class="mb-2 text-lg font-bold tracking-wide text-white uppercase">
-          Hold Cmd+G
-        </h3>
+         <h3 class="mb-2 text-lg font-bold tracking-wide text-white uppercase">
+           Hold <ShortcutDisplay client:load />
+         </h3>
         <p class="text-sm text-gray-400">Enter targeting mode</p>
       </div>
 
@@ -48,4 +49,6 @@
       Try it on these elements above.
     </p>
   </div>
+
+
 </section>

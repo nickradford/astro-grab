@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import Installation from "../components/Installation.astro";
 import Card from "../components/Card.astro";
+import ShortcutDisplay from "../components/ShortcutDisplay.astro";
 
 import Footer from "../components/Footer.astro";
 ---
@@ -20,7 +21,7 @@ import Footer from "../components/Footer.astro";
         </h2>
         <div id="steps-container" class="mb-12 text-left max-w-lg mx-auto">
           <ol class="list-decimal list-inside space-y-2 text-gray-300">
-            <li id="step-1">Hit <kbd class="bg-gray-800 px-2 py-1 font-mono text-xs text-white">Cmd+G</kbd> to enter targeting mode</li>
+             <li id="step-1">Hit <kbd class="bg-gray-800 px-2 py-1 font-mono text-xs text-white"><ShortcutDisplay client:load /></kbd> to enter targeting mode</li>
             <li id="step-2" style="height: 0; overflow: hidden; opacity: 0; transition: height 0.3s ease, opacity 0.3s ease;">Click on any component on this page</li>
             <li id="step-3" style="height: 0; overflow: hidden; opacity: 0; transition: height 0.3s ease, opacity 0.3s ease;">Paste the copied code into the textarea below</li>
             <li id="step-4" style="height: 0; overflow: hidden; opacity: 0; transition: height 0.3s ease, opacity 0.3s ease;">Now your AI agent has better context for editing</li>
@@ -178,6 +179,25 @@ import Footer from "../components/Footer.astro";
           (window as any).umami.track('targeting-cancelled');
         }
       });
+
+      // Update platform-aware shortcuts
+      function updateShortcut() {
+        const shortcutElement = document.getElementById('demo-shortcut');
+        if (!shortcutElement) return;
+
+        const platform = navigator.platform.toLowerCase();
+        let shortcut = 'Cmd/Ctrl+G'; // fallback
+
+        if (platform.includes('mac')) {
+          shortcut = 'Cmd+G';
+        } else if (platform.includes('win') || platform.includes('linux')) {
+          shortcut = 'Ctrl+G';
+        }
+
+        shortcutElement.textContent = shortcut;
+      }
+
+      updateShortcut();
 
       // Track integration section visibility
       const integrationSection = document.getElementById('installation');

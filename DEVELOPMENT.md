@@ -199,7 +199,7 @@ DOM tests use `happy-dom` for lightweight browser environment.
 
 Test in the demo app (`bun run dev`):
 
-- [ ] Hold Cmd+G (Mac) or Ctrl+G (Win/Linux) for 1s → targeting mode activates
+- [ ] Hold Cmd+G (Mac) or Ctrl+G (Windows/Linux) for 1s → targeting mode activates
 - [ ] Blue highlight follows cursor over elements
 - [ ] Tooltip shows `data-astro-grab` value
 - [ ] Click element → "Copied!" toast appears

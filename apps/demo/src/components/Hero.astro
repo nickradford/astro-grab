@@ -1,5 +1,6 @@
 ---
 // Hero component
+import ShortcutDisplay from "./ShortcutDisplay.astro";
 ---
 
 <div class="relative w-full bg-black">
@@ -23,9 +24,9 @@
       >
         astro-grab
       </h1>
-      <p class="mb-8 text-lg text-gray-400 sm:text-xl">
-        try it, right now. hit cmd+g
-      </p>
+       <p class="mb-8 text-lg text-gray-400 sm:text-xl">
+         try it, right now. hit <ShortcutDisplay client:load />
+       </p>
       <div class="flex flex-col items-center justify-center gap-6 sm:flex-row">
         <a
           href="#installation"
@@ -43,4 +44,6 @@
       </div>
     </div>
   </section>
+
+
 </div>

@@ -1,0 +1,33 @@
+---
+// ShortcutDisplay component - displays platform-aware keyboard shortcuts
+---
+
+<span class="shortcut-display">Cmd/Ctrl+G</span>
+
+<script>
+  function updateShortcuts() {
+    const shortcutElements = document.querySelectorAll('.shortcut-display');
+
+    const platform = navigator.platform.toLowerCase();
+    let shortcut = 'Cmd/Ctrl+G'; // fallback
+
+    if (platform.includes('mac')) {
+      shortcut = 'Cmd+G';
+    } else if (platform.includes('win') || platform.includes('linux')) {
+      shortcut = 'Ctrl+G';
+    }
+
+    shortcutElements.forEach(element => {
+      element.textContent = shortcut;
+    });
+  }
+
+  // Update on page load
+  document.addEventListener('DOMContentLoaded', updateShortcuts);
+  // Also update immediately in case DOM is already loaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateShortcuts);
+  } else {
+    updateShortcuts();
+  }
+</script>
