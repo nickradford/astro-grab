@@ -1,5 +1,16 @@
 # astro-grab
 
+## 0.1.2
+
+### Patch Changes
+
+- Update readme
+- Updated dependencies
+  - @astro-grab/client@0.1.2
+  - @astro-grab/server@0.1.2
+  - @astro-grab/shared@0.1.2
+  - @astro-grab/toolbar@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes
