@@ -1,5 +1,13 @@
 # @astro-grab/server
 
+## 0.1.1
+
+### Patch Changes
+
+- Fix versioning
+- Updated dependencies
+  - @astro-grab/shared@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

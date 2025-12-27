@@ -1,6 +1,6 @@
 {
   "name": "astro-grab",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "keywords": [
     "astro",
     "astro-integration",
@@ -44,5 +44,8 @@
   },
   "peerDependencies": {
     "astro": "^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

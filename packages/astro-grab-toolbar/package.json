@@ -1,6 +1,6 @@
 {
   "name": "@astro-grab/toolbar",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "files": [
     "dist"
   ],
@@ -30,5 +30,8 @@
     "astro": "^5.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.7.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

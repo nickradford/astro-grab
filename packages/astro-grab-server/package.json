@@ -1,18 +1,12 @@
 {
   "name": "@astro-grab/server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "files": [
     "dist"
   ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
-  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -35,5 +29,8 @@
   "peerDependencies": {
     "astro": "^5.0.0",
     "vite": "^6.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
