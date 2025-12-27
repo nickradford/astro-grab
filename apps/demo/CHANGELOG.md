@@ -1,5 +1,15 @@
 # demo
 
+## 0.1.3
+
+### Patch Changes
+
+- chore: add license
+- Updated dependencies
+  - astro-grab@0.1.3
+  - @astro-grab/client@0.1.3
+  - @astro-grab/server@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes

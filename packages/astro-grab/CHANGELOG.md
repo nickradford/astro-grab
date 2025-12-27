@@ -1,5 +1,16 @@
 # astro-grab
 
+## 0.1.3
+
+### Patch Changes
+
+- chore: add license
+- Updated dependencies
+  - @astro-grab/client@0.1.3
+  - @astro-grab/server@0.1.3
+  - @astro-grab/shared@0.1.3
+  - @astro-grab/toolbar@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes

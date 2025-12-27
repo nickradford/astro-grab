@@ -1,5 +1,11 @@
 # @astro-grab/shared
 
+## 0.1.3
+
+### Patch Changes
+
+- chore: add license
+
 ## 0.1.2
 
 ### Patch Changes
