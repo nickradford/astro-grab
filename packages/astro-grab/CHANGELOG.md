@@ -1,5 +1,16 @@
 # astro-grab
 
+## 0.1.5
+
+### Patch Changes
+
+- e912807: Fixes subsequent invocations of astro-grab
+- Updated dependencies [e912807]
+  - @astro-grab/client@0.1.5
+  - @astro-grab/server@0.1.5
+  - @astro-grab/shared@0.1.5
+  - @astro-grab/toolbar@0.1.5
+
 ## 0.1.4
 
 ### Patch Changes
