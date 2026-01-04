@@ -92,45 +92,51 @@ export default defineConfig({
   </div>
 </section>
 
- <script is:inline>
-   function copyToClipboard(el, targetSelector) {
-     const text = document.querySelector(targetSelector).textContent;
+<script is:inline>
+  function copyToClipboard(el, targetSelector) {
+    const text = document.querySelector(targetSelector).textContent;
 
-     navigator.clipboard.writeText(text).then(() => {
-       // Track successful copy based on target
-       let eventName = 'copy-failed';
-       if (targetSelector === '#install-cmd') {
-         eventName = 'copy-install-cmd';
-       } else if (targetSelector === '#astro-config') {
-         eventName = 'copy-astro-config';
-       } else if (targetSelector === '#run-cmd') {
-         eventName = 'copy-run-cmd';
-       }
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        // Track successful copy based on target
+        let eventName = "copy-failed";
+        if (targetSelector === "#install-cmd") {
+          eventName = "copy-install-cmd";
+        } else if (targetSelector === "#astro-config") {
+          eventName = "copy-astro-config";
+        } else if (targetSelector === "#run-cmd") {
+          eventName = "copy-run-cmd";
+        }
 
-       if (window.umami) {
-         window.umami.track(eventName);
-       }
+        if (window.umami) {
+          window.umami.track(eventName);
+        }
 
-       const button = el;
-       const originalText = button.textContent;
-       button.textContent = "Copied!";
-       button.style.background = "#000";
-       button.style.color = "white";
+        const button = el;
+        const originalText = button.textContent;
+        button.textContent = "Copied!";
+        button.style.background = "#000";
+        button.style.color = "white";
 
-       setTimeout(() => {
-         button.textContent = originalText;
-         button.style.background = "";
-         button.style.color = "";
-       }, 2000);
-     }).catch((error) => {
-       // Track failed copy with more specific error type
-       let eventName = 'copy-failed';
-       if (error.name === 'NotAllowedError' || error.message?.includes('permission')) {
-         eventName = 'clipboard-permission-denied';
-       }
-       if (window.umami) {
-         window.umami.track(eventName);
-       }
-     });
-   }
- </script>
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.style.background = "";
+          button.style.color = "";
+        }, 2000);
+      })
+      .catch((error) => {
+        // Track failed copy with more specific error type
+        let eventName = "copy-failed";
+        if (
+          error.name === "NotAllowedError" ||
+          error.message?.includes("permission")
+        ) {
+          eventName = "clipboard-permission-denied";
+        }
+        if (window.umami) {
+          window.umami.track(eventName);
+        }
+      });
+  }
+</script>

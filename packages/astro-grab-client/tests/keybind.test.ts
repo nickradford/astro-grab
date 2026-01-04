@@ -36,7 +36,7 @@ describe("KeybindHandler", () => {
 
   it("should transition to holding on Ctrl+G", () => {
     const event = new window.KeyboardEvent("keydown", {
-      key: "G", // Test uppercase
+      key: "G",
       ctrlKey: true,
     });
 
@@ -54,7 +54,6 @@ describe("KeybindHandler", () => {
     document.dispatchEvent(event);
     expect(stateMachine.getState()).toBe("holding");
 
-    // Wait for hold duration
     await new Promise((resolve) => setTimeout(resolve, 150));
 
     expect(stateMachine.getState()).toBe("targeting");
@@ -69,7 +68,6 @@ describe("KeybindHandler", () => {
 
     expect(stateMachine.getState()).toBe("holding");
 
-    // Release before hold duration completes
     await new Promise((resolve) => setTimeout(resolve, 50));
 
     const keyup = new window.KeyboardEvent("keyup", {
@@ -87,18 +85,15 @@ describe("KeybindHandler", () => {
     });
     document.dispatchEvent(keydown);
 
-    // Wait for hold duration
     await new Promise((resolve) => setTimeout(resolve, 150));
 
     expect(stateMachine.getState()).toBe("targeting");
 
-    // Release key
     const keyup = new window.KeyboardEvent("keyup", {
       key: "g",
     });
     document.dispatchEvent(keyup);
 
-    // Should still be targeting
     expect(stateMachine.getState()).toBe("targeting");
   });
 
@@ -113,7 +108,6 @@ describe("KeybindHandler", () => {
     await new Promise((resolve) => setTimeout(resolve, 150));
     expect(stateMachine.getState()).toBe("targeting");
 
-    // Press Escape
     const escape = new window.KeyboardEvent("keydown", {
       key: "Escape",
     });
@@ -155,15 +149,13 @@ describe("KeybindHandler", () => {
       await new Promise((resolve) => setTimeout(resolve, 150));
       expect(stateMachine.getState()).toBe("targeting");
 
-      // Simulate state reset (as if element was selected)
       stateMachine.reset();
       expect(stateMachine.getState()).toBe("idle");
 
-      // Second activation - simulating repeat keydown (user still holding G)
       const keydown2 = new window.KeyboardEvent("keydown", {
         key: "g",
         metaKey: true,
-        repeat: true, // Key repeat event
+        repeat: true,
       });
 
       let preventDefaultCalled = false;
@@ -173,7 +165,6 @@ describe("KeybindHandler", () => {
 
       document.dispatchEvent(keydown2);
 
-      // Should have called preventDefault even on repeat
       expect(preventDefaultCalled).toBe(true);
     });
 
@@ -188,15 +179,12 @@ describe("KeybindHandler", () => {
       await new Promise((resolve) => setTimeout(resolve, 150));
       expect(stateMachine.getState()).toBe("targeting");
 
-      // Simulate element selection (state resets to idle)
       stateMachine.reset();
       expect(stateMachine.getState()).toBe("idle");
 
-      // Release G key
       const keyup = new window.KeyboardEvent("keyup", { key: "g" });
       document.dispatchEvent(keyup);
 
-      // Press G again (Cmd still held) - should immediately enter targeting
       const keydown2 = new window.KeyboardEvent("keydown", {
         key: "g",
         metaKey: true,
@@ -204,7 +192,6 @@ describe("KeybindHandler", () => {
       });
       document.dispatchEvent(keydown2);
 
-      // Should immediately go to targeting (hasActivatedOnce is true)
       expect(stateMachine.getState()).toBe("targeting");
     });
 
@@ -218,10 +205,8 @@ describe("KeybindHandler", () => {
       await new Promise((resolve) => setTimeout(resolve, 150));
       expect(stateMachine.getState()).toBe("targeting");
 
-      // Reset to idle
       stateMachine.reset();
 
-      // Repeat event should be ignored (not start new targeting)
       const repeatEvent = new window.KeyboardEvent("keydown", {
         key: "g",
         metaKey: true,
@@ -229,7 +214,6 @@ describe("KeybindHandler", () => {
       });
       document.dispatchEvent(repeatEvent);
 
-      // Should still be idle - repeat events don't trigger new state
       expect(stateMachine.getState()).toBe("idle");
     });
   });

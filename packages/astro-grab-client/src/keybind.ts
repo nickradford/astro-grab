@@ -36,15 +36,15 @@ export class KeybindHandler {
       return;
     }
 
-    e.preventDefault(); // Always prevent browser's find dialog
+    e.preventDefault();
 
     if (e.repeat) {
-      return; // Ignore key repeats
+      return;
     }
 
     const currentState = this.stateMachine.getState();
     if (currentState !== "idle") {
-      return; // Already in holding/targeting state
+      return;
     }
 
     if (this.hasActivatedOnce) {
