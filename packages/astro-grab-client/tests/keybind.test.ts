@@ -142,4 +142,95 @@ describe("KeybindHandler", () => {
 
     expect(stateMachine.getState()).toBe("idle");
   });
+
+  describe("repeated activation", () => {
+    it("should always call preventDefault on Cmd+G even during key repeat", async () => {
+      // First activation
+      const keydown1 = new window.KeyboardEvent("keydown", {
+        key: "g",
+        metaKey: true,
+      });
+      document.dispatchEvent(keydown1);
+
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      expect(stateMachine.getState()).toBe("targeting");
+
+      // Simulate state reset (as if element was selected)
+      stateMachine.reset();
+      expect(stateMachine.getState()).toBe("idle");
+
+      // Second activation - simulating repeat keydown (user still holding G)
+      const keydown2 = new window.KeyboardEvent("keydown", {
+        key: "g",
+        metaKey: true,
+        repeat: true, // Key repeat event
+      });
+
+      let preventDefaultCalled = false;
+      keydown2.preventDefault = () => {
+        preventDefaultCalled = true;
+      };
+
+      document.dispatchEvent(keydown2);
+
+      // Should have called preventDefault even on repeat
+      expect(preventDefaultCalled).toBe(true);
+    });
+
+    it("should re-enter targeting when pressing G again after state reset", async () => {
+      // First activation - complete the full flow
+      const keydown1 = new window.KeyboardEvent("keydown", {
+        key: "g",
+        metaKey: true,
+      });
+      document.dispatchEvent(keydown1);
+
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      expect(stateMachine.getState()).toBe("targeting");
+
+      // Simulate element selection (state resets to idle)
+      stateMachine.reset();
+      expect(stateMachine.getState()).toBe("idle");
+
+      // Release G key
+      const keyup = new window.KeyboardEvent("keyup", { key: "g" });
+      document.dispatchEvent(keyup);
+
+      // Press G again (Cmd still held) - should immediately enter targeting
+      const keydown2 = new window.KeyboardEvent("keydown", {
+        key: "g",
+        metaKey: true,
+        repeat: false,
+      });
+      document.dispatchEvent(keydown2);
+
+      // Should immediately go to targeting (hasActivatedOnce is true)
+      expect(stateMachine.getState()).toBe("targeting");
+    });
+
+    it("should ignore repeat keydown events without entering new state", async () => {
+      const keydown = new window.KeyboardEvent("keydown", {
+        key: "g",
+        metaKey: true,
+      });
+      document.dispatchEvent(keydown);
+
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      expect(stateMachine.getState()).toBe("targeting");
+
+      // Reset to idle
+      stateMachine.reset();
+
+      // Repeat event should be ignored (not start new targeting)
+      const repeatEvent = new window.KeyboardEvent("keydown", {
+        key: "g",
+        metaKey: true,
+        repeat: true,
+      });
+      document.dispatchEvent(repeatEvent);
+
+      // Should still be idle - repeat events don't trigger new state
+      expect(stateMachine.getState()).toBe("idle");
+    });
+  });
 });

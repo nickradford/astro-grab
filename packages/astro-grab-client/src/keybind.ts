@@ -4,7 +4,6 @@ export class KeybindHandler {
   private holdTimer: number | null = null;
   private holdDuration: number;
   private readonly stateMachine: StateMachine;
-  private isKeyDown = false;
   private hasActivatedOnce = false;
   private currentMouseX = 0;
   private currentMouseY = 0;
@@ -33,12 +32,20 @@ export class KeybindHandler {
     const isTriggerKey =
       e.key.toLowerCase() === "g" && (e.metaKey || e.ctrlKey);
 
-    if (!isTriggerKey || this.isKeyDown) {
+    if (!isTriggerKey) {
       return;
     }
 
-    e.preventDefault();
-    this.isKeyDown = true;
+    e.preventDefault(); // Always prevent browser's find dialog
+
+    if (e.repeat) {
+      return; // Ignore key repeats
+    }
+
+    const currentState = this.stateMachine.getState();
+    if (currentState !== "idle") {
+      return; // Already in holding/targeting state
+    }
 
     if (this.hasActivatedOnce) {
       this.stateMachine.transition("targeting");
@@ -57,7 +64,6 @@ export class KeybindHandler {
       e.key === "Meta" ||
       e.key === "Control"
     ) {
-      this.isKeyDown = false;
       this.clearTimer();
 
       if (this.stateMachine.getState() === "holding") {
