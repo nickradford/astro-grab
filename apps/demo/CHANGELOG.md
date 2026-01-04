@@ -1,5 +1,13 @@
 # demo
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [b7fab44]
+  - @astro-grab/client@0.1.6
+  - astro-grab@0.1.6
+
 ## 0.1.5
 
 ### Patch Changes

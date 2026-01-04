@@ -1,5 +1,11 @@
 # @astro-grab/client
 
+## 0.1.6
+
+### Patch Changes
+
+- b7fab44: Fix toast, show copied toast near copied component
+
 ## 0.1.5
 
 ### Patch Changes
