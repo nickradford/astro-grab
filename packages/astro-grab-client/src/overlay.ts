@@ -65,19 +65,17 @@ export class Overlay {
     this.toast = document.createElement("div");
     this.toast.style.cssText = `
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: hsla(${this.hue}, 80%, 45%, 0.95);
+      background: rgba(0, 0, 0, 0.9);
       color: white;
-      padding: 12px 20px;
-      border-radius: 6px;
-      font-family: system-ui, sans-serif;
-      font-size: 14px;
-      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 0.5px solid white;
+      font-family: monospace;
+      font-size: 12px;
       pointer-events: none;
       display: none;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       z-index: 999999;
+      transform: translateX(-50%);
     `;
 
     this.crosshair = document.createElement("div");
@@ -143,9 +141,12 @@ export class Overlay {
 
     this.container.appendChild(this.highlightBox);
     this.container.appendChild(this.tooltip);
-    this.container.appendChild(this.toast);
     this.container.appendChild(this.crosshair);
     document.body.appendChild(this.container);
+
+    if (this.toast) {
+      document.body.appendChild(this.toast);
+    }
   }
 
   show(): void {
@@ -264,13 +265,36 @@ export class Overlay {
     }
   }
 
-  showToast(message: string, duration: number = 1000): void {
+  showToast(message: string, rect?: DOMRect, duration: number = 2000): void {
     if (!this.toast) {
       return;
     }
 
     this.toast.textContent = message;
     this.toast.style.display = "block";
+
+    if (rect) {
+      const TOAST_OFFSET = 12;
+      const centerX = rect.left + rect.width / 2;
+      const toastHeight = 40;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+
+      if (spaceBelow >= toastHeight + TOAST_OFFSET) {
+        this.toast.style.top = `${rect.bottom + TOAST_OFFSET}px`;
+      } else if (spaceAbove >= toastHeight + TOAST_OFFSET) {
+        this.toast.style.top = `${rect.top - toastHeight - TOAST_OFFSET}px`;
+      } else {
+        this.toast.style.top = `${rect.top + rect.height / 2}px`;
+      }
+
+      this.toast.style.left = `${centerX}px`;
+    } else {
+      this.toast.style.bottom = "20px";
+      this.toast.style.right = "20px";
+      this.toast.style.left = "auto";
+      this.toast.style.top = "auto";
+    }
 
     setTimeout(() => {
       if (this.toast) {
@@ -285,10 +309,6 @@ export class Overlay {
     if (this.highlightBox) {
       this.highlightBox.style.borderColor = `hsla(${newHue}, 90%, 50%, 1)`;
       this.highlightBox.style.backgroundColor = `hsla(${newHue}, 90%, 50%, 0.1)`;
-    }
-
-    if (this.toast) {
-      this.toast.style.backgroundColor = `hsla(${newHue}, 80%, 45%, 0.95)`;
     }
 
     if (this.crosshair) {
@@ -326,8 +346,12 @@ export class Overlay {
       this.container = null;
       this.highlightBox = null;
       this.tooltip = null;
-      this.toast = null;
       this.crosshair = null;
+    }
+
+    if (this.toast) {
+      this.toast.remove();
+      this.toast = null;
     }
   }
 }

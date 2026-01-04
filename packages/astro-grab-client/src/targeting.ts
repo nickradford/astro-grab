@@ -168,14 +168,15 @@ export class TargetingHandler {
     if (this.currentTarget) {
       const src = this.currentTarget.getAttribute("data-astro-grab");
       if (src) {
-        await this.fetchAndCopySnippet(src);
+        const rect = this.currentTarget.getBoundingClientRect();
+        await this.fetchAndCopySnippet(src, rect);
       }
     }
 
     this.stateMachine.reset();
   };
 
-  private async fetchAndCopySnippet(src: string): Promise<void> {
+  private async fetchAndCopySnippet(src: string, rect: DOMRect): Promise<void> {
     const primaryEndpoint = this.apiBaseUrl
       ? `${this.apiBaseUrl}/snippet`
       : "/__astro_grab/snippet";
@@ -202,7 +203,7 @@ export class TargetingHandler {
         console.log(
           `[astro-grab] Copied snippet from ${data.file}:${data.targetLine}`,
         );
-        this.overlay.showToast("Copied!", 1000);
+        this.overlay.showToast("Copied!", rect, 2000);
 
         window.dispatchEvent(
           new CustomEvent("astro-grab:component-targeted", {
@@ -235,7 +236,7 @@ export class TargetingHandler {
     }
 
     // Both endpoints failed
-    this.overlay.showToast("Error copying snippet", 2000);
+    this.overlay.showToast("Error copying snippet", rect, 2000);
   }
 
   private findElementWithSource(element: HTMLElement): HTMLElement | null {
