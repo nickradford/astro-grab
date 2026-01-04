@@ -36,7 +36,7 @@ describe("KeybindHandler", () => {
 
   it("should transition to holding on Ctrl+G", () => {
     const event = new window.KeyboardEvent("keydown", {
-      key: "G", // Test uppercase
+      key: "G",
       ctrlKey: true,
     });
 
@@ -54,7 +54,6 @@ describe("KeybindHandler", () => {
     document.dispatchEvent(event);
     expect(stateMachine.getState()).toBe("holding");
 
-    // Wait for hold duration
     await new Promise((resolve) => setTimeout(resolve, 150));
 
     expect(stateMachine.getState()).toBe("targeting");
@@ -69,7 +68,6 @@ describe("KeybindHandler", () => {
 
     expect(stateMachine.getState()).toBe("holding");
 
-    // Release before hold duration completes
     await new Promise((resolve) => setTimeout(resolve, 50));
 
     const keyup = new window.KeyboardEvent("keyup", {
@@ -87,18 +85,15 @@ describe("KeybindHandler", () => {
     });
     document.dispatchEvent(keydown);
 
-    // Wait for hold duration
     await new Promise((resolve) => setTimeout(resolve, 150));
 
     expect(stateMachine.getState()).toBe("targeting");
 
-    // Release key
     const keyup = new window.KeyboardEvent("keyup", {
       key: "g",
     });
     document.dispatchEvent(keyup);
 
-    // Should still be targeting
     expect(stateMachine.getState()).toBe("targeting");
   });
 
@@ -113,7 +108,6 @@ describe("KeybindHandler", () => {
     await new Promise((resolve) => setTimeout(resolve, 150));
     expect(stateMachine.getState()).toBe("targeting");
 
-    // Press Escape
     const escape = new window.KeyboardEvent("keydown", {
       key: "Escape",
     });
@@ -141,5 +135,86 @@ describe("KeybindHandler", () => {
     document.dispatchEvent(event);
 
     expect(stateMachine.getState()).toBe("idle");
+  });
+
+  describe("repeated activation", () => {
+    it("should always call preventDefault on Cmd+G even during key repeat", async () => {
+      // First activation
+      const keydown1 = new window.KeyboardEvent("keydown", {
+        key: "g",
+        metaKey: true,
+      });
+      document.dispatchEvent(keydown1);
+
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      expect(stateMachine.getState()).toBe("targeting");
+
+      stateMachine.reset();
+      expect(stateMachine.getState()).toBe("idle");
+
+      const keydown2 = new window.KeyboardEvent("keydown", {
+        key: "g",
+        metaKey: true,
+        repeat: true,
+      });
+
+      let preventDefaultCalled = false;
+      keydown2.preventDefault = () => {
+        preventDefaultCalled = true;
+      };
+
+      document.dispatchEvent(keydown2);
+
+      expect(preventDefaultCalled).toBe(true);
+    });
+
+    it("should re-enter targeting when pressing G again after state reset", async () => {
+      // First activation - complete the full flow
+      const keydown1 = new window.KeyboardEvent("keydown", {
+        key: "g",
+        metaKey: true,
+      });
+      document.dispatchEvent(keydown1);
+
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      expect(stateMachine.getState()).toBe("targeting");
+
+      stateMachine.reset();
+      expect(stateMachine.getState()).toBe("idle");
+
+      const keyup = new window.KeyboardEvent("keyup", { key: "g" });
+      document.dispatchEvent(keyup);
+
+      const keydown2 = new window.KeyboardEvent("keydown", {
+        key: "g",
+        metaKey: true,
+        repeat: false,
+      });
+      document.dispatchEvent(keydown2);
+
+      expect(stateMachine.getState()).toBe("targeting");
+    });
+
+    it("should ignore repeat keydown events without entering new state", async () => {
+      const keydown = new window.KeyboardEvent("keydown", {
+        key: "g",
+        metaKey: true,
+      });
+      document.dispatchEvent(keydown);
+
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      expect(stateMachine.getState()).toBe("targeting");
+
+      stateMachine.reset();
+
+      const repeatEvent = new window.KeyboardEvent("keydown", {
+        key: "g",
+        metaKey: true,
+        repeat: true,
+      });
+      document.dispatchEvent(repeatEvent);
+
+      expect(stateMachine.getState()).toBe("idle");
+    });
   });
 });

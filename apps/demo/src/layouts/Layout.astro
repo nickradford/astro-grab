@@ -31,17 +31,17 @@ import "../styles/global.css";
     <script is:inline>
       function beforeSendHandler(type, payload) {
         if (payload.hostname !== "astro-grab.nickradford.dev") {
-          console.log(type,payload)
-          return false
+          console.log(type, payload);
+          return false;
         }
         return payload;
-
-      }</script>
-    <script 
-      defer 
-      is:inline 
-      src="https://st.nickradford.dev/script.js" 
-      data-website-id="a105b203-64dc-4fd8-be7b-319fa279bf49" 
+      }
+    </script>
+    <script
+      defer
+      is:inline
+      src="https://st.nickradford.dev/script.js"
+      data-website-id="a105b203-64dc-4fd8-be7b-319fa279bf49"
       data-before-send="beforeSendHandler"></script>
   </body>
 </html>
