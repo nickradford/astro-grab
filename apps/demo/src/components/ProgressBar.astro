@@ -1,0 +1,75 @@
+---
+// ProgressBar.astro - Visual feedback during Cmd/Ctrl+G hold
+---
+
+<!-- Progress bar above walkthrough steps -->
+<div
+  id="hold-progress-bar"
+  class="mb-4 mx-auto max-w-lg"
+  style="display: none;"
+>
+  <div class="h-2 bg-gray-800/50 rounded-full overflow-hidden">
+    <div
+      id="hold-progress-fill"
+      class="h-full transition-all"
+      style="width: 0%; background: linear-gradient(to right, #ff8c00, #ffa500); transition-property: width; transition-timing-function: linear;"
+    >
+    </div>
+  </div>
+  <p class="text-xs text-gray-400 mt-1 text-center">Hold Cmd/Ctrl+G...</p>
+</div>
+
+<script>
+  const HOLD_DURATION = 1000; // Match default holdDuration
+
+  // Show progress bar when user holds Cmd/Ctrl+G
+  window.addEventListener("astro-grab:key-held", () => {
+    const progressBar = document.getElementById("hold-progress-bar");
+    const progressFill = document.getElementById("hold-progress-fill");
+
+    if (!progressBar || !progressFill) return;
+
+    // Reset and show progress bar
+    progressBar.style.display = "block";
+    progressFill.style.width = "0%";
+    progressFill.style.transitionDuration = `${HOLD_DURATION}ms`;
+
+    // Force reflow to restart animation
+    progressFill.offsetHeight;
+
+    // Start the fill animation
+    requestAnimationFrame(() => {
+      progressFill.style.width = "100%";
+    });
+  });
+
+  // Hide progress bar when targeting mode starts
+  window.addEventListener("astro-grab:targeting-mode-started", () => {
+    const progressBar = document.getElementById("hold-progress-bar");
+    const progressFill = document.getElementById("hold-progress-fill");
+
+    if (!progressBar || !progressFill) return;
+
+    setTimeout(() => {
+      progressBar.style.display = "none";
+      progressFill.style.width = "0%";
+    }, 200);
+  });
+
+  // Flash red if user releases keys too early
+  window.addEventListener("astro-grab:keypress-too-short", () => {
+    const progressBar = document.getElementById("hold-progress-bar");
+    const progressFill = document.getElementById("hold-progress-fill");
+
+    if (!progressBar || !progressFill) return;
+
+    // Flash red to indicate early release
+    progressFill.style.background = "#ef4444";
+    progressFill.style.width = "0%";
+    setTimeout(() => {
+      progressBar.style.display = "none";
+      progressFill.style.background =
+        "linear-gradient(to right, #ff8c00, #ffa500)";
+    }, 300);
+  });
+</script>
