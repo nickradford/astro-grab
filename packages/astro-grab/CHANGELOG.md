@@ -1,5 +1,11 @@
 # astro-grab
 
+## 0.2.0
+
+### Minor Changes
+
+- refactor: single package
+
 ## 0.1.6
 
 ### Patch Changes
