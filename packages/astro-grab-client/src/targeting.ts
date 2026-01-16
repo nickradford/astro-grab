@@ -1,7 +1,7 @@
 import { StateMachine } from "./state-machine.js";
 import { Overlay } from "./overlay.js";
 import { copyToClipboard, formatSnippet } from "./clipboard.js";
-import type { SnippetResponse } from "@astro-grab/shared";
+import { DEFAULT_TEMPLATE, type SnippetResponse } from "@astro-grab/shared";
 
 /**
  * Handles targeting mode interactions
@@ -12,6 +12,7 @@ export class TargetingHandler {
   private readonly overlay: Overlay;
   private contextLines: number;
   private apiBaseUrl: string | undefined;
+  private template: string;
   private currentTarget: HTMLElement | null = null;
   private currentMouseX = 0;
   private currentMouseY = 0;
@@ -21,11 +22,13 @@ export class TargetingHandler {
     overlay: Overlay,
     contextLines: number = 4,
     apiBaseUrl?: string,
+    template: string = DEFAULT_TEMPLATE,
   ) {
     this.stateMachine = stateMachine;
     this.overlay = overlay;
     this.contextLines = contextLines;
     this.apiBaseUrl = apiBaseUrl;
+    this.template = template;
     this.trackMousePosition();
   }
 
@@ -197,7 +200,7 @@ export class TargetingHandler {
         }
 
         const data: SnippetResponse = await response.json();
-        const formatted = formatSnippet(data);
+        const formatted = formatSnippet(data, this.template);
         await copyToClipboard(formatted);
 
         console.log(
@@ -254,5 +257,9 @@ export class TargetingHandler {
 
   updateContextLines(newContextLines: number): void {
     this.contextLines = newContextLines;
+  }
+
+  updateTemplate(newTemplate: string): void {
+    this.template = newTemplate;
   }
 }

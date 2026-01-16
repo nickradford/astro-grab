@@ -183,6 +183,47 @@ export default defineToolbarApp({
     durationSection.appendChild(durationLabel);
     durationSection.appendChild(durationRow);
 
+    const templateSection = document.createElement("div");
+    templateSection.style.cssText =
+      "display: flex; flex-direction: column; gap: 8px;";
+
+    const templateLabel = document.createElement("div");
+    templateLabel.textContent = "Template";
+    templateLabel.style.cssText = "font-size: 13px; font-weight: 500;";
+
+    const templateNote = document.createElement("div");
+    templateNote.textContent = "Edit template in astro.config.mjs";
+    templateNote.style.cssText =
+      "font-size: 11px; color: #6b7280; font-style: italic;";
+
+    const templateDisplay = document.createElement("pre");
+    templateDisplay.id = "astro-grab-template-display";
+    templateDisplay.style.cssText =
+      "font-size: 11px; font-family: monospace; background-color: #1e1e1e; color: #d4d4d4; padding: 8px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; margin: 0; max-height: 120px; overflow-y: auto;";
+
+    const astroGrabInstance = (
+      window as unknown as { __astroGrabInstance__?: { getTemplate(): string } }
+    ).__astroGrabInstance__;
+    templateDisplay.textContent = astroGrabInstance
+      ? astroGrabInstance.getTemplate()
+      : "Template not available";
+
+    const variablesLabel = document.createElement("div");
+    variablesLabel.textContent = "Available variables:";
+    variablesLabel.style.cssText = "font-size: 11px; color: #6b7280;";
+
+    const variablesList = document.createElement("div");
+    variablesList.style.cssText =
+      "font-size: 10px; font-family: monospace; color: #9ca3af; line-height: 1.6;";
+    variablesList.textContent =
+      "{{file}} {{snippet}} {{startLine}} {{endLine}} {{targetLine}} {{language}}";
+
+    templateSection.appendChild(templateLabel);
+    templateSection.appendChild(templateNote);
+    templateSection.appendChild(templateDisplay);
+    templateSection.appendChild(variablesLabel);
+    templateSection.appendChild(variablesList);
+
     const actionsContainer = document.createElement("div");
     actionsContainer.style.cssText =
       "display: flex; gap: 8px; padding-top: 8px;";
@@ -203,6 +244,7 @@ export default defineToolbarApp({
     contentContainer.appendChild(enabledSection);
     contentContainer.appendChild(hueSection);
     contentContainer.appendChild(durationSection);
+    contentContainer.appendChild(templateSection);
     contentContainer.appendChild(actionsContainer);
 
     toolbarWindow.appendChild(headerContainer);

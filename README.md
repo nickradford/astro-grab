@@ -119,10 +119,35 @@ export default defineConfig({
       enabled: true, // Enable in dev mode (default: true)
       holdDuration: 1000, // Hold time in ms (default: 1000)
       contextLines: 10, // Lines of context around target (default: 5)
+      template: `Source: {{file}}:{{targetLine}}\n\n\`\`\`{{language}}\n{{snippet}}\n\`\`\``, // Custom clipboard template
     }),
   ],
 });
 ```
+
+### Custom Clipboard Template
+
+You can customize the format of the copied snippet using the `template` option with `{{variable}}` interpolation:
+
+```javascript
+astroGrab({
+  template: `File: {{file}}
+Line: {{targetLine}}
+
+{{snippet}}`
+})
+```
+
+**Available variables:**
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `{{file}}` | Path to the .astro file | `src/components/Card.astro` |
+| `{{snippet}}` | The extracted code snippet | `<div>...</div>` |
+| `{{startLine}}` | First line of snippet | `12` |
+| `{{endLine}}` | Last line of snippet | `18` |
+| `{{targetLine}}` | The line clicked on | `15` |
+| `{{language}}` | Language identifier | `astro` |
 
 3. Run your dev server:
 
