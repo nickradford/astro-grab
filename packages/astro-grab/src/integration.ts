@@ -12,6 +12,7 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
     hue = 30,
     debug = false,
     toolbar = true,
+    template,
   } = options;
 
   return {
@@ -32,7 +33,7 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
 
         logger.info("Initializing...");
         logger.info(
-          `Config: enabled=${enabled}, holdDuration=${holdDuration}, contextLines=${contextLines}, autoInject=${autoInject}, hue=${hue}, debug=${debug}, toolbar=${toolbar}`,
+          `Config: enabled=${enabled}, holdDuration=${holdDuration}, contextLines=${contextLines}, autoInject=${autoInject}, hue=${hue}, debug=${debug}, toolbar=${toolbar}, template=${template ? "custom" : "default"}`,
         );
 
         updateConfig({
@@ -54,6 +55,9 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
             ? process.env.ASTRO_GRAB_API_BASE_URL
             : undefined;
 
+          const templateConfig = template
+            ? `template: ${JSON.stringify(template)},`
+            : "";
           const script = `import { AstroGrab } from "@astro-grab/client";
 const toolbarConfig = (() => {
   try {
@@ -69,7 +73,8 @@ const instance = new AstroGrab({
   contextLines: ${contextLines},
   hue: toolbarConfig.hue ?? ${hue},
   debug: ${debug},
-  apiBaseUrl: ${apiBaseUrl ? `"${apiBaseUrl}"` : undefined}
+  apiBaseUrl: ${apiBaseUrl ? `"${apiBaseUrl}"` : undefined},
+  ${templateConfig}
 });
 window.__astroGrabInstance__ = instance;
 if (document.readyState === "loading") {

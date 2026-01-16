@@ -1,13 +1,16 @@
-import type { SnippetResponse } from "@astro-grab/shared";
+import { DEFAULT_TEMPLATE, type SnippetResponse } from "@astro-grab/shared";
 
-export const formatSnippet = (data: SnippetResponse): string => {
-  return `Astro Grab (alpha)
-
-Source: ${data.file}:${data.targetLine}:1
-
-\`\`\`astro
-${data.snippet}
-\`\`\``;
+export const formatSnippet = (
+  data: SnippetResponse,
+  template: string = DEFAULT_TEMPLATE
+): string => {
+  return template
+    .replace(/\{\{file\}\}/g, data.file)
+    .replace(/\{\{snippet\}\}/g, data.snippet)
+    .replace(/\{\{startLine\}\}/g, String(data.startLine))
+    .replace(/\{\{endLine\}\}/g, String(data.endLine))
+    .replace(/\{\{targetLine\}\}/g, String(data.targetLine))
+    .replace(/\{\{language\}\}/g, data.language);
 };
 
 export const copyToClipboard = async (text: string): Promise<void> => {

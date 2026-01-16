@@ -3,7 +3,7 @@ import { formatSnippet } from "../src/clipboard.js";
 import type { SnippetResponse } from "@astro-grab/shared";
 
 describe("formatSnippet", () => {
-  it("should format snippet with header and code block", () => {
+  it("should format snippet with default template", () => {
     const data: SnippetResponse = {
       file: "src/components/Card.astro",
       snippet: 'const title = "Hello";\n<div>{title}</div>',
@@ -15,8 +15,7 @@ describe("formatSnippet", () => {
 
     const formatted = formatSnippet(data);
 
-    expect(formatted).toContain("Astro Grab (alpha)");
-    expect(formatted).toContain("Source: src/components/Card.astro:6:1");
+    expect(formatted).toContain("Source: src/components/Card.astro:6");
     expect(formatted).toContain("```astro");
     expect(formatted).toContain('const title = "Hello";');
     expect(formatted).toContain("<div>{title}</div>");
@@ -52,8 +51,7 @@ describe("formatSnippet", () => {
 
     const formatted = formatSnippet(data);
 
-    expect(formatted).toContain("Astro Grab (alpha)");
-    expect(formatted).toContain("Source: empty.astro:1:1");
+    expect(formatted).toContain("Source: empty.astro:1");
     expect(formatted).toContain("```astro");
     expect(formatted).toContain("```");
   });
@@ -88,6 +86,40 @@ describe("formatSnippet", () => {
 
     const formatted = formatSnippet(data);
 
-    expect(formatted).toContain("Source: src/pages/[slug].astro:1:1");
+    expect(formatted).toContain("Source: src/pages/[slug].astro:1");
+  });
+
+  it("should use custom template when provided", () => {
+    const data: SnippetResponse = {
+      file: "src/components/Card.astro",
+      snippet: "<div>Hello</div>",
+      startLine: 5,
+      endLine: 7,
+      targetLine: 6,
+      language: "astro",
+    };
+
+    const customTemplate = "File: {{file}}\nLines: {{startLine}}-{{endLine}}\n{{snippet}}";
+    const formatted = formatSnippet(data, customTemplate);
+
+    expect(formatted).toBe(
+      "File: src/components/Card.astro\nLines: 5-7\n<div>Hello</div>"
+    );
+  });
+
+  it("should replace all occurrences of template variables", () => {
+    const data: SnippetResponse = {
+      file: "test.astro",
+      snippet: "code",
+      startLine: 1,
+      endLine: 5,
+      targetLine: 3,
+      language: "astro",
+    };
+
+    const customTemplate = "{{file}} | {{file}} | line {{targetLine}}";
+    const formatted = formatSnippet(data, customTemplate);
+
+    expect(formatted).toBe("test.astro | test.astro | line 3");
   });
 });

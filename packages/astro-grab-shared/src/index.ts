@@ -6,6 +6,8 @@ export type {
   AstroGrabOptions,
 } from "./types.js";
 
+export { DEFAULT_TEMPLATE } from "./types.js";
+
 export {
   encodeSourceLocation,
   decodeSourceLocation,

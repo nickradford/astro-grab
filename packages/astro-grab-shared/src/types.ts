@@ -1,4 +1,14 @@
 /**
+ * Default template for clipboard output.
+ * Available variables: {{file}}, {{snippet}}, {{startLine}}, {{endLine}}, {{targetLine}}, {{language}}
+ */
+export const DEFAULT_TEMPLATE = `Source: {{file}}:{{targetLine}}
+
+\`\`\`{{language}}
+{{snippet}}
+\`\`\``;
+
+/**
  * Represents a source location in a file with line and column information
  */
 export interface SourceLocation {
@@ -35,6 +45,8 @@ export interface ClientConfig {
   debug?: boolean;
   /** Base URL path for API endpoints (e.g., '/api/astro-grab') */
   apiBaseUrl?: string;
+  /** Template for clipboard output using {{variable}} interpolation */
+  template?: string;
 }
 
 /**
@@ -60,4 +72,6 @@ export interface AstroGrabOptions {
   debug?: boolean;
   /** Enable/disable the dev toolbar app (default: true) */
   toolbar?: boolean;
+  /** Template for clipboard output using {{variable}} interpolation */
+  template?: string;
 }

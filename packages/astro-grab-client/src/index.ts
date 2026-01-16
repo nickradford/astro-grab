@@ -2,7 +2,7 @@ import { StateMachine } from "./state-machine.js";
 import { KeybindHandler } from "./keybind.js";
 import { Overlay } from "./overlay.js";
 import { TargetingHandler } from "./targeting.js";
-import type { ClientConfig } from "@astro-grab/shared";
+import { DEFAULT_TEMPLATE, type ClientConfig } from "@astro-grab/shared";
 
 export class AstroGrab {
   private stateMachine: StateMachine;
@@ -13,6 +13,7 @@ export class AstroGrab {
   private holdDuration: number;
   private contextLines: number;
   private apiBaseUrl: string | undefined;
+  private template: string;
   private isEnabled = true;
 
   constructor(config: ClientConfig = {}) {
@@ -22,6 +23,7 @@ export class AstroGrab {
       hue: configHue = 30,
       debug = false,
       apiBaseUrl,
+      template = DEFAULT_TEMPLATE,
     } = config;
     const hue = configHue;
 
@@ -29,6 +31,7 @@ export class AstroGrab {
     this.holdDuration = holdDuration;
     this.contextLines = contextLines;
     this.apiBaseUrl = apiBaseUrl;
+    this.template = template;
 
     if (debug) {
       console.log("[astro-grab:constructor] config:", config);
@@ -43,6 +46,7 @@ export class AstroGrab {
       this.overlay,
       contextLines,
       apiBaseUrl,
+      template,
     );
   }
 
@@ -109,6 +113,11 @@ export class AstroGrab {
         "[astro-grab] apiBaseUrl changed - page reload may be required for changes to take effect",
       );
     }
+
+    if (typeof config.template === "string") {
+      this.template = config.template;
+      this.targeting.updateTemplate(config.template);
+    }
   };
 
   private handleToggle = (event: Event): void => {
@@ -134,6 +143,10 @@ export class AstroGrab {
     this.handleConfigUpdate(
       new CustomEvent("astro-grab:config-update", { detail: config }),
     );
+  }
+
+  getTemplate(): string {
+    return this.template;
   }
 }
 
