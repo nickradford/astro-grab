@@ -20,7 +20,7 @@
     "lint": "oxlint",
     "format": "prettier --write .",
     "ci:version": "cp README.md packages/astro-grab/ && cp LICENSE packages/astro-grab/ && changeset version && bun update",
-    "ci:publish": "for dir in packages/*; do (cd \"$dir\" && bun publish || true); done && changeset tag"
+    "ci:publish": "cd packages/astro-grab && bun publish && changeset tag"
   },
   "devDependencies": {
     "@changesets/cli": "2.29.8",
