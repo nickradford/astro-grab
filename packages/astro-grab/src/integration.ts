@@ -1,7 +1,7 @@
 import type { AstroIntegration } from "astro";
-import { astroGrabVitePlugin } from "@astro-grab/server";
-import type { AstroGrabOptions } from "@astro-grab/shared";
-import { astroGrabToolbar } from "@astro-grab/toolbar";
+import { astroGrabVitePlugin } from "./server/index.js";
+import type { AstroGrabOptions } from "./shared/index.js";
+import { astroGrabToolbar } from "./toolbar/index.js";
 
 export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
   const {
@@ -58,7 +58,7 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
           const templateConfig = template
             ? `template: ${JSON.stringify(template)},`
             : "";
-          const script = `import { AstroGrab } from "@astro-grab/client";
+          const script = `import { AstroGrab } from "astro-grab/client";
 const toolbarConfig = (() => {
   try {
     const stored = localStorage.getItem("astro-grab-toolbar-config");
