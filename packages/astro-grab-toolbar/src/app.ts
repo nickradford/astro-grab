@@ -252,8 +252,11 @@ export default defineToolbarApp({
     canvas.appendChild(toolbarWindow);
 
     const handleOutsideClick = (event: MouseEvent): void => {
-      const target = event.target as Node;
-      if (!canvas.contains(target)) {
+      const path = event.composedPath();
+      const isInsideToolbar = path.some(
+        (el) => el === canvas || el === toolbarWindow,
+      );
+      if (!isInsideToolbar) {
         app.toggleState({ state: false });
       }
     };
