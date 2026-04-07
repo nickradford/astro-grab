@@ -27,20 +27,13 @@
   const HOLD_DURATION = 1000; // Match default holdDuration
   const holdShortcutDisplay = document.getElementById("hold-shortcut-display");
 
-  const cleanupShortcutChange = onShortcutChange((shortcutLabel) => {
+  const handleShortcutChange = (shortcutLabel) => {
     if (holdShortcutDisplay instanceof HTMLElement) {
       holdShortcutDisplay.textContent = shortcutLabel;
     }
-  });
+  };
 
-  if (import.meta.hot) {
-    import.meta.hot.dispose(() => {
-      cleanupShortcutChange();
-    });
-  }
-
-  // Show progress bar when user holds Cmd/Ctrl+G
-  window.addEventListener("astro-grab:key-held", () => {
+  const handleKeyHeld = () => {
     const progressBar = document.getElementById("hold-progress-bar");
     const progressFill = document.getElementById("hold-progress-fill");
 
@@ -58,10 +51,9 @@
     requestAnimationFrame(() => {
       progressFill.style.width = "100%";
     });
-  });
+  };
 
-  // Hide progress bar when targeting mode starts
-  window.addEventListener("astro-grab:targeting-mode-started", () => {
+  const handleTargetingModeStarted = () => {
     const progressBar = document.getElementById("hold-progress-bar");
     const progressFill = document.getElementById("hold-progress-fill");
 
@@ -71,10 +63,9 @@
       progressBar.style.display = "none";
       progressFill.style.width = "0%";
     }, 200);
-  });
+  };
 
-  // Flash red if user releases keys too early
-  window.addEventListener("astro-grab:keypress-too-short", () => {
+  const handleKeypressTooShort = () => {
     const progressBar = document.getElementById("hold-progress-bar");
     const progressFill = document.getElementById("hold-progress-fill");
 
@@ -88,5 +79,32 @@
       progressFill.style.background =
         "linear-gradient(to right, #ff8c00, #ffa500)";
     }, 300);
-  });
+  };
+
+  const cleanupShortcutChange = onShortcutChange(handleShortcutChange);
+
+  window.addEventListener("astro-grab:key-held", handleKeyHeld);
+  window.addEventListener(
+    "astro-grab:targeting-mode-started",
+    handleTargetingModeStarted,
+  );
+  window.addEventListener(
+    "astro-grab:keypress-too-short",
+    handleKeypressTooShort,
+  );
+
+  if (import.meta.hot) {
+    import.meta.hot.dispose(() => {
+      cleanupShortcutChange();
+      window.removeEventListener("astro-grab:key-held", handleKeyHeld);
+      window.removeEventListener(
+        "astro-grab:targeting-mode-started",
+        handleTargetingModeStarted,
+      );
+      window.removeEventListener(
+        "astro-grab:keypress-too-short",
+        handleKeypressTooShort,
+      );
+    });
+  }
 </script>

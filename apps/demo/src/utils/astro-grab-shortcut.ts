@@ -1,3 +1,6 @@
+// HACK: Demo-only source import until astro-grab exports these helpers
+// publicly. This path will break if the demo moves, so replace it with a
+// package export when these symbols are part of the public API.
 import {
   formatPlatformShortcutDisplayLabel,
   getStoredTriggerKey,

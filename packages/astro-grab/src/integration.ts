@@ -3,6 +3,7 @@ import { astroGrabVitePlugin } from "./server/index.js";
 import type { AstroGrabOptions } from "./shared/index.js";
 import { astroGrabToolbar } from "./toolbar/index.js";
 import {
+  ASTRO_GRAB_TOOLBAR_STORAGE_KEY,
   DEFAULT_TRIGGER_KEY,
   formatShortcutDisplayLabel,
   normalizeTriggerKey,
@@ -66,9 +67,10 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
             ? `template: ${JSON.stringify(template)},`
             : "";
           const script = `import { AstroGrab } from "astro-grab/client";
+const toolbarStorageKey = ${JSON.stringify(ASTRO_GRAB_TOOLBAR_STORAGE_KEY)};
 const toolbarConfig = (() => {
   try {
-    const stored = localStorage.getItem("astro-grab-toolbar-config");
+    const stored = localStorage.getItem(toolbarStorageKey);
     if (stored) {
       return JSON.parse(stored);
     }

@@ -1,7 +1,7 @@
 export const ASTRO_GRAB_TOOLBAR_STORAGE_KEY = 'astro-grab-toolbar-config';
 export const DEFAULT_TRIGGER_KEY = 'g';
 
-const SINGLE_PRINTABLE_KEY_PATTERN = /^\S$/u;
+const SINGLE_PRINTABLE_KEY_PATTERN = /^[\x21-\x7E]$/;
 
 export const parseTriggerKey = (key?: string): string | null => {
   if (typeof key !== 'string') {

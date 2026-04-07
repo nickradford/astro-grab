@@ -25,6 +25,8 @@ describe("trigger key helpers", () => {
   it("should return null for invalid parsed keys", () => {
     expect(parseTriggerKey("Shift")).toBeNull();
     expect(parseTriggerKey("  ")).toBeNull();
+    expect(parseTriggerKey("😀")).toBeNull();
+    expect(parseTriggerKey("é")).toBeNull();
   });
 
   it("should format generic shortcut labels", () => {
