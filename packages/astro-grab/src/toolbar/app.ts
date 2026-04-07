@@ -1,24 +1,40 @@
 import { defineToolbarApp } from "astro/toolbar";
+import {
+  ASTRO_GRAB_TOOLBAR_STORAGE_KEY,
+  DEFAULT_TRIGGER_KEY,
+  formatShortcutDisplayLabel,
+  normalizeTriggerKey,
+  parseTriggerKey,
+} from "../shared/index.js";
 
 interface ToolbarConfig {
   enabled: boolean;
+  key: string;
   hue: number;
   holdDuration: number;
 }
 
 const DEFAULT_CONFIG: ToolbarConfig = {
   enabled: true,
+  key: DEFAULT_TRIGGER_KEY,
   hue: 30,
   holdDuration: 1000,
 };
 
-const STORAGE_KEY = "astro-grab-toolbar-config";
+const STORAGE_KEY = ASTRO_GRAB_TOOLBAR_STORAGE_KEY;
 
 const getConfig = (): ToolbarConfig => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      return { ...DEFAULT_CONFIG, ...JSON.parse(stored) };
+      const parsedConfig = JSON.parse(stored);
+      if (typeof parsedConfig === "object" && parsedConfig !== null) {
+        return {
+          ...DEFAULT_CONFIG,
+          ...parsedConfig,
+          key: normalizeTriggerKey(parsedConfig.key),
+        };
+      }
     }
   } catch {}
   return { ...DEFAULT_CONFIG };
@@ -50,6 +66,8 @@ export default defineToolbarApp({
     const config = getConfig();
 
     const toolbarWindow = document.createElement("astro-dev-toolbar-window");
+    toolbarWindow.style.cssText =
+      "display: flex; flex-direction: column; max-height: min(80vh, 680px);";
 
     const headerContainer = document.createElement("div");
     headerContainer.style.cssText =
@@ -80,7 +98,7 @@ export default defineToolbarApp({
 
     const contentContainer = document.createElement("div");
     contentContainer.style.cssText =
-      "padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 16px;";
+      "padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; max-height: min(64vh, 520px);";
 
     const enabledSection = document.createElement("div");
     enabledSection.style.cssText =
@@ -138,6 +156,39 @@ export default defineToolbarApp({
     hueRow.appendChild(hueValue);
     hueSection.appendChild(hueLabel);
     hueSection.appendChild(hueRow);
+
+    const keySection = document.createElement("div");
+    keySection.style.cssText =
+      "display: flex; flex-direction: column; gap: 8px;";
+
+    const keyLabel = document.createElement("div");
+    keyLabel.textContent = "Target Key";
+    keyLabel.style.cssText = "font-size: 13px; font-weight: 500;";
+
+    const keyRow = document.createElement("div");
+    keyRow.style.cssText =
+      "display: flex; align-items: center; gap: 12px; flex-wrap: wrap;";
+
+    const keyPreview = document.createElement("div");
+    keyPreview.id = "astro-grab-key-preview";
+    keyPreview.textContent = formatShortcutDisplayLabel(config.key);
+    keyPreview.style.cssText =
+      "font-size: 12px; min-width: 96px; text-align: center; font-family: monospace; padding: 6px 8px; border-radius: 4px; background-color: #111827; color: #f9fafb;";
+
+    const keyButton = document.createElement("astro-dev-toolbar-button");
+    keyButton.textContent = "Change Key";
+    keyButton.buttonStyle = "ghost";
+    keyButton.size = "small";
+
+    const keyNote = document.createElement("div");
+    keyNote.textContent = "Press a single key. Cmd/Ctrl stays fixed.";
+    keyNote.style.cssText = "font-size: 11px; color: #6b7280;";
+
+    keyRow.appendChild(keyPreview);
+    keyRow.appendChild(keyButton);
+    keySection.appendChild(keyLabel);
+    keySection.appendChild(keyRow);
+    keySection.appendChild(keyNote);
 
     const durationSection = document.createElement("div");
     durationSection.style.cssText =
@@ -199,7 +250,7 @@ export default defineToolbarApp({
     const templateDisplay = document.createElement("pre");
     templateDisplay.id = "astro-grab-template-display";
     templateDisplay.style.cssText =
-      "font-size: 11px; font-family: monospace; background-color: #1e1e1e; color: #d4d4d4; padding: 8px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; margin: 0; max-height: 120px; overflow-y: auto;";
+      "font-size: 11px; font-family: monospace; background-color: #1e1e1e; color: #d4d4d4; padding: 8px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; margin: 0; max-height: 96px; overflow-y: auto;";
 
     const astroGrabInstance = (
       window as unknown as { __astroGrabInstance__?: { getTemplate(): string } }
@@ -243,6 +294,7 @@ export default defineToolbarApp({
 
     contentContainer.appendChild(enabledSection);
     contentContainer.appendChild(hueSection);
+    contentContainer.appendChild(keySection);
     contentContainer.appendChild(durationSection);
     contentContainer.appendChild(templateSection);
     contentContainer.appendChild(actionsContainer);
@@ -259,6 +311,60 @@ export default defineToolbarApp({
       if (!isInsideToolbar) {
         app.toggleState({ state: false });
       }
+    };
+
+    let currentKey = config.key;
+    let isCapturingKey = false;
+
+    const setKeyCaptureState = (nextState: boolean): void => {
+      isCapturingKey = nextState;
+      keyButton.textContent = nextState ? "Cancel" : "Change Key";
+      keyNote.textContent = nextState
+        ? "Press a single key now. Press Escape to cancel."
+        : "Press a single key. Cmd/Ctrl stays fixed.";
+    };
+
+    const updateKeyPreview = (nextKey: string): void => {
+      currentKey = normalizeTriggerKey(nextKey);
+      keyPreview.textContent = formatShortcutDisplayLabel(currentKey);
+    };
+
+    const handleKeyCapture = (event: KeyboardEvent): void => {
+      if (!isCapturingKey) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (event.key === "Escape") {
+        stopKeyCapture();
+        return;
+      }
+
+      if (event.repeat) {
+        return;
+      }
+
+      const capturedKey = parseTriggerKey(event.key);
+      if (!capturedKey) {
+        return;
+      }
+
+      updateKeyPreview(capturedKey);
+      setConfig({ key: capturedKey });
+      updateAstroGrab({ key: capturedKey });
+      stopKeyCapture();
+    };
+
+    const stopKeyCapture = (): void => {
+      window.removeEventListener("keydown", handleKeyCapture, true);
+      setKeyCaptureState(false);
+    };
+
+    const startKeyCapture = (): void => {
+      setKeyCaptureState(true);
+      window.addEventListener("keydown", handleKeyCapture, true);
     };
 
     setTimeout(() => {
@@ -280,13 +386,25 @@ export default defineToolbarApp({
       toggleAstroGrab(enabled);
     });
 
+    keyButton.addEventListener("click", () => {
+      if (isCapturingKey) {
+        stopKeyCapture();
+        return;
+      }
+
+      startKeyCapture();
+    });
+
     resetButton.addEventListener("click", () => {
+      stopKeyCapture();
       toggle.input.checked = DEFAULT_CONFIG.enabled;
       toggle.toggleStyle = DEFAULT_CONFIG.enabled ? "green" : "gray";
 
       hueSlider.value = DEFAULT_CONFIG.hue.toString();
       huePreview.style.backgroundColor = `hsl(${DEFAULT_CONFIG.hue}, 70%, 50%)`;
       hueValue.textContent = DEFAULT_CONFIG.hue.toString();
+
+      updateKeyPreview(DEFAULT_CONFIG.key);
 
       durationSlider.value = DEFAULT_CONFIG.holdDuration.toString();
       durationValue.textContent = DEFAULT_CONFIG.holdDuration.toString();
@@ -305,6 +423,7 @@ export default defineToolbarApp({
       setConfig(DEFAULT_CONFIG);
       toggleAstroGrab(DEFAULT_CONFIG.enabled);
       updateAstroGrab({
+        key: DEFAULT_CONFIG.key,
         hue: DEFAULT_CONFIG.hue,
         holdDuration: DEFAULT_CONFIG.holdDuration,
       });
@@ -313,6 +432,7 @@ export default defineToolbarApp({
     reloadButton.addEventListener("click", () => {
       setConfig({
         enabled: toggle.input.checked,
+        key: currentKey,
         hue: parseInt(hueSlider.value, 10),
         holdDuration: parseInt(durationSlider.value, 10),
       });
@@ -323,6 +443,7 @@ export default defineToolbarApp({
       if (state) {
         document.addEventListener("click", handleOutsideClick);
       } else {
+        stopKeyCapture();
         document.removeEventListener("click", handleOutsideClick);
       }
     });

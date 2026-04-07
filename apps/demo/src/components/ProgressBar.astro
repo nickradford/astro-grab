@@ -16,11 +16,28 @@
     >
     </div>
   </div>
-  <p class="mt-1 text-center text-xs text-gray-400">Hold Cmd/Ctrl+G...</p>
+  <p class="mt-1 text-center text-xs text-gray-400">
+    Hold <span id="hold-shortcut-display">Cmd/Ctrl+G</span>...
+  </p>
 </div>
 
 <script>
+  import { onShortcutChange } from "../utils/astro-grab-shortcut.js";
+
   const HOLD_DURATION = 1000; // Match default holdDuration
+  const holdShortcutDisplay = document.getElementById("hold-shortcut-display");
+
+  const cleanupShortcutChange = onShortcutChange((shortcutLabel) => {
+    if (holdShortcutDisplay instanceof HTMLElement) {
+      holdShortcutDisplay.textContent = shortcutLabel;
+    }
+  });
+
+  if (import.meta.hot) {
+    import.meta.hot.dispose(() => {
+      cleanupShortcutChange();
+    });
+  }
 
   // Show progress bar when user holds Cmd/Ctrl+G
   window.addEventListener("astro-grab:key-held", () => {

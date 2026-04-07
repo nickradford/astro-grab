@@ -35,6 +35,8 @@ export interface SnippetResponse {
 export interface ClientConfig {
   /** Whether to automatically start the grab functionality on page load */
   autoStart?: boolean;
+  /** Base key used with Cmd/Ctrl to activate targeting mode (default: "g") */
+  key?: string;
   /** Duration in milliseconds to hold the keybind before activating targeting mode */
   holdDuration?: number;
   /** Number of lines of context to include around the target line */
@@ -60,6 +62,8 @@ export type ClientState = "idle" | "holding" | "targeting";
 export interface AstroGrabOptions {
   /** Enable/disable the integration (default: true in dev mode) */
   enabled?: boolean;
+  /** Base key used with Cmd/Ctrl to activate targeting mode (default: "g") */
+  key?: string;
   /** Duration in milliseconds to hold keybind (default: 1000) */
   holdDuration?: number;
   /** Number of lines of context around target (default: 4) */

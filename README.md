@@ -1,14 +1,14 @@
 # Astro Grab (Alpha)
 
-**Visual element targeting for Astro projects** - Hold Cmd/Ctrl+G to target any element and copy its source code to your clipboard.
+**Visual element targeting for Astro projects** - Hold Cmd/Ctrl+G by default to target any element and copy its source code to your clipboard.
 
 ## What is Astro Grab?
 
-Astro Grab is a dev-only tool that helps you quickly locate and grab source code from your Astro components. Simply hold Cmd+G (Mac) or Ctrl+G (Windows/Linux) for one second, then click any element to copy its source snippet to your clipboard - perfect for pasting into AI assistants like Claude.
+Astro Grab is a dev-only tool that helps you quickly locate and grab source code from your Astro components. Hold Cmd+G (Mac) or Ctrl+G (Windows/Linux) for 1 second by default, or configure a different trigger key, then click any element to copy its source snippet to your clipboard.
 
 ## Features (Alpha)
 
-- 🎯 **Visual targeting mode**: Hold Cmd/Ctrl+G to enter targeting mode with visual highlights
+- 🎯 **Visual targeting mode**: Hold `Cmd/Ctrl+<key>` to enter targeting mode with visual highlights
 - 📋 **Instant clipboard copy**: Click any element to copy its source code snippet
 - 🔍 **Source attribution**: Automatically tracks elements to their .astro files
 - ⚡ **Dev-only**: Zero impact on production builds
@@ -44,7 +44,7 @@ Builds are optimized with Turborepo:
 
 Visit `http://localhost:4321` and try the targeting mode:
 
-1. Hold Cmd+G (Mac) or Ctrl+G (Win/Linux) for 1 second
+1. Hold Cmd+G (Mac) or Ctrl+G (Win/Linux) for 1 second by default
 2. Move your mouse over elements to see them highlighted
 3. Click an element to copy its source code
 4. Press Escape to exit targeting mode
@@ -117,6 +117,7 @@ export default defineConfig({
   integrations: [
     astroGrab({
       enabled: true, // Enable in dev mode (default: true)
+      key: "b", // Base key for `Cmd/Ctrl+<key>` (default: "g")
       holdDuration: 1000, // Hold time in ms (default: 1000)
       contextLines: 10, // Lines of context around target (default: 5)
       template: `Source: {{file}}:{{targetLine}}\n\n\`\`\`{{language}}\n{{snippet}}\n\`\`\``, // Custom clipboard template
@@ -155,7 +156,7 @@ Line: {{targetLine}}
 npm run dev
 ```
 
-4. Hold Cmd/Ctrl+G and click elements to grab their source!
+4. Hold your configured `Cmd/Ctrl+<key>` shortcut and click elements to grab their source!
 
 ## Production Usage (Demo Sites)
 
@@ -171,7 +172,7 @@ ASTRO_GRAB_DANGEROUSLY_FORCE_ENABLE=true npm run build
 ## How It Works
 
 1. **Instrumentation**: During dev, the Vite plugin transforms `.astro` files to add `data-astro-grab="file:line:col"` attributes to HTML elements
-2. **Client injection**: The integration automatically injects a client script that listens for Cmd/Ctrl+G
+2. **Client injection**: The integration automatically injects a client script that listens for `Cmd/Ctrl+<key>`
 3. **Targeting mode**: Holding the keybind for 1s activates an overlay that highlights elements under the cursor
 4. **Snippet extraction**: Clicking an element fetches a code snippet from the dev server and copies it to clipboard
 

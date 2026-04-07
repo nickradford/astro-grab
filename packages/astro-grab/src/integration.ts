@@ -2,10 +2,16 @@ import type { AstroIntegration } from "astro";
 import { astroGrabVitePlugin } from "./server/index.js";
 import type { AstroGrabOptions } from "./shared/index.js";
 import { astroGrabToolbar } from "./toolbar/index.js";
+import {
+  DEFAULT_TRIGGER_KEY,
+  formatShortcutDisplayLabel,
+  normalizeTriggerKey,
+} from "./shared/index.js";
 
 export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
   const {
     enabled = true,
+    key: configKey = DEFAULT_TRIGGER_KEY,
     holdDuration = 1000,
     contextLines = 5,
     autoInject = true,
@@ -14,6 +20,7 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
     toolbar = true,
     template,
   } = options;
+  const key = normalizeTriggerKey(configKey);
 
   return {
     name: "astro-grab",
@@ -33,7 +40,7 @@ export const astroGrab = (options: AstroGrabOptions = {}): AstroIntegration => {
 
         logger.info("Initializing...");
         logger.info(
-          `Config: enabled=${enabled}, holdDuration=${holdDuration}, contextLines=${contextLines}, autoInject=${autoInject}, hue=${hue}, debug=${debug}, toolbar=${toolbar}, template=${template ? "custom" : "default"}`,
+          `Config: enabled=${enabled}, key=${key}, holdDuration=${holdDuration}, contextLines=${contextLines}, autoInject=${autoInject}, hue=${hue}, debug=${debug}, toolbar=${toolbar}, template=${template ? "custom" : "default"}`,
         );
 
         updateConfig({
@@ -69,6 +76,7 @@ const toolbarConfig = (() => {
   return {};
 })();
 const instance = new AstroGrab({
+  key: toolbarConfig.key ?? ${JSON.stringify(key)},
   holdDuration: toolbarConfig.holdDuration ?? ${holdDuration},
   contextLines: ${contextLines},
   hue: toolbarConfig.hue ?? ${hue},
@@ -85,7 +93,7 @@ if (document.readyState === "loading") {
           logger.info(`Injecting script`);
           injectScript("page", script);
           logger.info(
-            `Client script injected. Use crtl/cmd+g on your Astro site to select components.`,
+            `Client script injected. Use ${formatShortcutDisplayLabel(key)} on your Astro site to select components.`,
           );
         }
       },

@@ -1,16 +1,27 @@
 import { StateMachine } from "./state-machine.js";
+import {
+  DEFAULT_TRIGGER_KEY,
+  normalizeTriggerKey,
+  parseTriggerKey,
+} from "../shared/shortcut.js";
 
 export class KeybindHandler {
   private holdTimer: number | null = null;
   private holdDuration: number;
+  private triggerKey: string;
   private readonly stateMachine: StateMachine;
   private hasActivatedOnce = false;
   private currentMouseX = 0;
   private currentMouseY = 0;
 
-  constructor(stateMachine: StateMachine, holdDuration: number = 1000) {
+  constructor(
+    stateMachine: StateMachine,
+    holdDuration: number = 1000,
+    triggerKey: string = DEFAULT_TRIGGER_KEY,
+  ) {
     this.stateMachine = stateMachine;
     this.holdDuration = holdDuration;
+    this.triggerKey = normalizeTriggerKey(triggerKey);
   }
 
   init(): void {
@@ -29,8 +40,9 @@ export class KeybindHandler {
   }
 
   private handleKeyDown = (e: KeyboardEvent): void => {
+    const pressedKey = parseTriggerKey(e.key);
     const isTriggerKey =
-      e.key.toLowerCase() === "g" && (e.metaKey || e.ctrlKey);
+      pressedKey === this.triggerKey && (e.metaKey || e.ctrlKey);
 
     if (!isTriggerKey) {
       return;
@@ -59,8 +71,9 @@ export class KeybindHandler {
   };
 
   private handleKeyUp = (e: KeyboardEvent): void => {
+    const pressedKey = parseTriggerKey(e.key);
     if (
-      e.key.toLowerCase() === "g" ||
+      pressedKey === this.triggerKey ||
       e.key === "Meta" ||
       e.key === "Control"
     ) {
@@ -101,5 +114,9 @@ export class KeybindHandler {
 
   updateHoldDuration(newDuration: number): void {
     this.holdDuration = newDuration;
+  }
+
+  updateKey(newKey: string): void {
+    this.triggerKey = normalizeTriggerKey(newKey);
   }
 }

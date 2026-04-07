@@ -61,14 +61,14 @@ import ShortcutDisplay from "./ShortcutDisplay.astro";
   // Timing tracking for analytics
   let step1Time: number | null = null;
   let step2Time: number | null = null;
-  let cmdgTime: number | null = null;
+  let shortcutHeldTime: number | null = null;
   let step1Count = 0;
 
   // Track initial keypress
   window.addEventListener("astro-grab:key-held", () => {
-    cmdgTime = Date.now();
+    shortcutHeldTime = Date.now();
     if ((window as any).umami) {
-      (window as any).umami.track("cmd-g");
+      (window as any).umami.track("shortcut-held");
     }
   });
 
@@ -153,8 +153,8 @@ import ShortcutDisplay from "./ShortcutDisplay.astro";
         const duration = step3Time - step2Time;
         (window as any).umami.track("step-2-to-step-3-time", { duration });
       }
-      if (cmdgTime) {
-        const totalDuration = step3Time - cmdgTime;
+      if (shortcutHeldTime) {
+        const totalDuration = step3Time - shortcutHeldTime;
         (window as any).umami.track("total-walkthrough-time", {
           duration: totalDuration,
         });

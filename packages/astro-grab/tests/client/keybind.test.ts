@@ -137,6 +137,66 @@ describe("KeybindHandler", () => {
     expect(stateMachine.getState()).toBe("idle");
   });
 
+  it("should transition to holding on a custom trigger key", () => {
+    keybindHandler.updateKey("b");
+
+    const event = new window.KeyboardEvent("keydown", {
+      key: "b",
+      metaKey: true,
+    });
+
+    document.dispatchEvent(event);
+
+    expect(stateMachine.getState()).toBe("holding");
+  });
+
+  it("should ignore the default key after updating the trigger key", () => {
+    keybindHandler.updateKey("b");
+
+    const event = new window.KeyboardEvent("keydown", {
+      key: "g",
+      metaKey: true,
+    });
+
+    document.dispatchEvent(event);
+
+    expect(stateMachine.getState()).toBe("idle");
+  });
+
+  it("should apply key updates without reinitializing the handler", () => {
+    keybindHandler.updateKey("b");
+
+    const event = new window.KeyboardEvent("keydown", {
+      key: "b",
+      ctrlKey: true,
+    });
+
+    document.dispatchEvent(event);
+
+    expect(stateMachine.getState()).toBe("holding");
+  });
+
+  it("should reset to idle if a custom key is released early", async () => {
+    keybindHandler.updateKey("b");
+
+    const keydown = new window.KeyboardEvent("keydown", {
+      key: "b",
+      metaKey: true,
+    });
+    document.dispatchEvent(keydown);
+
+    expect(stateMachine.getState()).toBe("holding");
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    const keyup = new window.KeyboardEvent("keyup", {
+      key: "b",
+    });
+    document.dispatchEvent(keyup);
+
+    expect(stateMachine.getState()).toBe("idle");
+  });
+
   describe("repeated activation", () => {
     it("should always call preventDefault on Cmd+G even during key repeat", async () => {
       // First activation
@@ -215,6 +275,34 @@ describe("KeybindHandler", () => {
       document.dispatchEvent(repeatEvent);
 
       expect(stateMachine.getState()).toBe("idle");
+    });
+
+    it("should re-enter targeting with a custom trigger key after state reset", async () => {
+      keybindHandler.updateKey("b");
+
+      const keydown1 = new window.KeyboardEvent("keydown", {
+        key: "b",
+        metaKey: true,
+      });
+      document.dispatchEvent(keydown1);
+
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      expect(stateMachine.getState()).toBe("targeting");
+
+      stateMachine.reset();
+      expect(stateMachine.getState()).toBe("idle");
+
+      const keyup = new window.KeyboardEvent("keyup", { key: "b" });
+      document.dispatchEvent(keyup);
+
+      const keydown2 = new window.KeyboardEvent("keydown", {
+        key: "b",
+        metaKey: true,
+        repeat: false,
+      });
+      document.dispatchEvent(keydown2);
+
+      expect(stateMachine.getState()).toBe("targeting");
     });
   });
 });

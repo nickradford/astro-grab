@@ -140,7 +140,7 @@ bun run typecheck
 
 3. **Targeting Mode** (`astro-grab-client`):
    - State machine: `idle → holding → targeting → idle`
-   - Cmd/Ctrl+G held for 1000ms → enter targeting
+   - `Cmd/Ctrl+<key>` held for 1000ms → enter targeting
    - Mouse tracking highlights elements with source attribution
    - Click fetches snippet from server and copies to clipboard
 
@@ -160,7 +160,7 @@ bun run typecheck
 **Client Package:**
 
 - `state-machine.ts` - Core state management
-- `keybind.ts` - Cmd/Ctrl+G detection with hold timer
+- `keybind.ts` - `Cmd/Ctrl+<key>` detection with hold timer
 - `overlay.ts` - Visual overlay (highlight, tooltip, toast)
 - `targeting.ts` - Mouse tracking and click handling
 - `auto.ts` - Auto-initialization entry point
@@ -190,7 +190,7 @@ Tests use Vitest with the following patterns:
 **Client Package:**
 
 - State machine transitions
-- Keybind detection (Cmd+G, Ctrl+G, timing)
+- Keybind detection (`Cmd+<key>`, `Ctrl+<key>`, timing)
 - Clipboard formatting
 
 DOM tests use `happy-dom` for lightweight browser environment.
@@ -199,7 +199,7 @@ DOM tests use `happy-dom` for lightweight browser environment.
 
 Test in the demo app (`bun run dev`):
 
-- [ ] Hold Cmd+G (Mac) or Ctrl+G (Windows/Linux) for 1s → targeting mode activates
+- [ ] Hold the configured `Cmd/Ctrl+<key>` shortcut for 1s → targeting mode activates
 - [ ] Blue highlight follows cursor over elements
 - [ ] Tooltip shows `data-astro-grab` value
 - [ ] Click element → "Copied!" toast appears

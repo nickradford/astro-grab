@@ -2,7 +2,12 @@ import { StateMachine } from "./state-machine.js";
 import { KeybindHandler } from "./keybind.js";
 import { Overlay } from "./overlay.js";
 import { TargetingHandler } from "./targeting.js";
-import { DEFAULT_TEMPLATE, type ClientConfig } from "../shared/index.js";
+import {
+  DEFAULT_TEMPLATE,
+  type ClientConfig,
+  formatShortcutDisplayLabel,
+  normalizeTriggerKey,
+} from "../shared/index.js";
 
 export class AstroGrab {
   private stateMachine: StateMachine;
@@ -10,6 +15,7 @@ export class AstroGrab {
   private overlay: Overlay;
   private targeting: TargetingHandler;
   private debug: boolean;
+  private key: string;
   private holdDuration: number;
   private contextLines: number;
   private apiBaseUrl: string | undefined;
@@ -18,6 +24,7 @@ export class AstroGrab {
 
   constructor(config: ClientConfig = {}) {
     const {
+      key: configKey,
       holdDuration = 500,
       contextLines = 4,
       hue: configHue = 30,
@@ -28,6 +35,7 @@ export class AstroGrab {
     const hue = configHue;
 
     this.debug = debug;
+    this.key = normalizeTriggerKey(configKey);
     this.holdDuration = holdDuration;
     this.contextLines = contextLines;
     this.apiBaseUrl = apiBaseUrl;
@@ -39,7 +47,11 @@ export class AstroGrab {
     }
 
     this.stateMachine = new StateMachine();
-    this.keybind = new KeybindHandler(this.stateMachine, holdDuration);
+    this.keybind = new KeybindHandler(
+      this.stateMachine,
+      holdDuration,
+      this.key,
+    );
     this.overlay = new Overlay(this.stateMachine, hue);
     this.targeting = new TargetingHandler(
       this.stateMachine,
@@ -54,7 +66,9 @@ export class AstroGrab {
     this.keybind.init();
     this.overlay.init();
     this.targeting.init(this.keybind);
-    console.log("[astro-grab] Initialized - Hold Cmd/Ctrl+G to start");
+    console.log(
+      `[astro-grab] Initialized - Hold ${formatShortcutDisplayLabel(this.key)} to start`,
+    );
 
     this.stateMachine.onEnter("holding", () => {
       window.dispatchEvent(new CustomEvent("astro-grab:key-held"));
@@ -93,6 +107,11 @@ export class AstroGrab {
 
     if (typeof config.hue === "number") {
       this.overlay.updateHue(config.hue);
+    }
+
+    if (typeof config.key === "string") {
+      this.key = normalizeTriggerKey(config.key);
+      this.keybind.updateKey(this.key);
     }
 
     if (typeof config.holdDuration === "number") {
