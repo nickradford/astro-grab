@@ -13,6 +13,7 @@ export class KeybindHandler {
   private hasActivatedOnce = false;
   private currentMouseX = 0;
   private currentMouseY = 0;
+  private isInitialized = false;
 
   constructor(
     stateMachine: StateMachine,
@@ -25,6 +26,11 @@ export class KeybindHandler {
   }
 
   init(): void {
+    if (this.isInitialized) {
+      return;
+    }
+
+    this.isInitialized = true;
     document.addEventListener("keydown", this.handleKeyDown);
     document.addEventListener("keyup", this.handleKeyUp);
     document.addEventListener("keydown", this.handleEscape);
@@ -32,6 +38,12 @@ export class KeybindHandler {
   }
 
   destroy(): void {
+    if (!this.isInitialized) {
+      this.clearTimer();
+      return;
+    }
+
+    this.isInitialized = false;
     document.removeEventListener("keydown", this.handleKeyDown);
     document.removeEventListener("keyup", this.handleKeyUp);
     document.removeEventListener("keydown", this.handleEscape);

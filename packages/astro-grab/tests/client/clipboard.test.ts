@@ -123,4 +123,17 @@ describe("formatSnippet", () => {
 
     expect(formatted).toBe("test.astro | test.astro | line 3");
   });
+
+  it("should preserve replacement patterns in source snippets", () => {
+    const data: SnippetResponse = {
+      file: "test.astro",
+      snippet: 'value.replace(/x/, "$&")',
+      startLine: 1,
+      endLine: 1,
+      targetLine: 1,
+      language: "astro",
+    };
+
+    expect(formatSnippet(data, "{{snippet}}")).toBe(data.snippet);
+  });
 });

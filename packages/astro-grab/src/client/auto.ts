@@ -6,10 +6,13 @@ if (typeof window !== "undefined") {
     console.log("[astro-grab:auto] Config from window:", config);
   }
   const instance = new AstroGrab(config);
+  const autoStart = config.autoStart ?? true;
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => instance.init());
-  } else {
-    instance.init();
+  if (autoStart) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => instance.init());
+    } else {
+      instance.init();
+    }
   }
 }

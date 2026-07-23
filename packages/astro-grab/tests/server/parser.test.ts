@@ -63,6 +63,21 @@ const title = "Hello";
     expect(result.code.match(/data-astro-grab=/g)?.length).toBe(3);
   });
 
+  it("should instrument custom elements", async () => {
+    const code = `<my-card>
+  <span>Text</span>
+</my-card>`;
+
+    const result = await instrumentAstroFile(code, "custom-element.astro");
+
+    expect(result.code).toContain(
+      '<my-card data-astro-grab="custom-element.astro:1:1">',
+    );
+    expect(result.code).toContain(
+      '<span data-astro-grab="custom-element.astro:2:3">',
+    );
+  });
+
   it("should normalize Windows paths", async () => {
     const code = `<div>Test</div>`;
 
@@ -117,6 +132,65 @@ const data = "test";
     expect(result.code).toContain('class="btn"');
     expect(result.code).toContain('type="submit"');
     expect(result.code).toContain("disabled");
+  });
+
+  it("should use source positions after non-ASCII frontmatter", async () => {
+    const code = `---
+const labels = { ja: "設定", zh: "主题" };
+---
+<main>
+  <section><h2>{labels.ja}</h2></section>
+</main>`;
+
+    const result = await instrumentAstroFile(code, "unicode.astro");
+
+    expect(result.code).toContain(
+      '<main data-astro-grab="unicode.astro:4:1">',
+    );
+    expect(result.code).toContain(
+      '<section data-astro-grab="unicode.astro:5:3">',
+    );
+    expect(result.code).toContain(
+      '<h2 data-astro-grab="unicode.astro:5:12">',
+    );
+    expect(result.code.match(/data-astro-grab=/g)?.length).toBe(3);
+  });
+
+  it("should preserve inline scripts after non-ASCII source", async () => {
+    const code = `---
+const label = "テーマ";
+---
+<html>
+  <head>
+    <script is:inline>
+      const cookie = document.cookie;
+      const index = cookie.indexOf("theme=");
+    </script>
+  </head>
+  <body><div>{label}</div></body>
+</html>`;
+
+    const result = await instrumentAstroFile(code, "layout.astro");
+
+    expect(result.code).toContain(
+      'const index = cookie.indexOf("theme=");',
+    );
+    expect(result.code).not.toContain("script data-astro-grab");
+    expect(result.code).toContain(
+      '<div data-astro-grab="layout.astro:11:9">',
+    );
+  });
+
+  it("should instrument same-line conditional elements once", async () => {
+    const code = `{heading && <h2>{heading}</h2>}
+{body && <p>{body}</p>}`;
+
+    const result = await instrumentAstroFile(code, "conditional.astro");
+
+    expect(result.code).toBe(
+      `{heading && <h2 data-astro-grab="conditional.astro:1:13">{heading}</h2>}
+{body && <p data-astro-grab="conditional.astro:2:10">{body}</p>}`,
+    );
   });
 
   it("should instrument all elements in complex nested structure", async () => {

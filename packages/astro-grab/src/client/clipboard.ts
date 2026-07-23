@@ -5,12 +5,12 @@ export const formatSnippet = (
   template: string = DEFAULT_TEMPLATE,
 ): string => {
   return template
-    .replace(/\{\{file\}\}/g, data.file)
-    .replace(/\{\{snippet\}\}/g, data.snippet)
-    .replace(/\{\{startLine\}\}/g, String(data.startLine))
-    .replace(/\{\{endLine\}\}/g, String(data.endLine))
-    .replace(/\{\{targetLine\}\}/g, String(data.targetLine))
-    .replace(/\{\{language\}\}/g, data.language);
+    .replace(/\{\{file\}\}/g, () => data.file)
+    .replace(/\{\{snippet\}\}/g, () => data.snippet)
+    .replace(/\{\{startLine\}\}/g, () => String(data.startLine))
+    .replace(/\{\{endLine\}\}/g, () => String(data.endLine))
+    .replace(/\{\{targetLine\}\}/g, () => String(data.targetLine))
+    .replace(/\{\{language\}\}/g, () => data.language);
 };
 
 export const copyToClipboard = async (text: string): Promise<void> => {

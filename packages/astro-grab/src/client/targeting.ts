@@ -3,6 +3,10 @@ import { Overlay } from "./overlay.js";
 import { copyToClipboard, formatSnippet } from "./clipboard.js";
 import { DEFAULT_TEMPLATE, type SnippetResponse } from "../shared/index.js";
 
+interface MousePositionProvider {
+  getMousePosition(): { x: number; y: number };
+}
+
 /**
  * Handles targeting mode interactions
  * Tracks mouse movement, highlights elements, and handles clicks
@@ -16,6 +20,8 @@ export class TargetingHandler {
   private currentTarget: HTMLElement | null = null;
   private currentMouseX = 0;
   private currentMouseY = 0;
+  private mousePositionProvider: MousePositionProvider | undefined;
+  private isInitialized = false;
 
   constructor(
     stateMachine: StateMachine,
@@ -35,15 +41,40 @@ export class TargetingHandler {
   /**
    * Initialize targeting handlers
    */
-  init(keybindHandler?: {
-    getMousePosition(): { x: number; y: number };
-  }): void {
-    this.stateMachine.onEnter("targeting", () => {
-      const mousePos = keybindHandler?.getMousePosition() ?? { x: 0, y: 0 };
-      this.enable(mousePos.x, mousePos.y);
-    });
-    this.stateMachine.onEnter("idle", () => this.disable());
+  init(keybindHandler?: MousePositionProvider): void {
+    this.mousePositionProvider = keybindHandler;
+    if (this.isInitialized) {
+      return;
+    }
+
+    this.isInitialized = true;
+    this.stateMachine.onEnter("targeting", this.handleTargetingEnter);
+    this.stateMachine.onEnter("idle", this.handleIdleEnter);
   }
+
+  destroy(): void {
+    this.disable();
+    if (!this.isInitialized) {
+      return;
+    }
+
+    this.isInitialized = false;
+    this.mousePositionProvider = undefined;
+    this.stateMachine.offEnter("targeting", this.handleTargetingEnter);
+    this.stateMachine.offEnter("idle", this.handleIdleEnter);
+  }
+
+  private handleTargetingEnter = (): void => {
+    const mousePosition = this.mousePositionProvider?.getMousePosition() ?? {
+      x: 0,
+      y: 0,
+    };
+    this.enable(mousePosition.x, mousePosition.y);
+  };
+
+  private handleIdleEnter = (): void => {
+    this.disable();
+  };
 
   private trackMousePosition = (e?: MouseEvent): void => {
     if (e) {
@@ -257,6 +288,10 @@ export class TargetingHandler {
 
   updateContextLines(newContextLines: number): void {
     this.contextLines = newContextLines;
+  }
+
+  updateApiBaseUrl(newApiBaseUrl: string | undefined): void {
+    this.apiBaseUrl = newApiBaseUrl;
   }
 
   updateTemplate(newTemplate: string): void {

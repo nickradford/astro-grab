@@ -8,6 +8,7 @@ export class Overlay {
   private crosshair: HTMLDivElement | null = null;
   private readonly stateMachine: StateMachine;
   private hue: number;
+  private isInitialized = false;
 
   constructor(stateMachine: StateMachine, hue: number) {
     this.stateMachine = stateMachine;
@@ -15,11 +16,23 @@ export class Overlay {
   }
 
   init(): void {
-    this.createElements();
+    if (this.isInitialized) {
+      return;
+    }
 
-    this.stateMachine.onEnter("targeting", () => this.show());
-    this.stateMachine.onEnter("idle", () => this.hide());
+    this.isInitialized = true;
+    this.createElements();
+    this.stateMachine.onEnter("targeting", this.handleTargetingEnter);
+    this.stateMachine.onEnter("idle", this.handleIdleEnter);
   }
+
+  private handleTargetingEnter = (): void => {
+    this.show();
+  };
+
+  private handleIdleEnter = (): void => {
+    this.hide();
+  };
 
   private createElements(): void {
     this.container = document.createElement("div");
@@ -341,6 +354,12 @@ export class Overlay {
   }
 
   destroy(): void {
+    if (this.isInitialized) {
+      this.stateMachine.offEnter("targeting", this.handleTargetingEnter);
+      this.stateMachine.offEnter("idle", this.handleIdleEnter);
+      this.isInitialized = false;
+    }
+
     if (this.container) {
       this.container.remove();
       this.container = null;

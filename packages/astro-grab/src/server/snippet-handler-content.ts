@@ -12,7 +12,7 @@ export async function handleSnippetRequestFromContent(
 ): Promise<SnippetResponse> {
   const { contextLines = 4 } = options;
 
-  const loc = decodeSourceLocation(decodeURIComponent(src));
+  const loc = decodeSourceLocation(src);
 
   const { snippet, startLine, endLine } = extractSnippet(
     content,

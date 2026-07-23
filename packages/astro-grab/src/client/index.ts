@@ -20,10 +20,12 @@ export class AstroGrab {
   private contextLines: number;
   private apiBaseUrl: string | undefined;
   private template: string;
-  private isEnabled = true;
+  private isEnabled: boolean;
+  private isInitialized = false;
 
   constructor(config: ClientConfig = {}) {
     const {
+      enabled = true,
       key: configKey,
       holdDuration = 500,
       contextLines = 4,
@@ -35,6 +37,7 @@ export class AstroGrab {
     const hue = configHue;
 
     this.debug = debug;
+    this.isEnabled = enabled;
     this.key = normalizeTriggerKey(configKey);
     this.holdDuration = holdDuration;
     this.contextLines = contextLines;
@@ -63,38 +66,65 @@ export class AstroGrab {
   }
 
   init(): void {
-    this.keybind.init();
-    this.overlay.init();
-    this.targeting.init(this.keybind);
-    console.log(
-      `[astro-grab] Initialized - Hold ${formatShortcutDisplayLabel(this.key)} to start`,
-    );
+    if (this.isInitialized) {
+      return;
+    }
 
-    this.stateMachine.onEnter("holding", () => {
-      window.dispatchEvent(new CustomEvent("astro-grab:key-held"));
-    });
-
-    this.stateMachine.onEnter("targeting", () => {
-      window.dispatchEvent(
-        new CustomEvent("astro-grab:targeting-mode-started"),
-      );
-    });
-
+    this.isInitialized = true;
+    this.stateMachine.onEnter("holding", this.handleHoldingEnter);
+    this.stateMachine.onEnter("targeting", this.handleTargetingEnter);
     window.addEventListener(
       "astro-grab:config-update",
       this.handleConfigUpdate,
     );
     window.addEventListener("astro-grab:toggle", this.handleToggle);
+
+    if (this.isEnabled) {
+      this.activate();
+    }
+
+    console.log(
+      `[astro-grab] Initialized - Hold ${formatShortcutDisplayLabel(this.key)} to start`,
+    );
+  }
+
+  private handleHoldingEnter = (): void => {
+    window.dispatchEvent(new CustomEvent("astro-grab:key-held"));
+  };
+
+  private handleTargetingEnter = (): void => {
+    window.dispatchEvent(
+      new CustomEvent("astro-grab:targeting-mode-started"),
+    );
+  };
+
+  private activate(): void {
+    this.keybind.init();
+    this.overlay.init();
+    this.targeting.init(this.keybind);
+  }
+
+  private deactivate(): void {
+    this.stateMachine.reset();
+    this.targeting.destroy();
+    this.keybind.destroy();
+    this.overlay.destroy();
   }
 
   destroy(): void {
-    this.keybind.destroy();
-    this.overlay.destroy();
+    if (!this.isInitialized) {
+      return;
+    }
+
+    this.deactivate();
+    this.stateMachine.offEnter("holding", this.handleHoldingEnter);
+    this.stateMachine.offEnter("targeting", this.handleTargetingEnter);
     window.removeEventListener(
       "astro-grab:config-update",
       this.handleConfigUpdate,
     );
     window.removeEventListener("astro-grab:toggle", this.handleToggle);
+    this.isInitialized = false;
   }
 
   private handleConfigUpdate = (event: Event): void => {
@@ -124,13 +154,13 @@ export class AstroGrab {
       this.targeting.updateContextLines(config.contextLines);
     }
 
-    if (typeof config.apiBaseUrl === "string") {
+    if ("apiBaseUrl" in config) {
       this.apiBaseUrl = config.apiBaseUrl;
-      // Note: apiBaseUrl changes require reinitializing TargetingHandler
-      // For now, we'll log that this requires a page reload
-      console.warn(
-        "[astro-grab] apiBaseUrl changed - page reload may be required for changes to take effect",
-      );
+      this.targeting.updateApiBaseUrl(config.apiBaseUrl);
+    }
+
+    if (typeof config.enabled === "boolean") {
+      this.setEnabled(config.enabled);
     }
 
     if (typeof config.template === "string") {
@@ -147,16 +177,25 @@ export class AstroGrab {
       console.log("[astro-grab] Toggle received:", enabled);
     }
 
-    if (enabled && !this.isEnabled) {
-      this.isEnabled = true;
-      this.keybind.init();
-      this.overlay.init();
-    } else if (!enabled && this.isEnabled) {
-      this.isEnabled = false;
-      this.keybind.destroy();
-      this.overlay.destroy();
-    }
+    this.setEnabled(enabled);
   };
+
+  private setEnabled(enabled: boolean): void {
+    if (enabled === this.isEnabled) {
+      return;
+    }
+
+    this.isEnabled = enabled;
+    if (!this.isInitialized) {
+      return;
+    }
+
+    if (enabled) {
+      this.activate();
+    } else {
+      this.deactivate();
+    }
+  }
 
   updateConfig(config: Partial<ClientConfig>): void {
     this.handleConfigUpdate(

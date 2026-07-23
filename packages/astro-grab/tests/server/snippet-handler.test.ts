@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { writeFile, mkdir, rm } from "node:fs/promises";
+import { writeFile, mkdir, rm, symlink } from "node:fs/promises";
 import { join } from "node:path";
 import { handleSnippetRequest } from "../../src/server/snippet-handler.js";
 import { tmpdir } from "node:os";
@@ -98,19 +98,44 @@ describe("handleSnippetRequest", () => {
     expect(result.snippet).toContain("line 2");
   });
 
-  it("should handle URL-encoded source locations", async () => {
+  it("should handle percent signs in file names", async () => {
     const content = "line 1\nline 2\nline 3";
-    const testFile = join(testDir, "test.astro");
+    const testFile = join(testDir, "100%.astro");
     await writeFile(testFile, content);
 
-    const encoded = encodeURIComponent("test.astro:2:1");
-    const result = await handleSnippetRequest(encoded, {
+    const result = await handleSnippetRequest("100%.astro:2:1", {
       root: testDir,
       contextLines: 1,
     });
 
     expect(result.targetLine).toBe(2);
     expect(result.snippet).toContain("line 2");
+  });
+
+  it("should reject paths outside the project root", async () => {
+    const projectDir = join(testDir, "project");
+    await mkdir(projectDir);
+    await writeFile(join(testDir, "secret.astro"), "secret");
+
+    await expect(
+      handleSnippetRequest("../secret.astro:1:1", {
+        root: projectDir,
+      }),
+    ).rejects.toThrow("inside project root");
+  });
+
+  it("should reject symlinks that escape the project root", async () => {
+    const projectDir = join(testDir, "project");
+    const secretFile = join(testDir, "secret.astro");
+    await mkdir(projectDir);
+    await writeFile(secretFile, "secret");
+    await symlink(secretFile, join(projectDir, "linked.astro"));
+
+    await expect(
+      handleSnippetRequest("linked.astro:1:1", {
+        root: projectDir,
+      }),
+    ).rejects.toThrow("inside project root");
   });
 
   it("should handle files at file boundaries", async () => {

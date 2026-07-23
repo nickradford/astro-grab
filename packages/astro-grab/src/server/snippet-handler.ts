@@ -1,7 +1,7 @@
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
-import { decodeSourceLocation, extractSnippet } from "../shared/index.js";
-import type { SnippetResponse } from "../shared/index.js";
+import { readFile, realpath } from 'node:fs/promises';
+import { isAbsolute, relative, resolve, sep } from 'node:path';
+import { decodeSourceLocation, extractSnippet } from '../shared/index.js';
+import type { SnippetResponse } from '../shared/index.js';
 
 export interface SnippetHandlerOptions {
   root: string;
@@ -16,19 +16,23 @@ export const handleSnippetRequest = async (
 
   let loc;
   try {
-    loc = decodeSourceLocation(decodeURIComponent(src));
+    loc = decodeSourceLocation(src);
   } catch (error) {
     throw new Error(
       `Invalid source location: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 
-  const filePath = resolve(root, loc.file);
-
+  let filePath: string;
   let content: string;
   try {
-    content = await readFile(filePath, "utf-8");
+    filePath = await resolveSourceFile(root, loc.file);
+    content = await readFile(filePath, 'utf-8');
   } catch (error) {
+    if (error instanceof SourceOutsideRootError) {
+      throw error;
+    }
+
     throw new Error(
       `Failed to read file "${loc.file}": ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -46,6 +50,41 @@ export const handleSnippetRequest = async (
     startLine,
     endLine,
     targetLine: loc.line,
-    language: "astro",
+    language: 'astro',
   };
+};
+
+class SourceOutsideRootError extends Error {
+  constructor(file: string) {
+    super(`Source file must be inside project root: "${file}"`);
+    this.name = 'SourceOutsideRootError';
+  }
+}
+
+const resolveSourceFile = async (
+  root: string,
+  sourceFile: string,
+): Promise<string> => {
+  const resolvedRoot = await realpath(root);
+  const candidatePath = resolve(resolvedRoot, sourceFile);
+
+  if (!isPathInsideRoot(resolvedRoot, candidatePath)) {
+    throw new SourceOutsideRootError(sourceFile);
+  }
+
+  const resolvedFile = await realpath(candidatePath);
+  if (!isPathInsideRoot(resolvedRoot, resolvedFile)) {
+    throw new SourceOutsideRootError(sourceFile);
+  }
+
+  return resolvedFile;
+};
+
+const isPathInsideRoot = (root: string, file: string): boolean => {
+  const relativePath = relative(root, file);
+  return (
+    relativePath !== '..' &&
+    !relativePath.startsWith(`..${sep}`) &&
+    !isAbsolute(relativePath)
+  );
 };

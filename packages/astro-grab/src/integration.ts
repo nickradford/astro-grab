@@ -78,12 +78,13 @@ const toolbarConfig = (() => {
   return {};
 })();
 const instance = new AstroGrab({
+  enabled: toolbarConfig.enabled ?? true,
   key: toolbarConfig.key ?? ${JSON.stringify(key)},
   holdDuration: toolbarConfig.holdDuration ?? ${holdDuration},
   contextLines: ${contextLines},
   hue: toolbarConfig.hue ?? ${hue},
   debug: ${debug},
-  apiBaseUrl: ${apiBaseUrl ? `"${apiBaseUrl}"` : undefined},
+  apiBaseUrl: ${apiBaseUrl ? JSON.stringify(apiBaseUrl) : undefined},
   ${templateConfig}
 });
 window.__astroGrabInstance__ = instance;

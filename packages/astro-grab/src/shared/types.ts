@@ -33,6 +33,8 @@ export interface SnippetResponse {
  * Configuration options for the client-side grab functionality
  */
 export interface ClientConfig {
+  /** Whether the client is enabled when initialized */
+  enabled?: boolean;
   /** Whether to automatically start the grab functionality on page load */
   autoStart?: boolean;
   /** Base key used with Cmd/Ctrl to activate targeting mode (default: "g") */
